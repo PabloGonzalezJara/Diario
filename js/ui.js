@@ -15,6 +15,8 @@ import { DEBUG_MODE } from './constants.js';
 
 // Modal management
 function createModal() {
+    
+    
     // Create custom activity input modal
     const customActivityModal = document.createElement('div');
     customActivityModal.className = 'modal-overlay';
@@ -150,6 +152,8 @@ function createModal() {
 
 // Button management
 function createFloatingAddButton() {
+    
+    
     const button = document.createElement('button');
     button.className = 'floating-add-button';
     button.innerHTML = '+';

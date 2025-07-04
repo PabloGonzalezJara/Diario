@@ -1,0 +1,459 @@
+{
+  "general": {
+    "experimentID": "eR8ENvJPgQth",
+    "app_name": "DDUT",
+    "version": "1.0.0",
+    "author": "Pablo G",
+    "language": "es",
+    "instructions": true,
+    "primary_redirect_url": "pages/thank-you.html",
+    "fallbackToCSV": true
+  }, 
+  "timeline": {
+    "primary": {
+        "name": "Trabajo remunerado y actividades relacionadas",
+        "description": "",
+        "mode": "single-choice",
+        "min_coverage": "10",
+        "categories": [
+          {
+            "name": "Trabajo remunerado y actividades relacionadas",
+            "activities": [
+              {
+                "name": "Trabajo remunerado (incluído búsqueda de trabajo)",
+                "code": 101,
+                "label": "Trabajo remunerado",
+                "short": "T.R.",
+                "vshort": "tremun",
+                "color": "#a2b4ee",
+                "childItems": [
+                  
+                ]
+              },
+              {
+                "name": "Aprendizaje y estudio",
+                "code": 102,
+                "label": "Aprendizaje y estudio",
+                "short": "Aprendizaje",
+                "vshort": "AyE",
+                "color": "#a2e0da",
+                "childItems": [
+                  {
+                    "name": "Asistir a clases en el sistema educativo"
+                  },
+                  {
+                    "name": "Educación extracurricular"
+                  },
+                  {
+                    "name": "Estudiar, hacer tareas e investigaciones"
+                  }
+                ]
+              },
+              {
+                "name": "Trabajo para el autoconsumo",
+                "code": 103,
+                "label": "Trabajo para el autoconsumo",
+                "short": "Autoconsumo",
+                "vshort": "T.A.",
+                "color": "#b3d6c0",
+                "childItems": [
+                  {
+                    "name": "Cuidado de huerto; cría de animales; pesca; otras actividades primarias",
+                    "code": 103,
+                    "label": "Cuidado de huerto; cría de animales; pesca; otras actividades primarias",
+                    "short": "",
+                    "vshort": "",
+                    "color": "#b3d6c0"
+                  },
+                  {
+                    "name": "Preparación de conservas; confección de textiles; otras actividades no primarias",
+                    "code": 103,
+                    "label": "Preparación de conservas; confección de textiles; otras actividades no primarias",
+                    "short": "",
+                    "vshort": "",
+                    "color": "#b3d6c0"
+                  },
+                  {
+                    "name": "Construcción para uso final propio",
+                    "code": 103,
+                    "label": "Construcción para uso final propio",
+                    "short": "",
+                    "vshort": "",
+                    "color": "#b3d6c0"
+                  }
+                ]
+              }
+              
+              
+              
+              
+            ]
+          }
+        ]
+      },
+    "secondary": {
+        "name": "Trabajo doméstico no remunerado",
+        "description": "",
+        "mode": "single-choice",
+        "min_coverage": "10",
+        "categories": [
+          {
+            "name": "Trabajo doméstico no remunerado",
+            "activities": [
+              {
+                "name": "Preparación y servicio de comida",
+                "code": 101,
+                "label": "Preparación y servicio de comida",
+                "short": "",
+                "vshort": "",
+                "color": "#a2b4ee",
+                "childItems": [
+                  {
+                    "name": "Cocinar, preparar y servir los alimentos y bebidas",
+                    "code": 101,
+                    "label": "Cocinar, preparar y servir los alimentos y bebidas",
+                    "short": "",
+                    "vshort": "",
+                    "color": "#a2b4ee"
+                  },
+                  {
+                    "name": "Lavar la vajilla y limpiar el lugar donde se cocinó",
+                    "code": 101,
+                    "label": "Lavar la vajilla y limpiar el lugar donde se cocinó",
+                    "short": "",
+                    "vshort": "",
+                    "color": "#a2b4ee"
+                  }
+                ]
+              },
+              {
+                "name": "Limpiar y ordenar la vivienda",
+                "code": 102,
+                "label": "Limpiar y ordenar la vivienda",
+                "short": "",
+                "vshort": "",
+                "color": "#a2e0da",
+                "childItems": [
+                  
+                ]
+              },
+              {
+                "name": "Limpiar; planchar; reparar ropa y calzado",
+                "code": 103,
+                "label": "Limpiar; planchar; reparar ropa y calzado",
+                "short": "",
+                "vshort": "",
+                "color": "#b3d6c0",
+                "childItems": [
+                  
+                ]
+              },
+              {
+                "name": "Mantenimiento y reparaciones menores de la vivienda y de bienes del hogar",
+                "code": 104,
+                "label": "Mantenimiento y reparaciones menores de la vivienda y de bienes del hogar",
+                "short": "",
+                "vshort": "",
+                "color": "#e0e7cd",
+                "childItems": []
+              },
+              {
+                "name": "Trámites relacionados con el hogar",
+                "code": 105,
+                "label": "Trámites relacionados con el hogar",
+                "short": "",
+                "vshort": "",
+                "color": "#f1daf5",
+                "childItems": [
+                  
+                ]
+              },
+              {
+                "name": "Comprar comida y otro bienes para el hogar (ropa, inmuebles, etc)",
+                "code": 109,
+                "label": "Comprar comida y otro bienes para el hogar (ropa, inmuebles, etc)",
+                "short": "",
+                "vshort": "",
+                "color": "#f5b9ac",
+                "childItems": []
+              },
+              {
+                "name": "Cuidar mascotas y/o plantas",
+                "code": 110,
+                "label": "Cuidar mascotas y/o plantas",
+                "short": "",
+                "vshort": "",
+                "color": "#c0c5df",
+                "childItems": [
+                  
+                ]
+              },
+              {
+                "name": "Trabajo doméstico no remunerado para otros hogares",
+                "code": 111,
+                "label": "Trabajo doméstico no remunerado para otros hogares",
+                "short": "",
+                "vshort": "",
+                "color": "#C0CBDFFF",
+                "childItems": [
+                  
+                ]
+              }
+            ]
+          }
+          
+          
+          
+          
+          
+        ]
+      },
+    "location": {
+      "name": "Trabajo de cuidado no remunerado",
+      "description": "",
+      "mode": "single-choice",
+      "min_coverage": "0",
+      "categories": [
+        {
+          "name": "Trabajo de cuidado no remunerado",
+          "activities": [
+            {
+              "name": "Cuidado y acompañamiento de hijos propios",
+              "examples": "",
+              "color": "#a8f0de",
+              "childItems": [
+                {
+                  "name": "Indoor",
+                  "color": "#88e0ce"
+                },
+                {
+                  "name": "Outdoor",
+                  "color": "#c8ffee"
+                }
+              ]
+            },
+            {
+              "name": "Work",
+              "examples": "",
+              "color": "#f0a8ac",
+              "childItems": [
+                {
+                  "name": "Indoor",
+                  "color": "#e098a0"
+                },
+                {
+                  "name": "Outdoor",
+                  "color": "#ffb8bc"
+                }
+              ]
+            },
+            {
+              "name": "School/College",
+              "examples": "",
+              "color": "#c1f0a8",
+              "childItems": [
+                {
+                  "name": "Indoor",
+                  "color": "#b1e098"
+                },
+                {
+                  "name": "Outdoor",
+                  "color": "#d1ffb8"
+                }
+              ]
+            },
+            {
+              "name": "Other people's home",
+              "examples": "",
+              "color": "#a8f0ba",
+              "childItems": [
+                {
+                  "name": "Indoor",
+                  "color": "#98e0aa"
+                },
+                {
+                  "name": "Outdoor",
+                  "color": "#b8ffca"
+                }
+              ]
+            },
+            {
+              "name": "Restaurant, cafe or pub",
+              "examples": "",
+              "color": "#a8b5f0",
+              "childItems": [
+                {
+                  "name": "Indoor",
+                  "color": "#98a5e0"
+                },
+                {
+                  "name": "Outdoor",
+                  "color": "#b8c5ff"
+                }
+              ]
+            },
+            {
+              "name": "Shops, shopping centres, malls, markets",
+              "examples": "",
+              "color": "#f0c6a8",
+              "childItems": [
+                {
+                  "name": "Indoor",
+                  "color": "#e0b698"
+                },
+                {
+                  "name": "Outdoor",
+                  "color": "#ffd6b8"
+                }
+              ]
+            },
+            {
+              "name": "Other",
+              "examples": "",
+              "color": "#a8f0b1",
+              "childItems": [
+                {
+                  "name": "Indoor",
+                  "color": "#98e0a1"
+                },
+                {
+                  "name": "Outdoor",
+                  "color": "#b8ffc1"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "who": {
+      "name": "Who",
+      "description": "Who were you with?",
+      "mode": "multiple-choice",
+      "min_coverage": "0",
+      "categories": [
+        {
+          "name": " ",
+          "activities": [
+            {
+              "name": "Alone",
+              "examples": "",
+              "color": "#cdf0a8"
+            }
+          ]
+        },
+        {
+          "name": " ",
+          "activities": [
+            {
+              "name": "Spouse / partner",
+              "examples": "",
+              "color": "#f0a8d1"
+            },
+            {
+              "name": "Child under 12 from your household",
+              "examples": "",
+              "color": "#a8bff0"
+            },
+            {
+              "name": "Young Person 12-16 from your household",
+              "examples": "",
+              "color": "#caa8f0"
+            },
+            {
+              "name": "Other household member",
+              "examples": "",
+              "color": "#b5a8f0"
+            },
+            {
+              "name": "Non-household children",
+              "examples": "",
+              "color": "#a8e6f0"
+            },
+            {
+              "name": "Other non-household",
+              "examples": "",
+              "color": "#a8f0dd"
+            }
+          ]
+        }
+      ]
+    },
+    "device": {
+      "name": "Device",
+      "description": "Were you using a computer/tablet/smartphone?",
+      "mode": "multiple-choice",
+      "min_coverage": "0",
+      "categories": [
+        {
+          "name": " ",
+          "activities": [
+            {
+              "name": "Computer",
+              "examples": "",
+              "color": "#a8f0a8"
+            },
+            {
+              "name": "Tablet",
+              "examples": "",
+              "color": "#f0a8d7"
+            },
+            {
+              "name": "Smartphone",
+              "examples": "",
+              "color": "#a8f0ef"
+            }
+          ]
+        }
+      ]
+    },
+    "enjoyment": {
+      "name": "Enjoyment",
+      "description": "How much did you enjoy yourself doing this activity?",
+      "mode": "single-choice",
+      "min_coverage": "0",
+      "categories": [
+        {
+          "name": " ",
+          "activities": [
+            {
+              "name": "7 - Enjoyed very much",
+              "examples": "",
+              "color": "#FF9EC0"
+            },
+            {
+              "name": "6",
+              "examples": "",
+              "color": "#FFACC9"
+            },
+            {
+              "name": "5",
+              "examples": "",
+              "color": "#FFBAD2"
+            },
+            {
+              "name": "4",
+              "examples": "",
+              "color": "#FFC8DB"
+            },
+            {
+              "name": "3",
+              "examples": "",
+              "color": "#FFD6E4"
+            },
+            {
+              "name": "2",
+              "examples": "",
+              "color": "#FFE4ED"
+            },
+            {
+              "name": "1 - Didn't enjoy at all",
+              "examples": "",
+              "color": "#FFF2F6"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
