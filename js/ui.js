@@ -72,12 +72,16 @@ function createModal() {
 
     // NEW: Add event delegation for handling "Other not listed (enter)" clicks
     const modalActivitiesContainer = activitiesModal.querySelector('#modalActivitiesContainer');
+    
     modalActivitiesContainer.addEventListener('click', (e) => {
+        console.log(e.target.textContent.trim().includes('(especifique)',e.target.classList.contains('activity-name')))
         if (
             e.target.classList.contains('activity-name') && 
             (e.target.textContent.trim() === 'Other not listed (enter)' || 
              e.target.textContent.trim().includes('Other activities not listed') ||
-             e.target.textContent.trim().includes('other time use (please specify)'))
+             e.target.textContent.trim().includes('other time use (please specify)') ||
+             e.target.textContent.trim().includes('(especifique)')
+            )
         ) {
             // Hide the activities modal
             activitiesModal.style.cssText = 'display: none !important';
