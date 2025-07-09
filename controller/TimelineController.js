@@ -1,5 +1,5 @@
 // src/controllers/HomeController.js
-import HomeViewApi from '../models/HomeViewApi.js'
+import timelineApi from '../models/TimelineApi.js'
 
 /**
  * @typedef {import('@/models/Dimension').Dimension} Dimension
@@ -8,16 +8,20 @@ import HomeViewApi from '../models/HomeViewApi.js'
 /**
  * Controlador para la vista Home
  */
-class HomeController {
+class TimelineApi {
   /**
    * Obtiene el menú de opciones (dimensiones con categorías y subcategorías).
    * @returns {Promise<Dimension[]>}
    */
   async fetchTimeline() {
-    const menu = await HomeViewApi.getTimeline()
+    const menu = await timelineApi.getTimeline()
     console.log('Menú de opciones:', menu)
     return menu
   }
+
+  async saveTimelineData(data) {
+    return await timelineApi.saveTimelineData(data)
+  }
 }
 
-export default new HomeController()
+export default new TimelineApi()

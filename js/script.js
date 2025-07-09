@@ -2,7 +2,7 @@ import { TimelineMarker } from './timeline_marker.js';
 import { Timeline } from './timeline.js';
 import { TimelineContainer } from './timeline_container.js';
 import i18n from './i18n.js';
-import HomeController from '../controller/HomeController.js';
+import TimelineApi from '../controller/TimelineController.js';
 import {
     getCurrentTimelineData,
     getCurrentTimelineKey,
@@ -560,15 +560,15 @@ function logDebugInfo() {
 async function fetchActivities(key) {
     try {
 
-        //const response = await getActivities()
-        var response = await fetch('settings/activities.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        response = await response.json();
-        if (!response || !response.timeline || !response.general) {
-            throw new Error('Invalid JSON structure');
-        }
+        const response = await getActivities()
+        /*  var response = await fetch('settings/activities.json');
+         if (!response.ok) {
+             throw new Error(`HTTP error! status: ${response.status}`);
+         }
+         response = await response.json();
+         if (!response || !response.timeline || !response.general) {
+             throw new Error('Invalid JSON structure');
+         } */
 
         // Set app name in document title once
         document.title = response.general.app_name;
@@ -666,7 +666,7 @@ function createChildItemsModal() {
 }
 
 // Function to render child items in the modal
-function renderChildItems(activity, categoryName) {
+function renderChildItems(activity, category) {
     const modal = createChildItemsModal();
     const container = document.getElementById('childItemsContainer');
     const title = document.getElementById('childItemsModalTitle');
@@ -692,14 +692,25 @@ function renderChildItems(activity, categoryName) {
             button.className = 'child-item-button';
             button.textContent = childItem.name;
             button.style.setProperty('--color', childItem.color || activity.color);
-
+            ///SE AGREGA LAS SUBCATEGORIAS
             button.addEventListener('click', () => {
                 // Use parent activity properties but with child item name
+
+
                 window.selectedActivity = {
+
+                    dimension: category.name,
+                    subcategoria: childItem.name,
+                    categoria: activity.name,
+                    id_categoria: activity.id_categoria,
+                    id_subcategoria: childItem.id_subcategoria,
+                    id_dimension: category.id_dimension,
+                    id_estudio:  category.id_estudio,
+                    category: category.name,
                     name: childItem.name,
                     parentName: activity.name,
                     color: childItem.color || activity.color,
-                    category: categoryName,
+
                     selected: childItem.name  // Store the selected child item
                 };
 
@@ -817,12 +828,19 @@ function renderActivities(categories, container = document.getElementById('activ
                                     activityButton.classList.add('selected');
                                     const selectedButtons = Array.from(categoryButtons).filter(btn => btn.classList.contains('selected'));
                                     window.selectedActivity = {
+
                                         name: btn === activityButton ? customText : btn.querySelector('.activity-text').textContent,
                                         color: btn.style.getPropertyValue('--color')
                                     };
                                 } else {
                                     categoryButtons.forEach(b => b.classList.remove('selected'));
                                     window.selectedActivity = {
+                                        dimension: category.name,
+                                        maneja_numeros: category.maneja_numeros,
+                                        categoria: activity.name,
+                                        id_categoria: activity.id_categoria,
+                                         id_estudio:  category.id_estudio,
+                                        id_dimension: category.id_dimension,
                                         name: customText,
                                         color: activityButton.style.getPropertyValue('--color'),
                                         category: category.name
@@ -859,7 +877,7 @@ function renderActivities(categories, container = document.getElementById('activ
                         activityButton.classList.add('selected');
 
                         // Show child items modal
-                        renderChildItems(activity, category.name);
+                        renderChildItems(activity, category);
                         return;
                     }
 
@@ -876,6 +894,12 @@ function renderActivities(categories, container = document.getElementById('activ
                                     name: btn.textContent,
                                     color: btn.style.getPropertyValue('--color')
                                 })),
+                                dimension: category.name,
+                                maneja_numeros: category.maneja_numeros,
+                                categoria: activity.name,
+                                id_categoria: activity.id_categoria,
+                                 id_estudio:  category.id_estudio,
+                                id_dimension: category.id_dimension,
                                 category: category.name
                             };
                         } else {
@@ -891,8 +915,15 @@ function renderActivities(categories, container = document.getElementById('activ
                         }
                     } else {
                         // Single choice mode
+
                         categoryButtons.forEach(b => b.classList.remove('selected'));
                         window.selectedActivity = {
+                            dimension: category.name,
+                            maneja_numeros: category.maneja_numeros,
+                            categoria: activity.name,
+                            id_categoria: activity.id_categoria,
+                             id_estudio:  category.id_estudio,
+                            id_dimension: category.id_dimension,
                             name: activity.name,
                             color: activity.color,
                             category: category.name
@@ -1041,6 +1072,12 @@ function renderActivities(categories, container = document.getElementById('activ
                                 } else {
                                     categoryButtons.forEach(b => b.classList.remove('selected'));
                                     window.selectedActivity = {
+                                        dimension: category.name,
+                                        maneja_numeros: category.maneja_numeros,
+                                        categoria: activity.name,
+                                        id_categoria: activity.id_categoria,
+                                         id_estudio:  category.id_estudio,
+                                        id_dimension: category.id_dimension,
                                         name: customText,
                                         color: activity.color,
                                         category: category.name
@@ -1077,7 +1114,7 @@ function renderActivities(categories, container = document.getElementById('activ
                         activityButton.classList.add('selected');
 
                         // Show child items modal
-                        renderChildItems(activity, category.name);
+                        renderChildItems(activity, category);
                         return;
                     }
 
@@ -1109,8 +1146,15 @@ function renderActivities(categories, container = document.getElementById('activ
                         }
                     } else {
                         // Single choice mode
+
                         categoryButtons.forEach(b => b.classList.remove('selected'));
                         window.selectedActivity = {
+                            dimension: category.name,
+                            maneja_numeros: category.maneja_numeros,
+                            categoria: activity.name,
+                            id_categoria: activity.id_categoria,
+                             id_estudio:  category.id_estudio,
+                            id_dimension: category.id_dimension,
                             name: activity.name,
                             color: activity.color,
                             category: category.name
@@ -2041,7 +2085,7 @@ function initTimelineInteraction(timeline) {
         // Deselect the activity button after successful placement
         document.querySelectorAll('.activity-button').forEach(btn => btn.classList.remove('selected'));
         console.log('[ACTIVITY] Clearing window.selectedActivity after successful placement');
-        window.selectedActivity = null;
+
 
         const startTime = currentBlock.dataset.start;
         const endTime = currentBlock.dataset.end;
@@ -2054,7 +2098,9 @@ function initTimelineInteraction(timeline) {
         const activityCategory = currentBlock.dataset.category;
 
         // Create activity data with parent name if it exists
+
         const activityData = {
+            ...window.selectedActivity,
             id: generateUniqueId(),
             activity: combinedActivityText,
             category: activityCategory,
@@ -2064,7 +2110,8 @@ function initTimelineInteraction(timeline) {
             color: window.selectedActivity?.color || '#808080',
             count: parseInt(currentBlock.dataset.count) || 1
         };
-
+        console.log(activityData)
+        window.selectedActivity = null;
         // Add parent and selected attributes
         if (currentBlock.dataset.parentName) {
             activityData.parentName = currentBlock.dataset.parentName;
@@ -2192,10 +2239,12 @@ async function init() {
         }
         const data = await response.json();
 
-        const res = await HomeController.fetchTimeline();
+        const res = await TimelineApi.fetchTimeline();
+      
+      
 
-        //data.timeline = res.timeline
-        console.log(data)
+        data.timeline = res.timeline
+       
 
         localStorage.setItem("Activities", JSON.stringify(data))
 
