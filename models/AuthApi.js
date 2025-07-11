@@ -1,15 +1,10 @@
-// apiService.js
-import axios from 'axios'
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
-  headers: { 'Content-Type': 'application/json' }
-})
+
 
 /**
  * @typedef {Object} LoginPayload
- * @property {string} rut         El RUT del usuario
- * @property {string} contrasena  La contraseña en claro (o hasheada)
+ * @property {string} contrasena         El RUT del usuario
+ * @property {string} identificador  La contraseña en claro (o hasheada)
  */
 
 /**
@@ -27,8 +22,11 @@ const api = axios.create({
  * @property {string}   date        En formato 'YYYY-MM-DD'
  * // …otros campos opcionales…
  */
-
-export const ApiService = {
+const api = axios.create({
+  baseURL: 'http://localhost:3000/api/',
+  headers: { 'Content-Type': 'application/json' }
+})
+export const AuthApi = {
   /**
    * @param {LoginPayload} payload
    * @returns {Promise<LoginResponse>}
@@ -36,7 +34,7 @@ export const ApiService = {
   login: (payload) =>
     api.post('/auth/login', payload).then(res => res.data),
 
-  // otros endpoints…
+
 }
 
-export default ApiService
+export default AuthApi

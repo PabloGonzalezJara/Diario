@@ -7,10 +7,10 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' }
 })
 
+const token = localStorage.getItem('token')
 // Interceptor para inyectar el token en cada petición
 api.interceptors.request.use(
   config => {
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTIwODE3MjAsImV4cCI6MTc1MjA4ODkyMH0._UxfEciZRCFhIxHgvQD48BRrq-UVIWSTbIEsUomTcmA'
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -21,11 +21,11 @@ api.interceptors.request.use(
 
 export const TimelineApi = {
 
-  getTimeline: () =>
+  getTimeline: (id_estudio) =>
     api
-      .get('/dimensiones/getTimeline/1')
+      .get(`/dimensiones/getTimeline/${id_estudio}`)
       .then(res => (res.data).data),
-  saveTimelineData : (data) => api.post('/registros/saveTimelineData', JSON.stringify(data))
+  saveTimelineData: (data) => api.post('/registros/saveTimelineData', JSON.stringify(data))
 }
 
 export default TimelineApi

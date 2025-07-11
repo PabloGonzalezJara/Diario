@@ -14,8 +14,10 @@ class TimelineApi {
    * @returns {Promise<Dimension[]>}
    */
   async fetchTimeline() {
-    const menu = await timelineApi.getTimeline()
-    console.log('Menú de opciones:', menu)
+    const id_estudio = localStorage.getItem('id_estudio')
+
+    const menu = await timelineApi.getTimeline(id_estudio)
+
     return menu
   }
 

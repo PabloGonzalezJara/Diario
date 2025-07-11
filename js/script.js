@@ -705,7 +705,7 @@ function renderChildItems(activity, category) {
                     id_categoria: activity.id_categoria,
                     id_subcategoria: childItem.id_subcategoria,
                     id_dimension: category.id_dimension,
-                    id_estudio:  category.id_estudio,
+                    id_estudio: category.id_estudio,
                     category: category.name,
                     name: childItem.name,
                     parentName: activity.name,
@@ -839,7 +839,7 @@ function renderActivities(categories, container = document.getElementById('activ
                                         maneja_numeros: category.maneja_numeros,
                                         categoria: activity.name,
                                         id_categoria: activity.id_categoria,
-                                         id_estudio:  category.id_estudio,
+                                        id_estudio: category.id_estudio,
                                         id_dimension: category.id_dimension,
                                         name: customText,
                                         color: activityButton.style.getPropertyValue('--color'),
@@ -898,7 +898,7 @@ function renderActivities(categories, container = document.getElementById('activ
                                 maneja_numeros: category.maneja_numeros,
                                 categoria: activity.name,
                                 id_categoria: activity.id_categoria,
-                                 id_estudio:  category.id_estudio,
+                                id_estudio: category.id_estudio,
                                 id_dimension: category.id_dimension,
                                 category: category.name
                             };
@@ -922,7 +922,7 @@ function renderActivities(categories, container = document.getElementById('activ
                             maneja_numeros: category.maneja_numeros,
                             categoria: activity.name,
                             id_categoria: activity.id_categoria,
-                             id_estudio:  category.id_estudio,
+                            id_estudio: category.id_estudio,
                             id_dimension: category.id_dimension,
                             name: activity.name,
                             color: activity.color,
@@ -1076,7 +1076,7 @@ function renderActivities(categories, container = document.getElementById('activ
                                         maneja_numeros: category.maneja_numeros,
                                         categoria: activity.name,
                                         id_categoria: activity.id_categoria,
-                                         id_estudio:  category.id_estudio,
+                                        id_estudio: category.id_estudio,
                                         id_dimension: category.id_dimension,
                                         name: customText,
                                         color: activity.color,
@@ -1153,7 +1153,7 @@ function renderActivities(categories, container = document.getElementById('activ
                             maneja_numeros: category.maneja_numeros,
                             categoria: activity.name,
                             id_categoria: activity.id_categoria,
-                             id_estudio:  category.id_estudio,
+                            id_estudio: category.id_estudio,
                             id_dimension: category.id_dimension,
                             name: activity.name,
                             color: activity.color,
@@ -2229,22 +2229,22 @@ async function init() {
         syncURLParamsToStudy();
 
         // (Rest of your initialization code...)
-        checkAndRequestPID();
+        //checkAndRequestPID();
         preventPullToRefresh();
 
         // Load initial timeline data and do the rest of the setup.
-        const response = await fetch('settings/activities.json');
+        const response = await fetch('../../settings/activities.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
 
         const res = await TimelineApi.fetchTimeline();
-      
-      
+
+
 
         data.timeline = res.timeline
-       
+
 
         localStorage.setItem("Activities", JSON.stringify(data))
 
@@ -2258,8 +2258,9 @@ async function init() {
         // Apply translations to existing elements
         i18n.applyTranslations();
 
-        // Handle instructions or redirection if needed.
+        /* // Handle instructions or redirection if needed.
         if (data.general?.instructions && !new URLSearchParams(window.location.search).has('instructions')) {
+
             if (!window.location.pathname.includes('/instructions/')) {
                 const currentParams = new URLSearchParams(window.location.search);
                 const redirectUrl = new URL('pages/instructions.html', window.location.href);
@@ -2270,6 +2271,7 @@ async function init() {
                 return;
             }
         } else if (window.location.pathname.includes('/instructions/')) {
+
             const currentParams = new URLSearchParams(window.location.search);
             const redirectUrl = new URL('index.html', window.location.href);
             currentParams.forEach((value, key) => {
@@ -2277,7 +2279,7 @@ async function init() {
             });
             window.location.href = redirectUrl.toString();
             return;
-        }
+        } */
 
         // Initialize timeline management structure with timeline keys
         window.timelineManager.keys = Object.keys(data.timeline);

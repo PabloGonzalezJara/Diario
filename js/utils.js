@@ -477,7 +477,7 @@ export async function sendDataToDataPipe() {
     try {
         // --- Prepare Timeline Data ---
         const timelineData = createTimelineDataFrame();
-        
+        const identificador = localStorage.getItem('identificador')
         // Get study data if available
         let studyData = window.timelineManager?.study || {};
         let pid;
@@ -517,7 +517,7 @@ export async function sendDataToDataPipe() {
         const session_id = hasPpid && (studyData.survey || studyData.SURVEY)
             ? (studyData.survey || studyData.SURVEY)
             : (studyData.SESSION_ID || null);
-        console.log(timelineData)
+       
         // Combine timeline and participant data
         const combinedData = timelineData.map(row => ({
             /* timelineKey: row.timelineKey,
@@ -545,11 +545,11 @@ export async function sendDataToDataPipe() {
             instructions: studyData.instructions === 'completed',
             PROLIFIC_PID: studyData.PROLIFIC_PID || null, */
             id_estudio: row.id_estudio|| null,
-            identificador: pid
+            identificador: identificador
         }));
         
          const prueba = await TimelineApi.saveTimelineData(combinedData);
-        console.log('prueba', prueba)
+        
 
         // Convert to CSV format
         const csvData = convertArrayToCSV(combinedData);

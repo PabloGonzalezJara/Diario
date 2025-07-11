@@ -41,7 +41,7 @@ function updateLayout() {
 document.addEventListener('DOMContentLoaded', () => {
     const continueBtn = document.getElementById('continueBtn');
     const progressBar = document.getElementById('progressBar');
-    
+    /* 
     // Function to create URL with preserved parameters
     function createUrlWithParams(targetPath) {
         const currentUrl = new URL(window.location.href);
@@ -106,22 +106,19 @@ document.addEventListener('DOMContentLoaded', () => {
             observer.observe(container);
             lazyImageObservers.set(container, observer);
         }
-    });
+    }); */
 
     // Handle start button click
     if (continueBtn) {
         console.log('Continue button found, adding click handler');
         continueBtn.addEventListener('click', (e) => {
-            console.log('Continue button clicked');
-            const targetUrl = createUrlWithParams('../index.html');
-            console.log('Redirecting to:', targetUrl);
-            window.location.href = targetUrl;
+           window.location = `../src/pages/timeline.html`
         });
     } else {
         console.error('Continue button not found!');
     }
 
-    // Cleanup function
+   /*  // Cleanup function
     function cleanup() {
         if (orientationTimeout) clearTimeout(orientationTimeout);
         lazyImageObservers.forEach(observer => observer.disconnect());
@@ -130,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Clean up when page is unloaded
-    window.addEventListener('unload', cleanup);
+    window.addEventListener('unload', cleanup); */
 });
 
 // Initial layout

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -7,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Loading...</title>
-    
+
     <!-- Favicons -->
     <link rel="shortcut icon" href="favicon/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
@@ -18,110 +19,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    
+
+
+
+    <link href="./src/output.css" rel="stylesheet">
 </head>
+
 <body>
-    <div class="header-section">
-        <div class="controls">
+    <div id="app"></div>
 
-        <button class="btn back-btn" id="backBtn" data-is-active="false" disabled>
-            <i class="fas fa-arrow-left"></i>
-            <span data-i18n="buttons.back">Back</span>
-        </button>
-
-        <button class="btn clean-row-btn" id="cleanRowBtn" data-is-active="false" disabled>
-            <i class="fas fa-trash-alt"></i>
-            <span data-i18n="buttons.cleanRow">Clean Row</span>
-        </button>
-
-        <button class="btn undo-btn" id="undoBtn" data-is-active="false" disabled>
-            <i class="fas fa-undo"></i>
-            <span data-i18n="buttons.undo">Undo</span>
-        </button>
-
-        <button class="btn next-btn" id="nextBtn" data-is-active="false" disabled>
-            <i class="fas fa-arrow-right"></i>
-            <span data-i18n="buttons.next">Next</span>
-        </button>
-
-        <button class="btn save-btn" id="saveBtn" data-is-active="true" style="display: none;">
-            <i class="fas fa-check"></i>
-            <span data-i18n="buttons.submit">Submit</span>
-        </button>
-        </div>
-
-        <div class="timeline-header">
-            <h1 class="timeline-title">Primary Activity</h1>
-            <p class="timeline-description"></p>
-        </div>
-    </div>
-
-    <div class="timeline-canvas">
-        <div class="timelines-wrapper">
-            <div class="past-initialized-timelines-wrapper"></div>
-            <div class="last-initialized-timeline-wrapper"></div>
-        </div>
-        <div class="gradient-bar"></div>
-    </div>
-
-    <div class="activities-container" id="activitiesContainer">
-        <div class="activities-accordion"></div>
-    </div>
-    
-    <!-- Debug overlay element -->
-    <div id="debugOverlay" class="debugOverlay"></div>
-
-    <!-- Load environment variables first -->
-    <script src="env-loader.js"></script>
-    
-    <!-- Load i18n (internationalization) module -->
-    <script src="js/i18n.js" type="module"></script>
-    
-    <!-- Load Bowser and other scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bowser/2.11.0/bundled.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
-    <script src="js/timeline_marker.js" type="module"></script>
-    <script src="js/timeline.js" type="module"></script>
-    <script src="js/utils.js" type="module"></script>
-    <script src="js/autoscroll.js" type="module"></script>
-     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <!-- <script src="js/script.js?v=1.1" type="module"></script> -->
-    <!-- <script src="tests/timeline_test.js" type="module"></script> -->
-    <script type="module">
-        import { calculateTimeDifference } from './js/utils.js';
-        import {init} from './js/script.js';
-        window.calculateTimeDifference = calculateTimeDifference;
-        await init();
-    </script>
-    <!-- <script type="module">
-        import { testTimelineMarkerPositioning } from './tests/timeline_test.js';
-        
-        // Run tests after page load
-        window.addEventListener('load', () => {
-            const testResult = testTimelineMarkerPositioning();
-            if (!testResult.success) {
-                console.error('Timeline marker positioning test failed:', testResult.errors);
-            } else {
-                console.log('Timeline marker positioning test passed');
-            }
-        });
-    </script> -->
-    
-    <!-- Attribute Tracker Script -->
-    <script src="js/attributeTracker.js"></script>
-
-    <div id="instructionsFooter" style="padding: 20px; background: white; border-top: 1px solid #ddd; text-align: left; margin-top: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <button onclick="window.location.href='./pages/instructions.html'" class="navigation-btn">
-                <i class="fas fa-chevron-left"></i>
-                <span data-i18n="buttons.backToInstructions">Back to Instructions</span>
-            </button>
-            <button id="navSubmitBtn" class="nav-submit-btn">
-                <i class="fas fa-check"></i>
-                <span data-i18n="buttons.submit">Submit</span>
-            </button>
-        </div>
-    </div>
+    <script type="module" src="/js/router.js"></script>
 </body>
+
 </html>

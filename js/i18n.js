@@ -42,7 +42,7 @@ class I18n {
         try {
             // Determine the correct path based on current location
             const isInSubfolder = window.location.pathname.includes('/pages/');
-            const localesPath = isInSubfolder ? '../locales' : './locales';
+            const localesPath = isInSubfolder ? '../../../locales' : './locales';
             
             const response = await fetch(`${localesPath}/${language}.json`);
             if (!response.ok) {
