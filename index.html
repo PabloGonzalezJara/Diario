@@ -19,7 +19,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
 
 
 
@@ -29,7 +29,38 @@
 <body>
     <div id="app"></div>
 
-    <script type="module" src="/js/router.js"></script>
+    <script>
+        // Lista de rutas válidas
+        const validRoutes = [
+            '/',
+            '/index.html',
+            '/login.html',
+            '/inicio.html',
+            '/timeline.html',
+            '/reportes.html',
+             '/estadisticas.html',
+            '/404.html'
+        ];
+
+        const path = window.location.pathname;
+        console.log(path)
+        // Si la ruta actual no es válida, redirige a 404.html
+        const isValid = validRoutes.some(valid => path === valid || path.endsWith(valid));
+        
+
+        if (!isValid) {
+            window.location.href = '/src/pages/404.html'; // ajusta si está en otra carpeta
+        } else {
+            
+            if (path === '/') {
+                window.location.href = '/src/pages/login.html';
+            } else {
+                window.location.href = `/src/pages${path}`;
+            }
+
+           
+        }
+    </script>
 </body>
 
 </html>

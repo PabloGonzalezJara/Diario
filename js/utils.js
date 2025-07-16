@@ -370,7 +370,7 @@ export function canPlaceActivity(newStart, newEnd, excludeId = null) {
 }
 
 
-export function isTimelineFull() {
+export function currentcoverage() {
     const currentKey = getCurrentTimelineKey();
     const currentData = getCurrentTimelineData();
 
@@ -390,7 +390,7 @@ export function isTimelineFull() {
 
     // Check if timeline is full based on coverage
     const currentCoverage = (coveredMinutes / MINUTES_PER_DAY) * 100;
-    return currentCoverage >= 100;
+    return currentCoverage;
 }
 
 export function calculateTimeDifference(startTime, endTime) {
@@ -448,16 +448,23 @@ export function createTimelineDataFrame() {
 
         // Add each activity to the dataframe with its timeline key
         activities.forEach(activity => {
+            const startMinutes = new Date(activity.startTime)
+            const endMinutes = new Date(activity.endTime)
+
+            const diffMs = endMinutes - startMinutes;
+            const diffMins = Math.round(diffMs / 60000);
             
             const row = {
-                ...activity
+                ...activity,
+                minutos: diffMins,
+
             };
 
             // Only add study params if they exist
             if (Object.keys(studyParams).length > 0) {
                 Object.assign(row, studyParams);
             }
-
+            
             dataFrame.push(row);
         });
     });
@@ -517,7 +524,7 @@ export async function sendDataToDataPipe() {
         const session_id = hasPpid && (studyData.survey || studyData.SURVEY)
             ? (studyData.survey || studyData.SURVEY)
             : (studyData.SESSION_ID || null);
-       
+
         // Combine timeline and participant data
         const combinedData = timelineData.map(row => ({
             /* timelineKey: row.timelineKey,
@@ -526,13 +533,14 @@ export async function sendDataToDataPipe() {
             otroValor: row.categoria.includes('Otra actividad') ? row.name : null,
             hora_inicio: row.startTime,
             hora_termino: row.endTime,
-            id_dimension:row.id_dimension,
-            id_categoria:row.id_categoria,
+            id_dimension: row.id_dimension,
+            id_categoria: row.id_categoria,
             id_subcategoria: row.subcategoria != null ? row.id_subcategoria : null,
             nombre_categoria: row.categoria,
             nombre_dimension: row.dimension,
             nombre_subcategoria: row.subcategoria != null ? row.subcategoria : null,
-            valor_numerico: row.maneja_numeros ?  parseInt(row.name.replace(/\D/g, '')) : null,
+            valor_numerico: row.maneja_numeros ? parseInt(row.name.replace(/\D/g, '')) : null,
+            minutos: row.minutos,
             /* startTime: row.startTime,
             endTime: row.endTime,
             pid: pid,
@@ -544,12 +552,12 @@ export async function sendDataToDataPipe() {
             browserVersion: browserInfo.version,
             instructions: studyData.instructions === 'completed',
             PROLIFIC_PID: studyData.PROLIFIC_PID || null, */
-            id_estudio: row.id_estudio|| null,
+            id_estudio: row.id_estudio || null,
             identificador: identificador
         }));
-        
-         const prueba = await TimelineApi.saveTimelineData(combinedData);
-        
+        console.log(combinedData);
+        //const prueba = await TimelineApi.saveTimelineData(combinedData);
+        //window.location.href  = 'inicio.html';
 
         // Convert to CSV format
         const csvData = convertArrayToCSV(combinedData);
@@ -580,25 +588,25 @@ export async function sendDataToDataPipe() {
 
         // Hide loading modal before redirect
         hideLoadingModal();
-/* 
-        // Handle redirect to thank you page
-        const redirectUrl = window.timelineManager?.general?.primary_redirect_url;
-
-        if (redirectUrl) {
-            // Check if it's a relative URL (like our thank-you.html page)
-            if (!redirectUrl.startsWith('http')) {
-                // For relative URLs, just redirect directly
-                window.location.href = redirectUrl;
-            } else {
-                // For external URLs, preserve existing URL parameters
-                const currentParams = new URLSearchParams(window.location.search);
-                const separator = redirectUrl.includes('?') ? '&' : '?';
-                const finalRedirectUrl = redirectUrl +
-                    (currentParams.toString() ? separator + currentParams.toString() : '');
-
-                window.location.href = finalRedirectUrl;
-            }
-        } */
+        /* 
+                // Handle redirect to thank you page
+                const redirectUrl = window.timelineManager?.general?.primary_redirect_url;
+        
+                if (redirectUrl) {
+                    // Check if it's a relative URL (like our thank-you.html page)
+                    if (!redirectUrl.startsWith('http')) {
+                        // For relative URLs, just redirect directly
+                        window.location.href = redirectUrl;
+                    } else {
+                        // For external URLs, preserve existing URL parameters
+                        const currentParams = new URLSearchParams(window.location.search);
+                        const separator = redirectUrl.includes('?') ? '&' : '?';
+                        const finalRedirectUrl = redirectUrl +
+                            (currentParams.toString() ? separator + currentParams.toString() : '');
+        
+                        window.location.href = finalRedirectUrl;
+                    }
+                } */
 
         return { success: true };
     } catch (error) {

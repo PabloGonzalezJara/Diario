@@ -22,6 +22,7 @@ const processQueue = (error, token = null) => {
 api.interceptors.request.use(
   config => {
     const token = localStorage.getItem('token'); // asegúrate que uses la misma key
+    
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }

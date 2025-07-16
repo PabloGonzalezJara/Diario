@@ -1,23 +1,7 @@
+import api from './api.js'; // la instancia ya configurada
 
 
 
-
-const api = axios.create({
-  baseURL: 'http://localhost:3000/api/',
-  headers: { 'Content-Type': 'application/json' }
-})
-
-const token = localStorage.getItem('token')
-// Interceptor para inyectar el token en cada petición
-api.interceptors.request.use(
-  config => {
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
-    return config
-  },
-  error => Promise.reject(error)
-)
 
 export const TimelineApi = {
 

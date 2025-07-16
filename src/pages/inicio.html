@@ -29,8 +29,8 @@
         <!-- Navegación de escritorio -->
         <nav class="hidden md:flex space-x-6">
           <a href="/src/pages/inicio.html" class="hover:bg-white/20 px-4 py-2 rounded">Inicio</a>
-          <a href="/reports" class="hover:bg-white/20 px-4 py-2 rounded">Reportes</a>
-          <a href="/stats" class="hover:bg-white/20 px-4 py-2 rounded">Estadísticas</a>
+          <a href="/reportes.html" class="hover:bg-white/20 px-4 py-2 rounded">Reportes</a>
+          <a href="/estadisticas.html" class="hover:bg-white/20 px-4 py-2 rounded">Estadísticas</a>
         </nav>
       </div>
     </header>
@@ -38,9 +38,9 @@
     <!-- Menú móvil desplegable -->
     <nav id="mobile-nav" class="bg-primary-light text-white hidden md:hidden">
       <div class="flex flex-col px-6 py-4 space-y-2">
-        <a href="/" class="block py-2 hover:bg-primary-light/20 rounded">Inicio</a>
-        <a href="/reports" class="block py-2 hover:bg-primary-light/20 rounded">Reportes</a>
-        <a href="/stats" class="block py-2 hover:bg-primary-light/20 rounded">Estadísticas</a>
+        <a href="/inicio.html" class="block py-2 hover:bg-primary-light/20 rounded">Inicio</a>
+        <a href="/reportes.html" class="block py-2 hover:bg-primary-light/20 rounded">Reportes</a>
+        <a href="/estadisticas.html" class="block py-2 hover:bg-primary-light/20 rounded">Estadísticas</a>
       </div>
     </nav>
 
@@ -91,6 +91,8 @@
 
   <script type="module">
     import inicioController from '../../controller/InicioController.js';
+    import { showToast } from '../utils/feedback.js';
+    const hoy = new Date();
    
     // Botones filtro
     const btnClasses = 'px-6 py-2 rounded-lg border transition font-medium';
@@ -138,8 +140,8 @@
         grid.innerHTML = `
       <div class="col-span-full flex justify-center items-center py-10 ">
         <div class="bg-primary-light shadow-md rounded-2xl px-8 py-6 max-w-md text-center border border-gray-200">
-          <h2 class="text-lg font-semibold text-white mb-2">Sin estudios disponibles</h2>
-          <p class="text-white">Actualmente no hay estudios registrados para mostrar.</p>
+          <h2 class="text-lg font-semibold text-white mb-2">No hay estudios para mostrar</h2>
+         
         </div>
       </div>
     `;
@@ -148,6 +150,8 @@
 
       // Si hay estudios, los renderiza normalmente
       list.forEach(e => {
+
+
         const activo = estaActivo(e.fecha_inicio, e.fecha_fin);
         const card = document.createElement('div');
         card.className = activo
@@ -162,11 +166,12 @@
       </div>
     `;
         if (activo) card.onclick = () => {
-
+         
+          
           const identificador = localStorage.getItem('identificador');
           localStorage.setItem('id_estudio', e.id_estudio);
 
-          
+
           window.location.href = `timeline.html`
         };
         grid.appendChild(card);
@@ -190,7 +195,10 @@
     });
     // Render inicial con DB
     getEstudiosFromDB().then(data => {
+
       estudios = data;
+
+      localStorage.setItem('estudios', JSON.stringify(estudios));
       renderEstudios(estudios);
     });
   </script>

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "live-server --port=8080 --entry-file=index.html"
+    "start": "live-server --port=3001 --entry-file=index.html"
   },
   "devDependencies": {
     "live-server": "^1.2.2",

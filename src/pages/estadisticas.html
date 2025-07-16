@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Estudios</title>
+    <link href="../output.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+</head>
+
+<body class="bg-gradient-to-r from-blue-50 to-indigo-50 min-h-screen flex flex-col">
+    <div class="flex-grow">
+
+        <!-- Header con menú móvil -->
+        <header class="bg-primary-light text-white flex items-center justify-between px-6 py-4 rounded-b-lg shadow-md">
+            <div class="flex items-center space-x-4">
+                <img src="../assets/svg/icono.svg" alt="Icono Labofam" class="h-10 w-auto filter invert" />
+                <img src="../assets/svg/logo.svg" alt="Labofam" class="h-6 w-auto filter invert" />
+            </div>
+            <div class="flex items-center space-x-4">
+                <!-- Botón hamburguesa visible en móvil -->
+                <button id="nav-toggle" class="md:hidden focus:outline-none">
+                    <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <!-- Navegación de escritorio -->
+                <nav class="hidden md:flex space-x-6">
+                    <a href="/src/pages/inicio.html" class="hover:bg-white/20 px-4 py-2 rounded">Inicio</a>
+                    <a href="/reportes.html" class="hover:bg-white/20 px-4 py-2 rounded">Reportes</a>
+                    <a href="/estadisticas.html" class="hover:bg-white/20 px-4 py-2 rounded">Estadísticas</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Menú móvil desplegable -->
+        <nav id="mobile-nav" class="bg-primary-light text-white hidden md:hidden">
+            <div class="flex flex-col px-6 py-4 space-y-2">
+                <a href="/inicio.html" class="block py-2 hover:bg-primary-light/20 rounded">Inicio</a>
+                <a href="/reportes.html" class="block py-2 hover:bg-primary-light/20 rounded">Reportes</a>
+                <a href="/estadisticas.html" class="block py-2 hover:bg-primary-light/20 rounded">Estadísticas</a>
+            </div>
+        </nav>
+        <div class="p-4  bg-white shadow z-10 sticky top-0 ">
+            <div class="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4">
+                <!-- Selector de estudio -->
+                <div class="flex items-center gap-2">
+                    <label for="estudioSeleccionado" class="font-semibold text-gray-700">Estudio:</label>
+                    <select id="estudioSeleccionado"
+                        class="border border-gray-300 rounded px-3 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                        <!-- Opciones se llenan con JS -->
+                    </select>
+                </div>
+
+                <!-- Fecha -->
+                <div class="flex items-center gap-2">
+                    <label for="fechaSeleccionada" class="font-semibold text-gray-700">Fecha:</label>
+                    <input type="date" id="fechaSeleccionada"
+                        class="border border-gray-300 rounded px-3 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+                </div>
+
+                <!-- Botón -->
+                <button id="filtrarBtn"
+                    class="bg-primary-light text-white px-4 py-1 rounded shadow hover:bg-primary-dark transition">
+                    Obtener datos
+                </button>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto max-h-[calc(100vh-100px)] p-2 space-y-4 ">
+
+            <!-- Carruseles -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div id="actividadPrincipal1" class="sm:col-span-2 lg:col-span-1"></div>
+                <div id="actividadPrincipal2" class="sm:col-span-2 lg:col-span-1"></div>
+                <div id="actividadPrincipal3" class="sm:col-span-2 lg:col-span-1"></div>
+            </div>
+
+
+            <div class="grid grid-cols-1 gap-4">
+
+                <div class="bg-white p-4 rounded-xl shadow-md flex flex-col ">
+                    <div class="flex items-center space-x-2">
+                        <div class="overflow-hidden flex-1 relative h-60">
+                            <canvas id="satisfaccionChart" class="absolute inset-0 w-full h-full"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-xl shadow-md h-48 flex flex-col">
+                    <h2 class="text-base font-semibold mb-2">Satisfacción diaria</h2>
+                    <div class="flex-grow relative">
+                        <canvas id="satisfaccionChart1" class="absolute inset-0 w-full h-full"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-md h-48 flex flex-col">
+                    <h2 class="text-base font-semibold mb-2">Satisfacción diaria</h2>
+                    <div class="flex-grow relative">
+                        <canvas id="satisfaccionChart2" class="absolute inset-0 w-full h-full"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-md h-48 flex flex-col">
+                    <h2 class="text-base font-semibold mb-2">Satisfacción diaria</h2>
+                    <div class="flex-grow relative">
+                        <canvas id="satisfaccionChart2" class="absolute inset-0 w-full h-full"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-primary-light text-white py-2">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col items-center">
+            <!-- Redes sociales centradas -->
+            <div class="flex space-x-6 mb-4">
+                <!-- Facebook -->
+                <a href="https://facebook.com/labofamchile" aria-label="Facebook" class="hover:text-primary-dark">
+                    <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path
+                            d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.99H7.898v-2.888h2.54V9.845c0-2.507 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.242 0-1.63.771-1.63 1.562v1.875h2.773l-.443 2.888h-2.33v6.99C18.343 21.128 22 16.991 22 12z" />
+                    </svg>
+                </a>
+                <!-- Twitter -->
+                <a href="https://twitter.com/labofamchile" aria-label="Twitter" class="hover:text-primary-dark">
+                    <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path
+                            d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
+                    </svg>
+                </a>
+                <!-- Instagram -->
+                <a href="https://instagram.com/labofamchile" aria-label="Instagram" class="hover:text-primary-dark">
+                    <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path
+                            d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 1.5A4.25 4.25 0 003.5 7.75v8.5A4.25 4.25 0 007.75 20.5h8.5a4.25 4.25 0 004.25-4.25v-8.5A4.25 4.25 0 0016.25 3.5h-8.5zm8.75 1a.75.75 0 110 1.5.75.75 0 010-1.5zM12 7a5 5 0 110 10 5 5 0 010-10zm0 1.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7z" />
+                    </svg>
+                </a>
+            </div>
+            <!-- Texto copyright abajo -->
+            <p class="text-base">© 2025 Labofam. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { showToast } from '../utils/feedback.js';
+        let estudios = JSON.parse(localStorage.getItem('estudios')) || [];
+        document.getElementById('nav-toggle').addEventListener('click', () => {
+            document.getElementById('mobile-nav').classList.toggle('hidden');
+        });
+        const fechaInput = document.getElementById("fechaSeleccionada");
+        const hoy = new Date();
+        var diasValidos = []
+        fechaInput.max = hoy.toISOString().split("T")[0];
+        // Poblar selector de estudios
+        var estudioSelect = document.getElementById('estudioSeleccionado');
+        estudios.forEach(est => {
+            const option = document.createElement('option');
+            option.value = JSON.stringify(est);
+            option.textContent = est.nombre;
+            estudioSelect.appendChild(option);
+        });
+        fechaInput.addEventListener("input", () => {
+
+            const fecha = new Date(fechaInput.value + "T00:00:00");
+
+            const diaSemana = fecha.getDay();
+
+            estudioSelect = document.getElementById('estudioSeleccionado');
+
+
+            diasValidos = JSON.parse(estudioSelect.value).dias_semana
+            
+            if (!diasValidos.includes(diaSemana)) {
+                /* alert("Este día no está permitido. Por favor elige otro."); */
+                showToast('error', 'Este no era un día válido para responder este estudio', 'top-center', 4000);
+                fechaInput.value = ""; // Borrar selección inválida
+            }
+        });
+
+        // Manejar botón
+        document.getElementById('filtrarBtn').addEventListener('click', () => {
+            const idEstudio = estudioSelect.value;
+            const fecha = document.getElementById('fechaSeleccionada').value;
+
+            if (!idEstudio || !fecha) {
+                showToast('error', 'Por favor, selecciona un estudio y una fecha.', 'top-center', 2000);
+                return;
+            }
+
+            // Lógica para obtener datos según estudio y fecha
+            console.log(`Estudio: ${idEstudio}, Fecha: ${fecha}`);
+
+            // Aquí podés llamar funciones que actualicen gráficos, tablas, etc.
+            // ejemplo:
+            // cargarEstadisticas(idEstudio, fecha);
+        });
+        function crearCarruselActividades(containerId, actividades, titulo = "Actividad principal") {
+            const container = document.getElementById(containerId);
+
+            container.innerHTML = `
+    <div class="bg-white p-4 rounded-xl shadow-md flex flex-col overflow-hidden relative">
+  <h2 class="text-base font-semibold mb-4 text-center">${titulo}</h2>
+
+  <div class="relative w-full">
+    <!-- Botón izquierdo -->
+    <button class="prevBtn absolute left-0 top-1/2 -translate-y-1/2 z-10 text-gray-400 hover:text-gray-600 px-2">
+      &lt;
+    </button>
+
+    <!-- Carrusel centrado -->
+    <div class="mx-10 overflow-hidden  ">
+      <div class="chartCarousel flex space-x-6 transition-all duration-300 overflow-hidden scrollbar-hide justify-center">
+
+        <!-- tus gráficos van aquí -->
+      </div>
+    </div>
+
+    <!-- Botón derecho -->
+    <button class="nextBtn absolute right-0 top-1/2 -translate-y-1/2 z-10 text-gray-400 hover:text-gray-600 px-2">
+      &gt;
+    </button>
+  </div>
+</div>
+
+  `;
+
+            const carousel = container.querySelector('.chartCarousel');
+
+            actividades.forEach(({ id, horas, label, color, bg }) => {
+                const chartDiv = document.createElement('div');
+                chartDiv.className = 'flex flex-col items-center w-24 shrink-0 ';
+                chartDiv.innerHTML = `
+      <div class="relative w-20 h-20 ">
+        <canvas id="${id}"></canvas>
+        <div class="absolute inset-0 flex items-center justify-center text-sm font-semibold text-gray-700">
+          ${horas} hrs
+        </div>
+      </div>
+      <p class="text-sm mt-1 text-center">${label}</p>
+    `;
+                carousel.appendChild(chartDiv);
+
+                new Chart(document.getElementById(id), {
+                    type: 'doughnut',
+                    data: {
+                        datasets: [{
+                            data: [horas, 24 - horas],
+                            backgroundColor: [color, bg],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        cutout: '70%',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: false }
+                        }
+                    }
+                });
+            });
+
+            // Scroll funcional por botones
+            const scrollStep = 110;
+            const prevBtn = container.querySelector('.prevBtn');
+            const nextBtn = container.querySelector('.nextBtn');
+            prevBtn.onclick = () => carousel.scrollBy({ left: -scrollStep, behavior: 'smooth' });
+            nextBtn.onclick = () => carousel.scrollBy({ left: scrollStep, behavior: 'smooth' });
+        }
+
+        // Datos
+        const actividadesA = [
+            { id: 'a1', horas: 8, label: 'Trabajo', color: '#ef4444', bg: '#fee2e2' },
+            { id: 'a2', horas: 2, label: 'Viaje', color: '#8b5cf6', bg: '#ede9fe' },
+            { id: 'a3', horas: 5, label: 'Ocio', color: '#10b981', bg: '#d1fae5' },
+            { id: 'a4', horas: 8, label: 'Trabajo', color: '#ef4444', bg: '#fee2e2' },
+            { id: 'a5', horas: 2, label: 'Viaje', color: '#8b5cf6', bg: '#ede9fe' },
+            { id: 'a6', horas: 5, label: 'Ocio', color: '#10b981', bg: '#d1fae5' },
+
+        ];
+
+        const actividadesB = [
+            { id: 'b1', horas: 3, label: 'Otros', color: '#f59e0b', bg: '#fef3c7' },
+            { id: 'b2', horas: 6, label: 'Deporte', color: '#3b82f6', bg: '#dbeafe' },
+            { id: 'b3', horas: 7, label: 'Descanso', color: '#e11d48', bg: '#ffe4e6' }, { id: 'b7', horas: 3, label: 'Otros', color: '#f59e0b', bg: '#fef3c7' },
+            { id: 'b4', horas: 6, label: 'Deporte', color: '#3b82f6', bg: '#dbeafe' },
+            { id: 'b5', horas: 7, label: 'Descanso', color: '#e11d48', bg: '#ffe4e6' }
+        ];
+        const actividadesC = [
+            { id: 'c1', horas: 3, label: 'Otros', color: '#f59e0b', bg: '#fef3c7' },
+            { id: 'c2', horas: 6, label: 'Deporte', color: '#3b82f6', bg: '#dbeafe' },
+            { id: 'c3', horas: 7, label: 'Descanso', color: '#e11d48', bg: '#ffe4e6' }, { id: 'c7', horas: 3, label: 'Otros', color: '#f59e0b', bg: '#fef3c7' },
+            { id: 'c4', horas: 6, label: 'Deporte', color: '#3b82f6', bg: '#dbeafe' },
+            { id: 'c5', horas: 7, label: 'Descanso', color: '#e11d48', bg: '#ffe4e6' }
+        ];
+
+        // Invocaciones
+        crearCarruselActividades('actividadPrincipal1', actividadesA);
+        crearCarruselActividades('actividadPrincipal2', actividadesB);
+        crearCarruselActividades('actividadPrincipal3', actividadesC);
+        const ctx = document.getElementById('satisfaccionChart').getContext('2d');
+
+
+        const fecha1 = new Date('2025-07-11T03:59');
+        const fecha2 = new Date('2025-07-12T04:01');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Satisfacción',
+                    data: [
+                        { x: fecha1, y: 6 },
+                        { x: fecha2, y: 7 },
+
+                    ],
+                    parsing: false, // importante para usar objetos {x, y}
+                    borderColor: '#8b5cf6',
+                    tension: 0.3,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'hour',
+                            displayFormats: {
+                                hour: 'HH:mm'
+                            },
+
+                        },
+                        min: fecha1,
+                        max: fecha2,
+                        title: { display: true, text: 'Hora' }
+                    },
+                    y: {
+                        title: { display: true, text: 'Satisfacción' }
+
+                    },
+
+                }
+            }
+        });
+
+    </script>
+</body>
+
+</html>
