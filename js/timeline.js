@@ -6,6 +6,7 @@ export class Timeline {
         this.mode = metadata?.mode || 'single-choice';
         this.minCoverage = metadata?.min_coverage || 0;
         this.categories = metadata?.categories || [];
+        this.porcentaje_completitud = metadata?.porcentaje_completitud ||0 
         this.activities = [];
     }
 

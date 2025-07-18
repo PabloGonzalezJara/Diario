@@ -9,7 +9,8 @@ export const TimelineApi = {
     api
       .get(`/dimensiones/getTimeline/${id_estudio}`)
       .then(res => (res.data).data),
-  saveTimelineData: (data) => api.post('/registros/saveTimelineData', JSON.stringify(data))
+  saveTimelineData: (data) => api.post('/registros/saveTimelineData', JSON.stringify(data)),
+  getTimelineRegistros: (payload) => api.get(`/registros/getTimelineRegistros/${payload.id_estudio}/${payload.id_ronda}/${payload.identificador}`).then(res => (res.data).data)
 }
 
 export default TimelineApi

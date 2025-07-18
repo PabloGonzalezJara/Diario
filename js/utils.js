@@ -1,6 +1,8 @@
 import { DEBUG_MODE, MINUTES_PER_DAY } from './constants.js';
 import { hideLoadingModal } from './ui.js';
 import TimelineApi from '../controller/TimelineController.js';
+import RondasApi from '../controller/rondasController.js';
+import {showToast} from '../src/utils/feedback.js';
 // Timeline state management functions
 export function getCurrentTimelineKey() {
     return window.timelineManager.keys[window.timelineManager.currentIndex];
@@ -371,26 +373,25 @@ export function canPlaceActivity(newStart, newEnd, excludeId = null) {
 
 
 export function currentcoverage() {
-    const currentKey = getCurrentTimelineKey();
+  
     const currentData = getCurrentTimelineData();
 
-    // Calculate total covered minutes
-    const coveredMinutes = currentData.reduce((total, activity) => {
-        const startMinutes = timeToMinutes(activity.startTime.split(' ')[1]);
-        const endMinutes = timeToMinutes(activity.endTime.split(' ')[1]);
-        return total + (endMinutes - startMinutes);
-    }, 0);
+    var coveredMinutes = 0;
+    for (var i = 0; i < currentData.length; i++) {
+        var activity = currentData[i];
+        const startMinutes = new Date(activity.startTime)
+        const endMinutes = new Date(activity.endTime)
 
-    // Get timeline metadata
-    const timeline = window.timelineManager.metadata[currentKey];
-    if (!timeline) {
-        console.error('Timeline metadata not found for key:', currentKey);
-        return false;
+        const diffMs = endMinutes - startMinutes;
+        const diffMins = Math.round(diffMs / 60000);
+       
+        coveredMinutes += diffMins;
     }
+  
+    return (coveredMinutes/MINUTES_PER_DAY)*100 
 
-    // Check if timeline is full based on coverage
-    const currentCoverage = (coveredMinutes / MINUTES_PER_DAY) * 100;
-    return currentCoverage;
+
+
 }
 
 export function calculateTimeDifference(startTime, endTime) {
@@ -524,23 +525,29 @@ export async function sendDataToDataPipe() {
         const session_id = hasPpid && (studyData.survey || studyData.SURVEY)
             ? (studyData.survey || studyData.SURVEY)
             : (studyData.SESSION_ID || null);
-
+        const ronda = localStorage.getItem('id_ronda')
         // Combine timeline and participant data
         const combinedData = timelineData.map(row => ({
             /* timelineKey: row.timelineKey,
             activity: row.activity,
             category: row.category, */
+            id_estudio: row.id_estudio || null,
+            identificador: identificador,
+            id_dimension: row.id_dimension,
+            id_categoria: row.id_categoria,
+            id_subcategoria: row.id_subcategoria,
+            id_actividad: row.id_actividad != null ? row.id_actividad : null,
+            id_ronda: ronda,
+            nombre_categoria: row.categoria,
+            nombre_dimension: row.dimension,
+            nombre_subcategoria: row.subcategoria,
+            nombre_actividad: row.nombre_actividad != null ? row.nombre_actividad : null,
+            valor_numerico: row.maneja_numeros ? parseInt(row.subcategoria.replace(/\D/g, '')) : null,
+            minutos: row.minutos,
+            
             otroValor: row.categoria.includes('Otra actividad') ? row.name : null,
             hora_inicio: row.startTime,
             hora_termino: row.endTime,
-            id_dimension: row.id_dimension,
-            id_categoria: row.id_categoria,
-            id_subcategoria: row.subcategoria != null ? row.id_subcategoria : null,
-            nombre_categoria: row.categoria,
-            nombre_dimension: row.dimension,
-            nombre_subcategoria: row.subcategoria != null ? row.subcategoria : null,
-            valor_numerico: row.maneja_numeros ? parseInt(row.name.replace(/\D/g, '')) : null,
-            minutos: row.minutos,
             /* startTime: row.startTime,
             endTime: row.endTime,
             pid: pid,
@@ -552,19 +559,32 @@ export async function sendDataToDataPipe() {
             browserVersion: browserInfo.version,
             instructions: studyData.instructions === 'completed',
             PROLIFIC_PID: studyData.PROLIFIC_PID || null, */
-            id_estudio: row.id_estudio || null,
-            identificador: identificador
+            
         }));
-        console.log(combinedData);
-        //const prueba = await TimelineApi.saveTimelineData(combinedData);
-        //window.location.href  = 'inicio.html';
+        
+        const res = await TimelineApi.saveTimelineData(combinedData);
+        console.log(res)
+        if(res.status == 201){
+            console.log(res);
+            const payload = {
+                id_ronda : ronda,
+                identificador : identificador,
+                fecha_finalizacion: new Date().toISOString()
+            }
+            const res2 = await RondasApi.finalizarRonda(payload);
+            window.location.href  = 'rondas.html';
+        }
+        hideLoadingModal();
+        // completar la ronda correspondiente en la base de datos
+
+        
 
         // Convert to CSV format
-        const csvData = convertArrayToCSV(combinedData);
+       /*  const csvData = convertArrayToCSV(combinedData);
 
         // Generate unique filename with timestamp
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const filename = `timeline_${pid}_${timestamp}.csv`;
+        const filename = `timeline_${pid}_${timestamp}.csv`; */
         //Accept: "*/*",
         // Send to DataPipe API
         /* const response = await fetch("https://pipe.jspsych.org/api/data/", {
@@ -587,7 +607,7 @@ export async function sendDataToDataPipe() {
         console.log('Data sent to DataPipe successfully'); */
 
         // Hide loading modal before redirect
-        hideLoadingModal();
+        
         /* 
                 // Handle redirect to thank you page
                 const redirectUrl = window.timelineManager?.general?.primary_redirect_url;
@@ -611,7 +631,7 @@ export async function sendDataToDataPipe() {
         return { success: true };
     } catch (error) {
         console.error('Error sending data to DataPipe:', error);
-
+        showToast('error', 'Error al enviar los datos, intenta en otro momento', 'top-center', 2000);
         // Hide loading modal on error
         hideLoadingModal();
 

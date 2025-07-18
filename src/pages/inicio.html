@@ -29,7 +29,7 @@
         <!-- Navegación de escritorio -->
         <nav class="hidden md:flex space-x-6">
           <a href="/src/pages/inicio.html" class="hover:bg-white/20 px-4 py-2 rounded">Inicio</a>
-          <a href="/reportes.html" class="hover:bg-white/20 px-4 py-2 rounded">Reportes</a>
+          <!-- <a href="/reportes.html" class="hover:bg-white/20 px-4 py-2 rounded">Reportes</a> -->
           <a href="/estadisticas.html" class="hover:bg-white/20 px-4 py-2 rounded">Estadísticas</a>
         </nav>
       </div>
@@ -39,17 +39,17 @@
     <nav id="mobile-nav" class="bg-primary-light text-white hidden md:hidden">
       <div class="flex flex-col px-6 py-4 space-y-2">
         <a href="/inicio.html" class="block py-2 hover:bg-primary-light/20 rounded">Inicio</a>
-        <a href="/reportes.html" class="block py-2 hover:bg-primary-light/20 rounded">Reportes</a>
+        <!-- <a href="/reportes.html" class="block py-2 hover:bg-primary-light/20 rounded">Reportes</a> -->
         <a href="/estadisticas.html" class="block py-2 hover:bg-primary-light/20 rounded">Estadísticas</a>
       </div>
     </nav>
 
-    <!-- Filtros -->
+   <!-- 
     <div id="filters" class="mt-6 mx-6 flex flex-wrap gap-4">
       <button data-filter="all" class="filter-btn active">Todos</button>
       <button data-filter="activos" class="filter-btn">Activos</button>
       <button data-filter="vencidos" class="filter-btn">Vencidos</button>
-    </div>
+    </div> -->
 
     <!-- Contenedor de estudios -->
     <main id="container" class="bg-white mt-4 mx-6 p-6 rounded-lg shadow-sm ">
@@ -86,6 +86,7 @@
       </div>
       <!-- Texto copyright abajo -->
       <p class="text-base">© 2025 Labofam. Todos los derechos reservados.</p>
+
     </div>
   </footer>
 
@@ -93,26 +94,26 @@
     import inicioController from '../../controller/InicioController.js';
     import { showToast } from '../utils/feedback.js';
     const hoy = new Date();
-   
+
     // Botones filtro
     const btnClasses = 'px-6 py-2 rounded-lg border transition font-medium';
     document.querySelectorAll('#filters button').forEach(btn => {
       btn.className = btnClasses + ' text border-primary-light hover:bg-primary-light hover:text-white';
     });
     // Activo inicial
-    const allBtn = document.querySelector('[data-filter="all"]');
+    /* const allBtn = document.querySelector('[data-filter="all"]');
     allBtn.classList.replace('text', 'text-white');
-    allBtn.classList.add('bg-primary-light', 'border-primary-light');
+    allBtn.classList.add('bg-primary-light', 'border-primary-light'); */
 
     let estudios = [];
     const formatFecha = fechaStr => new Date(fechaStr).toLocaleDateString('es-CL', { year: 'numeric', month: 'long', day: 'numeric' });
     const estaActivo = (ini, fin) => { const now = new Date(); return now >= new Date(ini) && now <= new Date(fin); };
     const estaVencido = fin => new Date() > new Date(fin);
-    const filtrarEstudios = (list, f) => {
+    /* const filtrarEstudios = (list, f) => {
       if (f === 'activos') return list.filter(e => estaActivo(e.fecha_inicio, e.fecha_fin));
       if (f === 'vencidos') return list.filter(e => estaVencido(e.fecha_fin));
       return list;
-    };
+    }; */
     async function getEstudiosFromDB() {
       try {
         const resp = await inicioController.getEstudiosForUser()
@@ -166,13 +167,13 @@
       </div>
     `;
         if (activo) card.onclick = () => {
-         
-          
+
+
           const identificador = localStorage.getItem('identificador');
           localStorage.setItem('id_estudio', e.id_estudio);
 
 
-          window.location.href = `timeline.html`
+          window.location.href = `rondas.html`
         };
         grid.appendChild(card);
       });
@@ -183,7 +184,7 @@
       document.getElementById('mobile-nav').classList.toggle('hidden');
     });
     // Filtros
-    document.querySelectorAll('#filters button').forEach(btn => {
+    /* document.querySelectorAll('#filters button').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('#filters button').forEach(b => {
           b.classList.remove('bg-primary-light', 'text-white', 'border-primary-light');
@@ -192,7 +193,7 @@
         btn.classList.add('bg-primary-light', 'text-white', 'border-primary-light');
         renderEstudios(filtrarEstudios(estudios, btn.dataset.filter));
       });
-    });
+    }); */
     // Render inicial con DB
     getEstudiosFromDB().then(data => {
 

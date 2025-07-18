@@ -1,4 +1,4 @@
-import api from './api.js'; // la instancia ya configurada
+import api from './api.js'; 
 
 
 export const InicioApi = {

@@ -5,6 +5,7 @@ import {
     formatTimeHHMM,
     timeToMinutes,
     generateUniqueId,
+    currentcoverage,
     createTimeLabel,
     updateTimeLabel,
     positionToMinutes
@@ -12,7 +13,7 @@ import {
 import { getIsMobile, updateIsMobile } from './globals.js';
 import { addNextTimeline, goToPreviousTimeline, renderActivities } from './script.js';
 import { DEBUG_MODE } from './constants.js';
-
+import {showToast} from '../src/utils/feedback.js';
 // Modal management
 function createModal() {
     
@@ -306,10 +307,31 @@ const handleNextButtonAction = () => {
         return;
     }
     nextButtonLastClick = currentTime;
-
+   
     const isLastTimeline = window.timelineManager.currentIndex === window.timelineManager.keys.length - 1;
+    window.timelineManager.currentIndex;
+    console.log(getCurrentTimelineKey());
+    console.log(window.timelineManager.metadata[getCurrentTimelineKey()].porcentaje_completitud )
+    const timelineCoveragePercent = window.timelineManager.metadata[getCurrentTimelineKey()].porcentaje_completitud;
+    const actualcoverage = currentcoverage();
+     if (isLastTimeline) {
+        // On last timeline, show confirmation modal
+        document.getElementById('confirmationModal').style.display = 'block';
+        return;
+
+    } 
     
-    if (isLastTimeline) {
+    if(actualcoverage >= timelineCoveragePercent || timelineCoveragePercent == 0){
+        addNextTimeline();
+        window.selectedActivity = null;
+    }else{
+
+        showToast("warning",`Porcentaje de completitud no alcanzado, ${actualcoverage.toFixed()}/${timelineCoveragePercent}`, "top-center", 2500);
+       /*  toast('warning', window.i18n ? window.i18n.t('toast.warning') : 'Porcentaje de completitud no alcanzado'); */
+    }
+    
+
+   /*  if (isLastTimeline) {
         // On last timeline, show confirmation modal
         document.getElementById('confirmationModal').style.display = 'block';
     } else {
@@ -317,7 +339,7 @@ const handleNextButtonAction = () => {
         addNextTimeline();
         
         window.selectedActivity = null;
-    }
+    } */
 };
 
 // Shared function to handle Back button logic with debounce

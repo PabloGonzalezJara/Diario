@@ -34,9 +34,9 @@ body {
 
 .header-section {
     position: sticky;
-    top: 0;
+    
     background: white;
-    z-index: 1000;
+    
     padding: clamp(8px, 2vw, 16px) clamp(6px, 2vw, 12px);
     width: 100%;
     box-sizing: border-box;

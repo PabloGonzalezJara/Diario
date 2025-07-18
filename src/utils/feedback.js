@@ -23,7 +23,7 @@ function injectToastContainer(position) {
 
     const div = document.createElement('div');
     div.id = id;
-    div.className = `fixed z-50 space-y-4 ${positions[position]} transform`;
+    div.className = `fixed z-50 space-y-4 ${positions[position]} transform `;
     document.body.appendChild(div);
 }
 

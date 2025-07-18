@@ -575,6 +575,7 @@ async function fetchActivities(key) {
 
         // Validate min_coverage
         if (response.timeline[key]) {
+            console.log(response.timeline[key])
             try {
                 validateMinCoverage(response.timeline[key].min_coverage);
             } catch (error) {
@@ -594,6 +595,7 @@ async function fetchActivities(key) {
         if (!timeline || !timeline.categories) {
             throw new Error(`Invalid timeline data for key: ${key}`);
         }
+        
 
         // Mark timeline as initialized
         window.timelineManager.initialized.add(key);
@@ -691,30 +693,33 @@ function renderChildItems(activity, category) {
             const button = document.createElement('button');
             button.className = 'child-item-button';
             button.textContent = childItem.name;
-            button.style.setProperty('--color', childItem.color || activity.color);
+            button.style.setProperty('--color', childItem.color );
             ///SE AGREGA LAS SUBCATEGORIAS
             button.addEventListener('click', () => {
                 // Use parent activity properties but with child item name
 
-
+                
                 window.selectedActivity = {
 
 
                     subcategoria: activity.name,
                     categoria: category.name,
                     id_categoria: category.id_categoria,
+                    dimension: category.nombre_dimension,
                     id_subcategoria: activity.id_subcategoria,
                     id_dimension: category.id_dimension,
                     id_actividad: childItem.id_actividad,
+                    maneja_numeros: category.maneja_numeros,
                     nombre_actividad: childItem.name,
                     id_estudio: category.id_estudio,
                     category: category.name,
                     name: childItem.name,
                     parentName: activity.name,
-                    color: childItem.color || activity.color,
+                    color: childItem.color,
 
                     selected: childItem.name  // Store the selected child item
-                };
+                };  
+                console.log("window.selectedActivity:", window.selectedActivity);
 
                 // Close the modal
                 modal.style.display = 'none';
@@ -839,11 +844,13 @@ function renderActivities(categories, container = document.getElementById('activ
                                     window.selectedActivity = {
                                         subcategoria: activity.name,
                                         categoria: category.name,
+                                        dimension: category.nombre_dimension,
                                         id_categoria: category.id_categoria,
+                                        maneja_numeros: category.maneja_numeros,
+                                        maneja_numeros: category.maneja_numeros,
                                         id_subcategoria: activity.id_subcategoria,
                                         id_dimension: category.id_dimension,
-                                        id_actividad: childItem.id_actividad,
-                                        nombre_actividad: childItem.name,
+                                        
                                         id_estudio: category.id_estudio,
                                         name: customText,
                                         color: activityButton.style.getPropertyValue('--color'),
@@ -903,6 +910,8 @@ function renderActivities(categories, container = document.getElementById('activ
                                 })),
                                 subcategoria: activity.name,
                                 categoria: category.name,
+                                dimension: category.nombre_dimension,
+                                maneja_numeros: category.maneja_numeros,
                                 id_categoria: category.id_categoria,
                                 id_subcategoria: activity.id_subcategoria,
                                 id_dimension: category.id_dimension,
@@ -932,13 +941,14 @@ function renderActivities(categories, container = document.getElementById('activ
                             subcategoria: activity.name,
                             categoria: category.name,
                             id_categoria: category.id_categoria,
+                            maneja_numeros: category.maneja_numeros,
                             id_subcategoria: activity.id_subcategoria,
                             id_dimension: category.id_dimension,
-                            
+                            dimension: category.nombre_dimension,
                             id_estudio: category.id_estudio,
                             name: category.name,
-                            color: category.color,
-                            category: category.name
+                            color: activity.color,
+                            category: activity.name
                         };
                         console.log('[ACTIVITY] Selected activity 1:', window.selectedActivity);
                         activityButton.classList.add('selected');
@@ -1086,11 +1096,13 @@ function renderActivities(categories, container = document.getElementById('activ
                                     window.selectedActivity = {
                                         subcategoria: activity.name,
                                         categoria: category.name,
+                                        dimension: category.nombre_dimension,
+                                        maneja_numeros: category.maneja_numeros,
+                                        
                                         id_categoria: category.id_categoria,
                                         id_subcategoria: activity.id_subcategoria,
                                         id_dimension: category.id_dimension,
-                                        id_actividad: childItem.id_actividad,
-                                        nombre_actividad: childItem.name,
+                                       
                                         id_estudio: category.id_estudio,
                                         name: customText,
                                         color: activity.color,
@@ -1164,18 +1176,19 @@ function renderActivities(categories, container = document.getElementById('activ
                         categoryButtons.forEach(b => b.classList.remove('selected'));
                         console.log("categoria:", category);
                         console.log("actividad:", activity);
-                        console.log()
+                       
                         window.selectedActivity = {
                             subcategoria: activity.name,
                             categoria: category.name,
                             id_categoria: category.id_categoria,
+                            maneja_numeros: category.maneja_numeros,
                             id_subcategoria: activity.id_subcategoria,
                             id_dimension: category.id_dimension,
-                            
+                            dimension: category.nombre_dimension,
                             id_estudio: category.id_estudio,
-                            name: category.name,
-                            color: category.color,
-                            category: category.name
+                            name: activity.name,
+                            color: activity.color,
+                            category: activity.name
                         };
                         console.log('[ACTIVITY] Selected activity 2:', window.selectedActivity);
                         activityButton.classList.add('selected');
