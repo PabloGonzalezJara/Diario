@@ -86,8 +86,9 @@
 
     <script type="module">
         import AuthController from '../../controller/AuthController.js';
+        import { showToast } from '../utils/feedback.js';
         const token = localStorage.getItem('token')
-        if(token) window.location.href = '/src/pages/inicio.html'
+        if (token) window.location.href = '/src/pages/inicio.html'
 
         document.getElementById('login-form').addEventListener('submit', async function (e) {
             e.preventDefault();
@@ -97,8 +98,18 @@
             const identificador = document.getElementById('rut').value;
             const contrasena = document.getElementById('password').value;
             const rutPattern = /^[0-9]+\.?[0-9]*-[0-9kK]$/;
+            const passwordPattern = /^.{8,20}$/;
+
             if (!rutPattern.test(identificador)) {
-                alert('Ingrese un R.U.T. válido.');
+
+                showToast('error', 'Ingrese un R.U.T. válido.', 'top-center', 2000);
+                btn.disabled = false;
+                btn.textContent = 'Ingresar';
+                return;
+            }
+            if (!passwordPattern.test(contrasena)) {
+                /* showToast('error', 'La contraseña debe tener al menos 8 caracteres, incluir una mayúscula, una minúscula y un número.', 'top-center', 3000); */
+                showToast('error', 'La contraseña debe tener al menos 8 caracteres.', 'top-center', 2000);
                 btn.disabled = false;
                 btn.textContent = 'Ingresar';
                 return;
@@ -109,19 +120,20 @@
                 localStorage.setItem('token', response.token);
                 localStorage.setItem('identificador', identificador);
                 localStorage.setItem('refreshToken', response.refreshToken);
-               
+
                 window.location.href = '/src/pages/inicio.html';
             } catch (error) {
-                alert(error.message);
+                showToast('error', 'Credenciales incorrectas.', 'top-center', 2000);
+                console.error(error);
                 btn.disabled = false;
                 btn.textContent = 'Ingresar';
             }
 
-           
+
 
         });
 
-        
+
     </script>
 </body>
 

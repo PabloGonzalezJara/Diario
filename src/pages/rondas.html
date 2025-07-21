@@ -90,19 +90,28 @@
         import rondasController from '../../controller/rondasController.js';
         import inicioController from '../../controller/InicioController.js';
         import { showToast } from '../utils/feedback.js';
+        document.getElementById('nav-toggle').addEventListener('click', () => {
+            document.getElementById('mobile-nav').classList.toggle('hidden');
+        });
         function obtenerNumeroSemana(fecha) {
+            // Crear una copia de la fecha, en formato UTC sin la hora
             const fechaCopia = new Date(Date.UTC(fecha.getFullYear(), fecha.getMonth(), fecha.getDate()));
 
-            // Ajustar al jueves de la semana actual
-            const dia = fechaCopia.getUTCDay() || 7; // Lunes = 1, ..., Domingo = 7
+            // Ajustar al jueves de la semana actual (ISO 8601 dice que la semana 1 es la que contiene el jueves)
+            const dia = fechaCopia.getUTCDay() || 7; // Domingo = 0, así que lo cambiamos a 7
             fechaCopia.setUTCDate(fechaCopia.getUTCDate() + 4 - dia);
 
+            // Obtener el primer día del año en UTC
             const primerDiaAno = new Date(Date.UTC(fechaCopia.getUTCFullYear(), 0, 1));
+
+            // Calcular la diferencia de días
             const diferencia = fechaCopia - primerDiaAno;
             const dias = Math.floor(diferencia / (24 * 60 * 60 * 1000));
 
+            // Dividir los días entre 7 y redondear hacia arriba para obtener el número de semana
             return Math.ceil((dias + 1) / 7);
         }
+
         function esDiaValido(diasSemanaStr) {
             const hoy = new Date();
             const diaActual = hoy.getDay(); // 0 = domingo, 6 = sábado
@@ -141,10 +150,13 @@
 
                 // Ordenar para que primero vaya la de semana, luego fin de semana
                 rondasSemana.sort((a, b) => a.numero_ronda - b.numero_ronda);
+                const hoy = new Date();
+                const semanaActual = obtenerNumeroSemana(hoy);
 
                 rondasSemana.forEach(ronda => {
-                    const semanaActual = obtenerNumeroSemana(new Date());
+
                     const esSemanaActual = parseInt(ronda.semana) === semanaActual;
+
 
                     const esHoyValido = esSemanaActual && ronda.dias_semana
                         .split(',')
@@ -152,6 +164,7 @@
                         .includes(diaActual);
 
                     const esSemanaPasada = parseInt(ronda.semana) < semanaActual;
+
 
                     const activo = !ronda.finalizada && !esSemanaPasada && esHoyValido;
 
@@ -172,11 +185,13 @@
                 <div class="flex justify-between items-center">
                     <h2 class="text-xl font-semibold text-gray-900">Ronda ${ronda.numero_ronda} - ${tipoRonda}</h2>
                     ${ronda.finalizada
-                            ? (esSemanaPasada
+                            ? `<span class="text-green-600 text-xl" title="Ronda finalizada">✔️</span>`
+                            : (esSemanaPasada
                                 ? `<span class="text-red-500 text-xl" title="Ronda finalizada y fuera de fecha">❌</span>`
-                                : `<span class="text-green-600 text-xl" title="Ronda finalizada">✔️</span>`)
-                            : ''
+                                : ''
+                            )
                         }
+
                 </div>
                 
                 <p class="mt-4 text-sm text-gray-500">
@@ -217,8 +232,7 @@
             }
         }
 
-        const hoy = new Date();
-        const semana = obtenerNumeroSemana(hoy);
+
         let rondasActuales = [];
 
         getRondasFromDB().then(rondas => {

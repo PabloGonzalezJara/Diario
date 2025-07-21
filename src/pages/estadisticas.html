@@ -283,7 +283,7 @@
 
 
                 principal = resp["Principal"];
-                console.log(principal)
+                
                 conquien = resp["¿Con quién?"];
                 donde = resp["¿Dónde?"];
                 satifaccion = resp["Satisfacción"];
@@ -299,9 +299,9 @@
                 crearCarruselActividades('actividadPrincipal2', conquien, "¿Con quién?");
                 crearCarruselActividades('actividadPrincipal3', donde, "¿Dónde?");
                 crearGraficoSatisfaccion('satisfaccionChart', satifaccion);
-                crearPolarChartActividades('actividadPrincipalSatifaccion1', agruparActividades(principal), "Satifacción Actividad principal");
-                crearPolarChartActividades('actividadPrincipalSatifaccion2', agruparActividades(conquien), "Satifacción Relaciones");
-                crearPolarChartActividades('actividadPrincipalSatifaccion3', agruparActividades(donde), "Satifacción Lugares");
+                crearPolarChartActividades('actividadPrincipalSatifaccion1', agruparActividades(principal), "Satisfacción Actividad principal");
+                crearPolarChartActividades('actividadPrincipalSatifaccion2', agruparActividades(conquien), "Satisfacción Relaciones");
+                crearPolarChartActividades('actividadPrincipalSatifaccion3', agruparActividades(donde), "Satisfacción Lugares");
 
 
 
@@ -493,8 +493,7 @@
             actividades.forEach(act => {
                 const actInicio = new Date(act.hora_inicio).getTime();
                 const actFin = new Date(act.hora_termino).getTime();
-                console.log(act.hora_inicio, act.hora_termino);
-
+                
                 satisfacciones.forEach(sat => {
                     const satInicio = new Date(sat.hora_inicio).getTime();
                     const satFin = new Date(sat.hora_termino).getTime();
