@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado de Estudios</title>
+    <title>Estadísticas</title>
     <link href="../output.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -42,7 +42,7 @@
         <nav id="mobile-nav" class="bg-primary-light text-white hidden md:hidden">
             <div class="flex flex-col px-6 py-4 space-y-2">
                 <a href="/inicio.html" class="block py-2 hover:bg-primary-light/20 rounded">Inicio</a>
-               <!--  <a href="/reportes.html" class="block py-2 hover:bg-primary-light/20 rounded">Reportes</a> -->
+                <!--  <a href="/reportes.html" class="block py-2 hover:bg-primary-light/20 rounded">Reportes</a> -->
                 <a href="/estadisticas.html" class="block py-2 hover:bg-primary-light/20 rounded">Estadísticas</a>
             </div>
         </nav>
@@ -70,7 +70,14 @@
                     class="bg-primary-light text-white px-4 py-1 rounded shadow hover:bg-primary-dark transition">
                     Obtener datos
                 </button>
+
             </div>
+            <div class="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4">
+                <div id="fechas" class="flex items-center ">
+
+                </div>
+            </div>
+
         </div>
 
         <div class="flex-1 overflow-y-auto max-h-[calc(100vh-100px)] p-2 space-y-4 ">
@@ -209,9 +216,10 @@
 
             rondasActuales.forEach(ronda => {
                 if (ronda.finalizada) {
+                    console.log(ronda)
                     const option = document.createElement('option');
                     option.value = JSON.stringify(ronda);
-                    option.textContent = `Semana ${ronda.semana} - Ronda ${ronda.numero_ronda}`;
+                    option.textContent = `Ronda ${ronda.numero_ronda} - ${ronda.anio} - ${!ronda.dias_semana.includes(6 || 7) ? 'Semana' : 'Finde de semana'}`;
                     rondaSelect.appendChild(option);
                     hayRondasFinalizadas = true;
                 }
@@ -245,6 +253,7 @@
         var principal = {}
         var conquien = {}
         var donde = {}
+
         document.getElementById('filtrarBtn').addEventListener('click', async () => {
             const btn = document.getElementById('filtrarBtn');
             try {
@@ -271,6 +280,8 @@
                     id_ronda: ronda.id_ronda
                 };
                 const resp = await TimelineApi.getTimelineRegistros(payload);
+                const fechas = document.getElementById('fechas');
+
                 //resetear gráficos
                 document.getElementById('actividadPrincipal1').innerHTML = '';
                 document.getElementById('actividadPrincipal2').innerHTML = '';
@@ -280,30 +291,13 @@
                 document.getElementById('actividadPrincipalSatifaccion2').innerHTML = '';
                 document.getElementById('actividadPrincipalSatifaccion3').innerHTML = '';
 
-
-
-                principal = resp["Principal"];
-                
-                conquien = resp["¿Con quién?"];
-                donde = resp["¿Dónde?"];
-                satifaccion = resp["Satisfacción"];
-                var principal = dividirActividadEnTramos(principal, satifaccion);
-                var conquien = dividirActividadEnTramos(conquien, satifaccion);
-                var donde = dividirActividadEnTramos(donde, satifaccion);
-
-
-
-
-
-                crearCarruselActividades('actividadPrincipal1', principal, "Actividad principal");
-                crearCarruselActividades('actividadPrincipal2', conquien, "¿Con quién?");
-                crearCarruselActividades('actividadPrincipal3', donde, "¿Dónde?");
-                crearGraficoSatisfaccion('satisfaccionChart', satifaccion);
-                crearPolarChartActividades('actividadPrincipalSatifaccion1', agruparActividades(principal), "Satisfacción Actividad principal");
-                crearPolarChartActividades('actividadPrincipalSatifaccion2', agruparActividades(conquien), "Satisfacción Relaciones");
-                crearPolarChartActividades('actividadPrincipalSatifaccion3', agruparActividades(donde), "Satisfacción Lugares");
-
-
+                crearCarruselActividades('actividadPrincipal1', agruparPorDimension(resp, "Principal", "minutos"), "Actividad principal");
+                crearCarruselActividades('actividadPrincipal2', agruparPorDimension(resp, "compañia", "minutos"), "¿Con quién?");
+                crearCarruselActividades('actividadPrincipal3', agruparPorDimension(resp, "ubicación", "minutos"), "¿Dónde?");
+                crearGraficoSatisfaccion('satisfaccionChart', resp);
+                crearPolarChartActividades('actividadPrincipalSatifaccion1', agruparPorDimension(resp, "Principal", "satisfaccion"), "Satisfacción actividad principal");
+                crearPolarChartActividades('actividadPrincipalSatifaccion2', agruparPorDimension(resp, "compañia", "satisfaccion"), "Satisfacción relaciones");
+                crearPolarChartActividades('actividadPrincipalSatifaccion3', agruparPorDimension(resp, "ubicación", "satisfaccion"), "Satisfacción lugares");
 
 
             } catch (e) {
@@ -314,40 +308,52 @@
                 btn.textContent = 'Obtener datos';
             }
         });
-        function agruparActividades(actividades, ordenarPor = 'satisfaccion') {
+        /* // Función para generar colores HSL únicos
+        function generarColor(index) {
+            const hue = (index * 137.508) % 360; // valor mágico para mejor dispersión
+            return `hsl(${hue}, 70%, 60%)`;
+        } */
+
+        function agruparPorDimension(actividades, dimension, ordenarPor = 'satisfaccion') {
             const agrupados = new Map();
 
-            // Función para generar colores HSL únicos
-            function generarColor(index) {
-                const hue = (index * 137.508) % 360; // valor mágico para mejor dispersión
-                return `hsl(${hue}, 70%, 60%)`;
-            }
-
-            let indexColor = 0;
-
             actividades.forEach(item => {
-                const clave = item.nombre_actividad
-                    || item.nombre_subcategoria
-                    || item.nombre_categoria
-                    || item.nombre_dimension
-                    || item.otroValor
-                    || "(sin nombre)";
+                let clave;
+
+                if (item.nombre_dimension === "Principal" && dimension === "Principal") {
+                    // Para la dimensión Principal, usar jerarquía de claves
+                    clave = item.nombre_actividad
+                        || item.nombre_subcategoria
+                        || item.nombre_categoria
+                        || item.otroValor
+                        || "(sin nombre)";
+                } else if (dimension !== "Principal") {
+                    // Para otras dimensiones, tomar el valor directamente del campo
+                    clave = item[dimension] ?? "(sin valor)";
+                } else {
+                    // Si no corresponde a esta dimensión, saltar
+                    return;
+                }
 
                 if (!agrupados.has(clave)) {
                     agrupados.set(clave, {
                         nombre: clave,
                         clave: clave,
+                        dimension,
                         minutos: 0,
                         sumaPonderada: 0,
                         registros: [],
-                        color: generarColor(indexColor)
+                        color: item.color ?? "#cccccc"
                     });
-                    indexColor++;
                 }
 
                 const grupo = agrupados.get(clave);
                 grupo.minutos += item.minutos;
-                grupo.sumaPonderada += item.valor_satisfaccion * item.minutos;
+
+                // Usar valor_numerico si existe, sino 0
+                const valor = Number(item.satisfacción ?? 0);
+                grupo.sumaPonderada += valor * item.minutos;
+
                 grupo.registros.push(item);
             });
 
@@ -361,16 +367,16 @@
                 };
             });
 
+            // Ordenar resultado
+            console.log(resultado)
             if (ordenarPor === 'minutos') {
                 return resultado.sort((a, b) => b.minutos - a.minutos);
             } else {
                 return resultado.sort((a, b) => b.satisfaccion_promedio - a.satisfaccion_promedio);
             }
         }
-        function generarColor(index) {
-            const hue = (index * 137.508) % 360; // evita colisiones visuales
-            return `hsl(${hue}, 70%, 60%)`;
-        }
+
+
 
 
         function formatearAHoras(mins) {
@@ -380,9 +386,9 @@
         }
 
 
-        function crearCarruselActividades(containerId, actividades, titulo = "Actividad principal") {
+        function crearCarruselActividades(containerId, actividadesAgrupadas, titulo = "Actividad principal") {
             const container = document.getElementById(containerId);
-            const actividadesAgrupadas = agruparActividades(actividades, "minutos");
+
 
 
 
@@ -493,7 +499,7 @@
             actividades.forEach(act => {
                 const actInicio = new Date(act.hora_inicio).getTime();
                 const actFin = new Date(act.hora_termino).getTime();
-                
+
                 satisfacciones.forEach(sat => {
                     const satInicio = new Date(sat.hora_inicio).getTime();
                     const satFin = new Date(sat.hora_termino).getTime();
@@ -523,12 +529,13 @@
 
         function transformarDatosSatisfaccion(actividades) {
             return actividades.flatMap((act) => ([
-                { x: new Date(act.hora_inicio), y: act.valor_satisfaccion || act.valor_numerico, tipo: 'inicio', ...act },
-                { x: new Date(act.hora_termino), y: act.valor_satisfaccion || act.valor_numerico, tipo: 'termino', ...act }
+                { x: new Date(act.hora_inicio), y: act.satisfacción || act.satisfacción, tipo: 'inicio', ...act },
+                { x: new Date(act.hora_termino), y: act.satisfacción || act.satisfacción, tipo: 'termino', ...act }
             ]));
         }
         function satifaccionPromedio(actividades) {
-            return actividades.reduce((promedio, { valor_numerico }) => promedio + valor_numerico, 0) / actividades.length;
+
+            return actividades.reduce((promedio, { satisfacción }) => promedio + satisfacción, 0) / actividades.length;
         }
         function crearPolarChartActividades(containerId, datosAgrupados, titulo = "Actividades con mayor dedicación", tipo = 'minutos') {
             const container = document.getElementById(containerId);
@@ -591,9 +598,7 @@
 
 
                             },
-                            onHover: function (event, legendItem) {
-                                console.log(event, legendItem);
-                            },
+
 
                             position: 'left'
                         },
@@ -631,11 +636,13 @@
             if (!canvas) return;
 
             var promedio = satifaccionPromedio(datos);
-            datos = transformarDatosSatisfaccion(datos);
+
+            var datosPrincipal = transformarDatosSatisfaccion(datos);
+            console.log(datosPrincipal)
             /* var datosPrincipal = transformarDatosSatisfaccion(actividadesConSatisfaccion); */
 
-            if (!minFecha) minFecha = datos[0]?.x;
-            if (!maxFecha) maxFecha = datos[datos.length - 1]?.x;
+            if (!minFecha) minFecha = datosPrincipal[0]?.x;
+            if (!maxFecha) maxFecha = datosPrincipal[datos.length - 1]?.x;
 
             const datosPromedio = [
                 { x: minFecha, y: promedio, tipo: 'promedio' },
@@ -648,7 +655,7 @@
                     datasets: [
                         {
                             label: 'Satisfacción',
-                            data: datos,
+                            data: datosPrincipal,
                             parsing: false,
                             borderColor: '#682850',
 

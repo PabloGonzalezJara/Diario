@@ -331,15 +331,7 @@ const handleNextButtonAction = () => {
     }
     
 
-   /*  if (isLastTimeline) {
-        // On last timeline, show confirmation modal
-        document.getElementById('confirmationModal').style.display = 'block';
-    } else {
-        // For other timelines, proceed to next timeline
-        addNextTimeline();
-        
-        window.selectedActivity = null;
-    } */
+   
 };
 
 // Shared function to handle Back button logic with debounce

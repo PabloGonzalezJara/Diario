@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado de Estudios</title>
+    <title>Rondas</title>
     <link href="../output.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
@@ -93,124 +93,89 @@
         document.getElementById('nav-toggle').addEventListener('click', () => {
             document.getElementById('mobile-nav').classList.toggle('hidden');
         });
-        function obtenerNumeroSemana(fecha) {
-            // Crear una copia de la fecha, en formato UTC sin la hora
-            const fechaCopia = new Date(Date.UTC(fecha.getFullYear(), fecha.getMonth(), fecha.getDate()));
 
-            // Ajustar al jueves de la semana actual (ISO 8601 dice que la semana 1 es la que contiene el jueves)
-            const dia = fechaCopia.getUTCDay() || 7; // Domingo = 0, así que lo cambiamos a 7
-            fechaCopia.setUTCDate(fechaCopia.getUTCDate() + 4 - dia);
 
-            // Obtener el primer día del año en UTC
-            const primerDiaAno = new Date(Date.UTC(fechaCopia.getUTCFullYear(), 0, 1));
-
-            // Calcular la diferencia de días
-            const diferencia = fechaCopia - primerDiaAno;
-            const dias = Math.floor(diferencia / (24 * 60 * 60 * 1000));
-
-            // Dividir los días entre 7 y redondear hacia arriba para obtener el número de semana
-            return Math.ceil((dias + 1) / 7);
-        }
-
-        function esDiaValido(diasSemanaStr) {
-            const hoy = new Date();
-            const diaActual = hoy.getDay(); // 0 = domingo, 6 = sábado
-            const dias = diasSemanaStr.split(',').map(d => parseInt(d));
-            return dias.includes(diaActual);
-        }
 
         function renderizarRondas(rondas) {
             const container = document.getElementById('rondas-container');
             container.innerHTML = '';
 
-            // Agrupar por semana
-            const rondasPorSemana = {};
-            rondas.forEach(r => {
-                if (!rondasPorSemana[r.semana]) {
-                    rondasPorSemana[r.semana] = [];
-                }
-                rondasPorSemana[r.semana].push(r);
-            });
-
+            //const hoy = new Date("2026-07-26 00:00:00"); 
             const hoy = new Date();
+            const anioActual = hoy.getFullYear();
             const diaActual = hoy.getDay(); // 0 = domingo, 6 = sábado
 
-            Object.entries(rondasPorSemana).forEach(([semana, rondasSemana]) => {
+            // Agrupar por numero_ronda
+            const rondasPorNumero = {};
+
+            rondas.forEach(r => {
+                if (!rondasPorNumero[r.numero_ronda]) {
+                    rondasPorNumero[r.numero_ronda] = [];
+                }
+                rondasPorNumero[r.numero_ronda].push(r);
+            });
+
+            Object.entries(rondasPorNumero).forEach(([numero_ronda, muestras]) => {
                 const grupo = document.createElement('div');
-                grupo.className = 'bg-white rounded-lg shadow p-4 border-2 border-primary-light  mb-6';
+                grupo.className = 'bg-white rounded-lg shadow p-4 border-2 border-primary-light mb-6';
 
                 const titulo = document.createElement('h3');
-                titulo.textContent = `Semana ${semana}`;
+                titulo.textContent = `Ronda ${numero_ronda} - ${muestras[0].anio}`;
                 titulo.className = 'text-lg font-bold mb-4 text-gray-800';
                 grupo.appendChild(titulo);
 
                 const fila = document.createElement('div');
                 fila.className = 'flex flex-wrap gap-4 px-1';
 
+                muestras.sort((a, b) => a.numero_muestra - b.numero_muestra);
 
-                // Ordenar para que primero vaya la de semana, luego fin de semana
-                rondasSemana.sort((a, b) => a.numero_ronda - b.numero_ronda);
-                const hoy = new Date();
-                const semanaActual = obtenerNumeroSemana(hoy);
+                muestras.forEach(ronda => {
+                    const dias = ronda.dias_semana.split(',').map(Number);
+                    const esHoyValido = dias.includes(diaActual);
+                    const esAnioActual = parseInt(ronda.anio) === anioActual;
+                    const esAnioPasadoSinResponder = parseInt(ronda.anio) < anioActual && !ronda.finalizada;
 
-                rondasSemana.forEach(ronda => {
-
-                    const esSemanaActual = parseInt(ronda.semana) === semanaActual;
-
-
-                    const esHoyValido = esSemanaActual && ronda.dias_semana
-                        .split(',')
-                        .map(Number)
-                        .includes(diaActual);
-
-                    const esSemanaPasada = parseInt(ronda.semana) < semanaActual;
-
-
-                    const activo = !ronda.finalizada && !esSemanaPasada && esHoyValido;
+                    const activo = esAnioActual && !ronda.finalizada && esHoyValido;
 
                     const card = document.createElement('div');
-                    const anchoMitadConGap = 'w-[calc(50%-0.5rem)]';
                     card.className = activo
                         ? 'bg-white p-6 rounded-2xl shadow-lg border-l-4 border-primary-light hover:shadow-xl transition cursor-pointer w-full md:w-[calc(50%-0.5rem)] flex flex-col gap-2'
                         : 'bg-white p-6 rounded-2xl shadow-lg opacity-50 pointer-events-none w-full md:w-[calc(50%-0.5rem)] flex flex-col gap-2';
 
+                    const nombreDias = dias
+                        .map(d => ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'][d])
+                        .join(', ');
 
-
-
-
-                    const tipoRonda = ronda.numero_ronda === 1 ? 'Semana (Lunes a Viernes)' : 'Fin de semana (Sábado y Domingo)';
-
-                    // Construir el contenido HTML similar a tu ejemplo
+                    // Icono según estado
+                    let icono = '';
+                    if (ronda.finalizada) {
+                        icono = `<span class="text-green-600 text-xl" title="Ronda finalizada">✔️</span>`;
+                    } else if (esAnioPasadoSinResponder) {
+                        icono = `<span class="text-red-500 text-xl" title="Ronda expirada sin responder">❌</span>`;
+                    }
+                    const semana = !ronda.dias_semana.includes(6 || 7) ? 'Semana' : 'Finde de semana';
                     card.innerHTML = `
                 <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-semibold text-gray-900">Ronda ${ronda.numero_ronda} - ${tipoRonda}</h2>
-                    ${ronda.finalizada
-                            ? `<span class="text-green-600 text-xl" title="Ronda finalizada">✔️</span>`
-                            : (esSemanaPasada
-                                ? `<span class="text-red-500 text-xl" title="Ronda finalizada y fuera de fecha">❌</span>`
-                                : ''
-                            )
-                        }
-
+                    <h2 class="text-xl font-semibold text-gray-900">${semana}</h2>
+                    ${icono}
                 </div>
-                
+
+                <p class="text-sm text-gray-600 mt-2">Días asignados: <span class="font-semibold">${nombreDias}</span></p>
+
                 <p class="mt-4 text-sm text-gray-500">
-                    ${esHoyValido && !ronda.finalizada ? '<span class="bg-primary-light text-white px-2 py-1 rounded w-max">Disponible hoy</span>' : '<span class="bg-gray-200 text-gray-800 px-2 py-1 rounded w-max">No disponible hoy</span>'}
+                    ${activo
+                            ? '<span class="bg-primary-light text-white px-2 py-1 rounded w-max">Disponible</span>'
+                            : '<span class="bg-gray-200 text-gray-800 px-2 py-1 rounded w-max">No disponible</span>'
+                        }
                 </p>
             `;
 
-                    card.addEventListener('click', () => {
-                        if (ronda.finalizada) {
-                            showToast("warning", "Esta ronda ya fue respondida.", "top-center", 2500);
-                            return;
-                        }
-                        if (!esHoyValido) {
-                            showToast("warning", "La ronda no está disponible hoy", "top-center", 2500);
-                            return;
-                        }
-                        localStorage.setItem('id_ronda', ronda.id_ronda);
-                        window.location.href = '/src/pages/timeline.html';
-                    });
+                    if (activo) {
+                        card.addEventListener('click', () => {
+                            localStorage.setItem('id_ronda', ronda.id_ronda);
+                            window.location.href = '/src/pages/timeline.html';
+                        });
+                    }
 
                     fila.appendChild(card);
                 });
@@ -219,6 +184,9 @@
                 container.appendChild(grupo);
             });
         }
+
+
+
 
         async function getRondasFromDB() {
             try {

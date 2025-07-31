@@ -2,7 +2,7 @@ import { DEBUG_MODE, MINUTES_PER_DAY } from './constants.js';
 import { hideLoadingModal } from './ui.js';
 import TimelineApi from '../controller/TimelineController.js';
 import RondasApi from '../controller/rondasController.js';
-import {showToast} from '../src/utils/feedback.js';
+import { showToast } from '../src/utils/feedback.js';
 // Timeline state management functions
 export function getCurrentTimelineKey() {
     return window.timelineManager.keys[window.timelineManager.currentIndex];
@@ -373,7 +373,7 @@ export function canPlaceActivity(newStart, newEnd, excludeId = null) {
 
 
 export function currentcoverage() {
-  
+
     const currentData = getCurrentTimelineData();
 
     var coveredMinutes = 0;
@@ -384,11 +384,11 @@ export function currentcoverage() {
 
         const diffMs = endMinutes - startMinutes;
         const diffMins = Math.round(diffMs / 60000);
-       
+
         coveredMinutes += diffMins;
     }
-  
-    return (coveredMinutes/MINUTES_PER_DAY)*100 
+
+    return (coveredMinutes / MINUTES_PER_DAY) * 100
 
 
 
@@ -430,48 +430,190 @@ export function isOverlapping(elem1, elem2) {
         rect1.top > rect2.bottom
     );
 }
+function dividirActividadEnTramos(principal, b, key) {
+    const resultado = [];
 
-export function createTimelineDataFrame() {
-    // Initialize array to hold all timeline data
-    const dataFrame = [];
+    principal.forEach(act => {
+        const actInicio = new Date(act.hora_inicio).getTime();
+        const actFin = new Date(act.hora_termino).getTime();
 
-    // Get all timeline keys
-    const timelineKeys = window.timelineManager.keys;
+        b.forEach(sat => {
+            const satInicio = new Date(sat.hora_inicio).getTime();
+            const satFin = new Date(sat.hora_termino).getTime();
+            const valor =
+                sat.otroValor
+                || sat.valor_numerico
+                || sat.nombre_actividad
+                || sat.nombre_subcategoria
+                || sat.nombre_categoria
+                || sat.nombre_dimension
 
-    // Get study parameters if they exist
-    const studyParams = (window.timelineManager.study && Object.keys(window.timelineManager.study).length > 0)
-        ? window.timelineManager.study
-        : {};
+                || "(sin nombre)";
+            const cruce = calcularSuperposicionDesde(actInicio, actFin, satInicio, satFin);
+            if (cruce) {
+                resultado.push({
+                    ...act,
+                    hora_inicio: new Date(cruce.inicio).toISOString(),
+                    hora_termino: new Date(cruce.fin).toISOString(),
+                    minutos: cruce.minutos,
 
-    // Iterate through each timeline
-    timelineKeys.forEach(timelineKey => {
-        const activities = window.timelineManager.activities[timelineKey] || [];
-
-        // Add each activity to the dataframe with its timeline key
-        activities.forEach(activity => {
-            const startMinutes = new Date(activity.startTime)
-            const endMinutes = new Date(activity.endTime)
-
-            const diffMs = endMinutes - startMinutes;
-            const diffMins = Math.round(diffMs / 60000);
-            
-            const row = {
-                ...activity,
-                minutos: diffMins,
-
-            };
-
-            // Only add study params if they exist
-            if (Object.keys(studyParams).length > 0) {
-                Object.assign(row, studyParams);
+                    [key]: valor
+                });
             }
-            
-            dataFrame.push(row);
         });
     });
 
-    return dataFrame;
+    return resultado;
 }
+function calcularSuperposicionDesde(actInicio, actFin, satInicio, satFin) {
+    const inicio = Math.max(actInicio, satInicio);
+    const fin = Math.min(actFin, satFin);
+    if (inicio < fin) {
+        return { inicio, fin, minutos: (fin - inicio) / (1000 * 60) };
+    }
+    return null;
+}
+
+export function createTimelineDataFrame() {
+    const agrupado = new Map();
+
+    const timelineKeys = window.timelineManager.keys;
+    const identificador = localStorage.getItem('identificador');
+    const ronda = localStorage.getItem('id_ronda');
+
+    // Paso 1: agrupar las actividades por dimensión
+    timelineKeys.forEach(timelineKey => {
+        const activities = window.timelineManager.activities[timelineKey] || [];
+
+        activities.forEach(activity => {
+            const start = new Date(activity.startTime);
+            const end = new Date(activity.endTime);
+            const minutos = Math.round((end - start) / 60000);
+
+            const row = {
+                id_estudio: activity.id_estudio || null,
+                id_dimension: activity.id_dimension,
+                id_categoria: activity.id_categoria,
+                id_subcategoria: activity.id_subcategoria,
+                id_actividad: activity.id_actividad ?? null,
+                id_ronda: ronda,
+                nombre_dimension: activity.dimension,
+                nombre_categoria: activity.categoria,
+                nombre_subcategoria: activity.subcategoria,
+                nombre_actividad: activity.nombre_actividad ?? null,
+                valor_numerico: activity.maneja_numeros ? parseInt(activity.subcategoria.replace(/\D/g, '')) : null,
+                color: activity.color,
+                otroValor: activity.categoria.includes('Otros') ? activity.name : null,
+                hora_inicio: activity.startTime,
+                hora_termino: activity.endTime,
+                identificador,
+                minutos
+            };
+
+            const dimension = row.nombre_dimension;
+            if (!agrupado.has(dimension)) agrupado.set(dimension, []);
+            agrupado.get(dimension).push(row);
+        });
+    });
+
+
+    const tramos = dividirActividadPrincipalEnTramos(agrupado);
+
+    return tramos;
+}
+function toMySQLDatetime(dateISO) {
+    const date = new Date(dateISO);
+    const pad = n => n.toString().padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
+function dividirActividadPrincipalEnTramos(agrupado) {
+    let tramos = agrupado.get("Principal")?.map(act => {
+        const actInicio = new Date(act.hora_inicio).getTime();
+        const actFin = new Date(act.hora_termino).getTime();
+        return {
+            ...act,
+            hora_inicio: new Date(actInicio).toISOString(),
+            hora_termino: new Date(actFin).toISOString(),
+            minutos: (actFin - actInicio) / (1000 * 60)
+        };
+    }) || [];
+
+    const otrasDimensiones = Array.from(agrupado.entries()).filter(([key]) => key !== "Principal");
+
+    // Procesar cada dimensión adicional de forma acumulativa
+    otrasDimensiones.forEach(([nombreDim, lista]) => {
+        const nuevosTramos = [];
+
+        tramos.forEach(tramo => {
+            const actInicio = new Date(tramo.hora_inicio).getTime();
+            const actFin = new Date(tramo.hora_termino).getTime();
+
+            const cortes = new Set([actInicio, actFin]);
+
+            lista.forEach(dim => {
+                const dimInicio = new Date(dim.hora_inicio).getTime();
+                const dimFin = new Date(dim.hora_termino).getTime();
+                const cruce = calcularSuperposicionDesde(actInicio, actFin, dimInicio, dimFin);
+                if (cruce) {
+                    cortes.add(cruce.inicio);
+                    cortes.add(cruce.fin);
+                }
+            });
+
+            const cortesOrdenados = Array.from(cortes).sort((a, b) => a - b);
+
+            for (let i = 0; i < cortesOrdenados.length - 1; i++) {
+                const inicio = cortesOrdenados[i];
+                const fin = cortesOrdenados[i + 1];
+                if (inicio >= fin) continue;
+
+                const subTramo = {
+                    ...tramo,
+                    hora_inicio: toMySQLDatetime(inicio),
+                    hora_termino: toMySQLDatetime(fin),
+                    minutos: (fin - inicio) / (1000 * 60)
+                };
+
+                // Buscar si este subtramo tiene un valor en la dimensión actual
+                const valorDim = lista.find(d => {
+                    const dimInicio = new Date(d.hora_inicio).getTime();
+                    const dimFin = new Date(d.hora_termino).getTime();
+                    return inicio >= dimInicio && fin <= dimFin;
+                });
+
+                const clave = valorDim?.valor_numerico
+                    ?? valorDim?.nombre_actividad
+                    ?? valorDim?.nombre_subcategoria
+                    ?? valorDim?.nombre_categoria
+                    ?? valorDim?.nombre_dimension
+                    ?? valorDim?.otroValor
+                    ?? "(sin nombre)";
+                const nombre = nombreDimension(nombreDim);
+                subTramo[nombre.toLowerCase()] = clave;
+
+                nuevosTramos.push(subTramo);
+            }
+        });
+
+        tramos = nuevosTramos;
+    });
+    console.log(tramos)
+    return tramos;
+}
+
+function nombreDimension(nombre) {
+    if (nombre == "¿Dónde?") {
+        return "ubicación";
+    }
+    else if (nombre == "¿Con quién?") {
+        return "compañia";
+    }
+
+    return nombre;
+}
+
+
+
 
 /**
  * Sends timeline and participant data to DataPipe API.
@@ -485,7 +627,9 @@ export async function sendDataToDataPipe() {
     try {
         // --- Prepare Timeline Data ---
         const timelineData = createTimelineDataFrame();
+        const ronda = localStorage.getItem('id_ronda')
         const identificador = localStorage.getItem('identificador')
+        /* const identificador = localStorage.getItem('identificador')
         // Get study data if available
         let studyData = window.timelineManager?.study || {};
         let pid;
@@ -520,17 +664,15 @@ export async function sendDataToDataPipe() {
                 version: browserParser.getBrowserVersion()
             };
         }
-
+        
         // Determine session_id based on whether ppid exists
         const session_id = hasPpid && (studyData.survey || studyData.SURVEY)
             ? (studyData.survey || studyData.SURVEY)
             : (studyData.SESSION_ID || null);
-        const ronda = localStorage.getItem('id_ronda')
+        
         // Combine timeline and participant data
         const combinedData = timelineData.map(row => ({
-            /* timelineKey: row.timelineKey,
-            activity: row.activity,
-            category: row.category, */
+           
             id_estudio: row.id_estudio || null,
             identificador: identificador,
             id_dimension: row.id_dimension,
@@ -544,47 +686,38 @@ export async function sendDataToDataPipe() {
             nombre_actividad: row.nombre_actividad != null ? row.nombre_actividad : null,
             valor_numerico: row.maneja_numeros ? parseInt(row.subcategoria.replace(/\D/g, '')) : null,
             minutos: row.minutos,
-            
+            color: row.color,
             otroValor: row.categoria.includes('Otra actividad') ? row.name : null,
             hora_inicio: row.startTime,
             hora_termino: row.endTime,
-            /* startTime: row.startTime,
-            endTime: row.endTime,
-            pid: pid,
-            diaryWave: studyData.DIARY_WAVE ? parseInt(studyData.DIARY_WAVE) : null,
-            viewportWidth,
-            viewportHeight,
-            layoutHorizontal,
-            browserName: browserInfo.name,
-            browserVersion: browserInfo.version,
-            instructions: studyData.instructions === 'completed',
-            PROLIFIC_PID: studyData.PROLIFIC_PID || null, */
-            
-        }));
-        
-        const res = await TimelineApi.saveTimelineData(combinedData);
-        console.log(res)
-        if(res.status == 201){
-            console.log(res);
+         
+
+        })); */
+        console.log(timelineData.length)
+        const res = await TimelineApi.saveTimelineData(timelineData);
+
+        if (res.status == 201) {
+
             const payload = {
-                id_ronda : ronda,
-                identificador : identificador,
+                id_ronda: ronda,
+                identificador: identificador,
                 fecha_finalizacion: new Date().toISOString()
             }
             const res2 = await RondasApi.finalizarRonda(payload);
-            window.location.href  = 'rondas.html';
+            window.location.href = 'rondas.html';
         }
+
         hideLoadingModal();
         // completar la ronda correspondiente en la base de datos
 
-        
+
 
         // Convert to CSV format
-       /*  const csvData = convertArrayToCSV(combinedData);
-
-        // Generate unique filename with timestamp
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const filename = `timeline_${pid}_${timestamp}.csv`; */
+        /*  const csvData = convertArrayToCSV(combinedData);
+ 
+         // Generate unique filename with timestamp
+         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+         const filename = `timeline_${pid}_${timestamp}.csv`; */
         //Accept: "*/*",
         // Send to DataPipe API
         /* const response = await fetch("https://pipe.jspsych.org/api/data/", {
@@ -607,7 +740,7 @@ export async function sendDataToDataPipe() {
         console.log('Data sent to DataPipe successfully'); */
 
         // Hide loading modal before redirect
-        
+
         /* 
                 // Handle redirect to thank you page
                 const redirectUrl = window.timelineManager?.general?.primary_redirect_url;

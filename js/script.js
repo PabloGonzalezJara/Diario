@@ -714,12 +714,12 @@ function renderChildItems(activity, category) {
                     id_estudio: category.id_estudio,
                     category: category.name,
                     name: childItem.name,
-                    parentName: activity.name,
+                    /* parentName: activity.name, */
                     color: childItem.color,
 
                     selected: childItem.name  // Store the selected child item
                 };  
-                console.log("window.selectedActivity:", window.selectedActivity);
+                
 
                 // Close the modal
                 modal.style.display = 'none';
@@ -857,7 +857,7 @@ function renderActivities(categories, container = document.getElementById('activ
                                         category: category.name
                                     };
 
-                                    console.log('window.selectedActivity XD:', window.selectedActivity);
+                                   
 
                                     activityButton.classList.add('selected');
                                 }
@@ -920,7 +920,7 @@ function renderActivities(categories, container = document.getElementById('activ
                                 id_estudio: category.id_estudio,
                                 category: category.name
                             };
-                            console.log('[ACTIVITY] Selected activity 3:', window.selectedActivity);
+                            
 
                         } else {
                             // Only clear window.selectedActivity in multiple-choice mode if user actively deselected
@@ -950,7 +950,7 @@ function renderActivities(categories, container = document.getElementById('activ
                             color: activity.color,
                             category: activity.name
                         };
-                        console.log('[ACTIVITY] Selected activity 1:', window.selectedActivity);
+                        
                         activityButton.classList.add('selected');
                     }
                     // Only close modal in single-choice mode
@@ -1174,8 +1174,7 @@ function renderActivities(categories, container = document.getElementById('activ
                         // Single choice mode
 
                         categoryButtons.forEach(b => b.classList.remove('selected'));
-                        console.log("categoria:", category);
-                        console.log("actividad:", activity);
+                        
                        
                         window.selectedActivity = {
                             subcategoria: activity.name,
@@ -2132,12 +2131,12 @@ function initTimelineInteraction(timeline) {
 
         // Create activity data with parent name if it exists
         
-        
+        console.log()
         var activityData = {
             ...window.selectedActivity,
             id: generateUniqueId(),
             activity: combinedActivityText,
-            category: activityCategory,
+            category: "activityCategory",
             startTime: times.startTime,
             endTime: times.endTime,
             
