@@ -48,18 +48,18 @@
         const isValid = validRoutes.some(valid => path === valid || path.endsWith(valid));
 
 
-        /* if (!isValid) {
+        if (!isValid) {
             window.location.href = '/src/pages/404.html'; // ajusta si está en otra carpeta
         } else {
 
-            if (path === '/' || path === '/Diario') {
+            if (path === '/' || path === '/Diario/') {
                 window.location.href = '/src/pages/login.html';
             } else {
                 window.location.href = `/src/pages${path}`;
             }
 
 
-        } */
+        }
     </script>
 </body>
 
