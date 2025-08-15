@@ -50,13 +50,13 @@
 
         console.log(isValid)
         if (!isValid) {
-            window.location.href = '/src/pages/404.html'; // ajusta si está en otra carpeta
+            window.location.href = './src/pages/404.html'; // ajusta si está en otra carpeta
         } else {
 
             if (path === '/' || path === '/Diario/') {
-                window.location.href = '/src/pages/login.html';
+                window.location.href = './src/pages/login.html';
             } else {
-                window.location.href = `/src/pages${path}`;
+                window.location.href = `./src/pages${path}`;
             }
 
 
