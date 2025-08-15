@@ -88,7 +88,7 @@
         import AuthController from '../../controller/AuthController.js';
         import { showToast } from '../utils/feedback.js';
         const token = localStorage.getItem('token')
-        if (token) window.location.href = '/src/pages/inicio.html'
+        if (token) window.location.href = './src/pages/inicio.html'
 
         document.getElementById('login-form').addEventListener('submit', async function (e) {
             e.preventDefault();
@@ -121,7 +121,7 @@
                 localStorage.setItem('identificador', identificador);
                 localStorage.setItem('refreshToken', response.refreshToken);
 
-                window.location.href = '/src/pages/inicio.html';
+                window.location.href = './src/pages/inicio.html';
             } catch (error) {
                 showToast('error', 'Credenciales incorrectas.', 'top-center', 2000);
                 console.error(error);
