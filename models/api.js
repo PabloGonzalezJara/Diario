@@ -75,7 +75,7 @@ api.interceptors.response.use(
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
         
-        window.location.href = '/src/pages/login.html';
+        window.location.href = './src/pages/login.html';
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
