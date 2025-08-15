@@ -52,14 +52,18 @@ function createModal() {
     activitiesModal.className = 'modal-overlay';
     activitiesModal.id = 'activitiesModal';
     activitiesModal.innerHTML = `
-        <div class="modal">
-            <div class="modal-header">
-                <h3 data-i18n="modals.addActivity.title">Add Activity</h3>
-                <button class="modal-close">&times;</button>
+    <div class="modal">
+        <div class="modal-header sticky top-0 z-50 bg-white  border-b flex flex-col">
+            <div class="flex justify-between items-center">
+                <h3 data-i18n="modals.addActivity.title" class="text-lg font-semibold">Add Activity</h3>
+                <button class="modal-close text-2xl font-bold text-center">&times;</button>
             </div>
-            <div id="modalActivitiesContainer"></div>
+            <p id="categoriaDescripcionMobile" class="text-base text-gray-600 mt-2"></p>
         </div>
-    `;
+
+        <div id="modalActivitiesContainer" class="p-4"></div>
+    </div>
+`;
 
     activitiesModal.querySelector('.modal-close').addEventListener('click', () => {
         activitiesModal.style.cssText = 'display: none !important';
@@ -172,12 +176,12 @@ function createFloatingAddButton() {
         const categories = window.timelineManager.metadata[currentKey].categories;
         renderActivities(categories, document.getElementById('modalActivitiesContainer'));
         
-        if (getIsMobile()) {
+        /* if (getIsMobile()) {
             const firstCategory = modal.querySelector('.activity-category');
             if (firstCategory) {
                 firstCategory.classList.add('active');
             }
-        }
+        } */
     });
 
     document.body.appendChild(button);
@@ -310,8 +314,7 @@ const handleNextButtonAction = () => {
    
     const isLastTimeline = window.timelineManager.currentIndex === window.timelineManager.keys.length - 1;
     window.timelineManager.currentIndex;
-    console.log(getCurrentTimelineKey());
-    console.log(window.timelineManager.metadata[getCurrentTimelineKey()].porcentaje_completitud )
+    
     const timelineCoveragePercent = window.timelineManager.metadata[getCurrentTimelineKey()].porcentaje_completitud;
     const actualcoverage = currentcoverage();
      if (isLastTimeline) {
@@ -323,6 +326,10 @@ const handleNextButtonAction = () => {
     
     if(actualcoverage >= timelineCoveragePercent || timelineCoveragePercent == 0){
         addNextTimeline();
+        const descripcion1 = document.getElementById("categoriaDescripcionMobile");
+        const descripcion2 = document.getElementById("descripcion");
+        descripcion1.textContent = "";
+        descripcion2.textContent = "";
         window.selectedActivity = null;
     }else{
 

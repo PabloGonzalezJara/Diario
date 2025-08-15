@@ -110,9 +110,9 @@ async function restoreNextTimeline(nextTimelineIndex, nextTimelineKey) {
         void timelineHeader.offsetWidth;
         timelineHeader.classList.add('flip-animation');
 
-        // Update content
-        timelineTitle.textContent = nextTimeline.name;
-        timelineDescription.textContent = nextTimeline.description;
+        
+        timelineTitle.textContent = nextTimeline.name == "Principal" || nextTimeline.name == "Secundaria" ? `Actividad ${nextTimeline.name.toLowerCase()}` : nextTimeline.name;
+
 
         void timelineHeader.offsetWidth;
         timelineHeader.classList.add('flip-animation');
@@ -255,8 +255,9 @@ async function addNextTimeline() {
         timelineHeader.classList.add('flip-animation');
 
         // Update content immediately
-        timelineTitle.textContent = nextTimeline.name;
-        timelineDescription.textContent = nextTimeline.description;
+        timelineTitle.textContent = nextTimeline.name == "Principal" || nextTimeline.name == "Secundaria" ? `Actividad ${nextTimeline.name.toLowerCase()}` : nextTimeline.name;
+
+        timelineDescription.textContent = nextTimeline.descripcion;
 
         // Trigger reflow to ensure animation plays
         void timelineHeader.offsetWidth;
@@ -416,8 +417,9 @@ async function goToPreviousTimeline() {
         timelineHeader.classList.add('flip-animation');
 
         // Update content immediately
-        timelineTitle.textContent = previousTimeline.name;
-        timelineDescription.textContent = previousTimeline.description;
+        timelineTitle.textContent = previousTimeline.name == "Principal" || previousTimeline.name == "Secundaria" ? `Actividad ${previousTimeline.name.toLowerCase()}` : previousTimeline.name;
+        
+        timelineDescription.textContent = previousTimeline.descripcion;
 
         // Trigger reflow to ensure animation plays
         void timelineHeader.offsetWidth;
@@ -595,7 +597,7 @@ async function fetchActivities(key) {
         if (!timeline || !timeline.categories) {
             throw new Error(`Invalid timeline data for key: ${key}`);
         }
-        
+
 
         // Mark timeline as initialized
         window.timelineManager.initialized.add(key);
@@ -693,12 +695,76 @@ function renderChildItems(activity, category) {
             const button = document.createElement('button');
             button.className = 'child-item-button';
             button.textContent = childItem.name;
-            button.style.setProperty('--color', childItem.color );
+            button.style.setProperty('--color', childItem.color);
             ///SE AGREGA LAS SUBCATEGORIAS
             button.addEventListener('click', () => {
-                // Use parent activity properties but with child item name
 
-                
+
+
+
+                // Use parent activity properties but with child item name
+                if (
+                    childItem.name.toLowerCase().includes('(especifique)')
+                ) {
+                    modal.style.display = 'none';
+                    // Show custom activity modal
+                    const customActivityModal = document.getElementById('customActivityModal');
+                    const customActivityInput = document.getElementById('customActivityInput');
+                    customActivityInput.value = ''; // Clear previous input
+                    customActivityModal.style.display = 'block';
+                    customActivityInput.focus(); // Focus the input field
+
+                    // Handle custom activity submission
+                    const handleCustomActivity = () => {
+                        const customText = customActivityInput.value.trim();
+                        if (customText) {
+
+                            /*  categoryButtons.forEach(b => b.classList.remove('selected')); */
+                            window.selectedActivity = {
+                                subcategoria: activity.name,
+                                categoria: category.name,
+                                dimension: category.nombre_dimension,
+                                id_categoria: category.id_categoria,
+                                maneja_numeros: category.maneja_numeros,
+                                maneja_numeros: category.maneja_numeros,
+                                id_subcategoria: activity.id_subcategoria,
+                                id_dimension: category.id_dimension,
+                                id_actividad: childItem.id_actividad,
+                                nombre_actividad: childItem.name,
+                                id_estudio: category.id_estudio,
+                                name: customText,
+                                color: childItem.color,
+                                category: category.name
+                            };
+
+
+
+
+
+                            customActivityModal.style.display = 'none';
+                            document.getElementById('activitiesModal').style.display = 'none';
+                        }
+                    };
+
+                    // Set up event listeners for custom activity modal
+                    const confirmBtn = document.getElementById('confirmCustomActivity');
+                    const inputField = document.getElementById('customActivityInput');
+
+                    // Remove any existing listeners
+                    const newConfirmBtn = confirmBtn.cloneNode(true);
+                    confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+
+                    // Add new listeners
+                    newConfirmBtn.addEventListener('click', handleCustomActivity);
+                    inputField.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            handleCustomActivity();
+                        }
+                    });
+
+                    return;
+                }
+
                 window.selectedActivity = {
 
 
@@ -718,8 +784,8 @@ function renderChildItems(activity, category) {
                     color: childItem.color,
 
                     selected: childItem.name  // Store the selected child item
-                };  
-                
+                };
+
 
                 // Close the modal
                 modal.style.display = 'none';
@@ -740,6 +806,31 @@ function renderChildItems(activity, category) {
     // Show the modal
     modal.style.display = 'block';
 }
+function mostrarPopup(texto) {
+    const popup = document.createElement('div');
+    popup.className = " fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1003]"; // z-index muy alto
+
+    popup.innerHTML = `
+    <div class="bg-white rounded-xl shadow-lg max-w-md w-full p-6 relative">
+        <!-- Botón cerrar -->
+        <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl font-bold">&times;</button>
+        
+        <!-- Contenido -->
+        <div class="mt-6">
+            <p class="text-gray-800">${texto}</p>
+        </div>
+    </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    popup.querySelector('button').addEventListener('click', () => popup.remove());
+    popup.addEventListener('click', (e) => {
+        if (e.target === popup) popup.remove();
+    });
+}
+
+
 
 function renderActivities(categories, container = document.getElementById('activitiesContainer')) {
     container.innerHTML = '';
@@ -766,7 +857,28 @@ function renderActivities(categories, container = document.getElementById('activ
         categories.forEach(category => {
             const categoryDiv = document.createElement('div');
             categoryDiv.className = 'activity-category';
+            const descripcion = document.getElementById("categoriaDescripcionMobile");
+            const descripcion2 = document.getElementById("descripcion");
+            const timelineDescription = document.querySelector('.timeline-description');
+            categoryDiv.addEventListener('click', () => {
 
+                descripcion2.textContent = category.descripcion || '-';
+
+                descripcion.textContent = category.descripcion;
+            })
+            categoryDiv.addEventListener('click', () => {
+                categoryDiv.classList.toggle('active');
+                console.log(categoryDiv.classList.contains('active'));
+                if (categoryDiv.classList.contains('active')) {
+                    timelineDescription.style.display = 'none';
+                    descripcion.textContent = category.descripcion || '-';
+                } else {
+                    timelineDescription.style.display = 'block';
+                    descripcion.textContent = '';
+                }
+
+                
+            })
             const categoryTitle = document.createElement('h3');
             categoryTitle.textContent = category.name;
             categoryDiv.appendChild(categoryTitle);
@@ -774,10 +886,20 @@ function renderActivities(categories, container = document.getElementById('activ
             const activityButtonsDiv = document.createElement('div');
             activityButtonsDiv.className = 'activity-buttons';
 
+
             category.activities.forEach(activity => {
                 const activityButton = document.createElement('button');
                 const isMultipleChoice = container.getAttribute('data-mode') === 'multiple-choice';
                 activityButton.className = `activity-button ${isMultipleChoice ? 'checkbox-style' : ''}`;
+                activityButton.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    /* descripcion2.textContent = activity.descripcion || '-';
+                    descripcion.textContent = activity.descripcion || '-'; */
+                    if (activity.descripcion != null) {
+                        mostrarPopup(activity.descripcion);
+                    }
+
+                })
                 // Add indicator class if activity has child items
                 if (activity.childItems && activity.childItems.length > 0) {
                     activityButton.classList.add('has-child-items');
@@ -850,14 +972,14 @@ function renderActivities(categories, container = document.getElementById('activ
                                         maneja_numeros: category.maneja_numeros,
                                         id_subcategoria: activity.id_subcategoria,
                                         id_dimension: category.id_dimension,
-                                        
+
                                         id_estudio: category.id_estudio,
                                         name: customText,
                                         color: activityButton.style.getPropertyValue('--color'),
                                         category: category.name
                                     };
+                                    console.log('1', window.selectedActivity);
 
-                                   
 
                                     activityButton.classList.add('selected');
                                 }
@@ -920,7 +1042,7 @@ function renderActivities(categories, container = document.getElementById('activ
                                 id_estudio: category.id_estudio,
                                 category: category.name
                             };
-                            
+
 
                         } else {
                             // Only clear window.selectedActivity in multiple-choice mode if user actively deselected
@@ -946,11 +1068,12 @@ function renderActivities(categories, container = document.getElementById('activ
                             id_dimension: category.id_dimension,
                             dimension: category.nombre_dimension,
                             id_estudio: category.id_estudio,
-                            name: category.name,
+                            name: activity.name,
                             color: activity.color,
                             category: activity.name
                         };
-                        
+                        console.log("2", window.selectedActivity);
+
                         activityButton.classList.add('selected');
                     }
                     // Only close modal in single-choice mode
@@ -964,7 +1087,10 @@ function renderActivities(categories, container = document.getElementById('activ
                                 const activitiesModal = document.getElementById('activitiesModal');
                                 const customActivityModal = document.getElementById('customActivityModal');
                                 if (activitiesModal) {
-                                    activitiesModal.style.cssText = 'display: none !important';
+                                    if (activity.descripcion == null) {
+                                        activitiesModal.style.cssText = 'display: none !important';
+                                    }
+                                   
                                 }
                                 if (customActivityModal) {
                                     customActivityModal.style.cssText = 'display: none !important';
@@ -997,27 +1123,28 @@ function renderActivities(categories, container = document.getElementById('activ
                 activityButtonsDiv.appendChild(activityButton);
             });
 
-            categoryDiv.appendChild(activityButtonsDiv);
+
             accordionContainer.appendChild(categoryDiv);
+
+            categoryDiv.appendChild(activityButtonsDiv);
         });
 
         container.appendChild(accordionContainer);
 
-        // Add click event listener to category titles
-        const categoryTitles = accordionContainer.querySelectorAll('.activity-category h3');
-        categoryTitles.forEach(title => {
-            title.addEventListener('click', () => {
-                const category = title.parentElement;
-                category.classList.toggle('active');
-            });
-        });
+
     } else {
         categories.forEach(category => {
             const categoryDiv = document.createElement('div');
+            const elemento = document.getElementById("descripcion");
+            categoryDiv.addEventListener('mouseover', () => {
+
+                elemento.textContent = category.descripcion || '-';
+            });
             categoryDiv.className = 'activity-category';
 
             const categoryTitle = document.createElement('h3');
             categoryTitle.textContent = category.name;
+
             categoryDiv.appendChild(categoryTitle);
 
             const activityButtonsDiv = document.createElement('div');
@@ -1027,6 +1154,11 @@ function renderActivities(categories, container = document.getElementById('activ
                 const activityButton = document.createElement('button');
                 const isMultipleChoice = container.getAttribute('data-mode') === 'multiple-choice';
                 activityButton.className = `activity-button ${isMultipleChoice ? 'checkbox-style' : ''}`;
+                activityButton.addEventListener('mouseover', (event) => {
+                    console.log(activity.descripcion)
+                    event.stopPropagation();
+                    elemento.textContent = activity.descripcion || '-';
+                })
                 // Add indicator class if activity has child items
                 if (activity.childItems && activity.childItems.length > 0) {
                     activityButton.classList.add('has-child-items');
@@ -1059,6 +1191,8 @@ function renderActivities(categories, container = document.getElementById('activ
 
                 activityButton.appendChild(textSpan);
                 activityButton.addEventListener('click', () => {
+                    
+
                     const activitiesContainer = activityButton.closest('#activitiesContainer, #modalActivitiesContainer');
                     const isMultipleChoice = activitiesContainer.getAttribute('data-mode') === 'multiple-choice';
                     const categoryButtons = activityButton.closest('.activity-category').querySelectorAll('.activity-button');
@@ -1098,11 +1232,11 @@ function renderActivities(categories, container = document.getElementById('activ
                                         categoria: category.name,
                                         dimension: category.nombre_dimension,
                                         maneja_numeros: category.maneja_numeros,
-                                        
+
                                         id_categoria: category.id_categoria,
                                         id_subcategoria: activity.id_subcategoria,
                                         id_dimension: category.id_dimension,
-                                       
+
                                         id_estudio: category.id_estudio,
                                         name: customText,
                                         color: activity.color,
@@ -1174,8 +1308,8 @@ function renderActivities(categories, container = document.getElementById('activ
                         // Single choice mode
 
                         categoryButtons.forEach(b => b.classList.remove('selected'));
-                        
-                       
+
+
                         window.selectedActivity = {
                             subcategoria: activity.name,
                             categoria: category.name,
@@ -1233,6 +1367,7 @@ function renderActivities(categories, container = document.getElementById('activ
                         }
                     }
                 });
+
                 activityButtonsDiv.appendChild(activityButton);
             });
 
@@ -1661,15 +1796,15 @@ function initTimelineInteraction(timeline) {
                         }
 
                         // Debug logging with accurate values
-                       /*  if (DEBUG_MODE) {
-                            console.log('[Resize Right Edge]:', {
-                                newRight: newRight.toFixed(2) + '%',
-                                time: formatTimelineEnd(endMinutes),
-                                startMinutes,
-                                endMinutes,
-                                coverage: window.getTimelineCoverage()
-                            });
-                        } */
+                        /*  if (DEBUG_MODE) {
+                             console.log('[Resize Right Edge]:', {
+                                 newRight: newRight.toFixed(2) + '%',
+                                 time: formatTimelineEnd(endMinutes),
+                                 startMinutes,
+                                 endMinutes,
+                                 coverage: window.getTimelineCoverage()
+                             });
+                         } */
 
                         // Validate time order considering next day times
                         const isEndNextDay = endMinutes < 240 || endMinutes >= 1440;
@@ -2120,7 +2255,7 @@ function initTimelineInteraction(timeline) {
 
         const startTime = currentBlock.dataset.start;
         const endTime = currentBlock.dataset.end;
-        
+
         const times = formatTimeDDMMYYYYHHMM(startTime, endTime);
         if (!times.startTime || !times.endTime) {
             throw new Error('Activity start time and end time must be defined');
@@ -2130,7 +2265,7 @@ function initTimelineInteraction(timeline) {
         const activityCategory = currentBlock.dataset.category;
 
         // Create activity data with parent name if it exists
-        
+
         console.log()
         var activityData = {
             ...window.selectedActivity,
@@ -2139,7 +2274,7 @@ function initTimelineInteraction(timeline) {
             category: "activityCategory",
             startTime: times.startTime,
             endTime: times.endTime,
-            
+
             blockLength: parseInt(currentBlock.dataset.length),
             color: window.selectedActivity?.color || '#808080',
             count: parseInt(currentBlock.dataset.count) || 1

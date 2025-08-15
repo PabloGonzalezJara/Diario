@@ -10,57 +10,81 @@
     <title>Loading...</title>
     <link rel="stylesheet" href="../../styles.css">
     <link href="../output.css" rel="stylesheet">
- 
-   
+
+
 </head>
 
 <body>
-    <div class="header-section">
-        
-        <div class="controls">
-      
-            <button class="btn back-btn" id="backBtn" data-is-active="false" disabled>
-                <i class="fas fa-arrow-left"></i>
-                <span data-i18n="buttons.back">Back</span>
-            </button>
+    <div class="header-section ">
 
-            <button class="btn clean-row-btn" id="cleanRowBtn" data-is-active="false" disabled>
-                <i class="fas fa-trash-alt"></i>
-                <span data-i18n="buttons.cleanRow">Clean Row</span>
-            </button>
+        <!-- Controles fijos arriba -->
+        <div class="controls sticky top-0 z-50 bg-white shadow-md p-2 flex flex-col gap-2">
+            <!-- Vista escritorio -->
+            <div class="w-full grid grid-cols-3 items-center text-center">
 
-            <button class="btn undo-btn" id="undoBtn" data-is-active="false" disabled>
-                <i class="fas fa-undo"></i>
-                <span data-i18n="buttons.undo">Undo</span>
-            </button>
+                <div class="flex justify-start">
+                    <button onclick="window.location.href='../../pages/instructions.html'"
+                        class="navigation-btn bg-primary-light hover:bg-primary-dark text-white">
+                        <i class="fas fa-chevron-left"></i>
+                        <span data-i18n="buttons.backToInstructions">Instructions</span>
+                    </button>
+                </div>
 
-            <button class="btn next-btn" id="nextBtn" data-is-active="false" disabled>
-                <i class="fas fa-arrow-right"></i>
-                <span data-i18n="buttons.next">Next</span>
-            </button>
 
-            <button class="btn save-btn" id="saveBtn" data-is-active="true" style="display: none;">
-                <i class="fas fa-check"></i>
-                <span data-i18n="buttons.submit">Submit</span>
-            </button>
+                <div class="flex justify-center gap-2 flex-wrap">
+                    <button class="btn back-btn" id="backBtn" disabled>
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Volver</span>
+                    </button>
+                    <button class="btn clean-row-btn" id="cleanRowBtn" disabled>
+                        <i class="fas fa-trash-alt"></i>
+                        <span>Borrar</span>
+                    </button>
+                    <button class="btn undo-btn" id="undoBtn" disabled>
+                        <i class="fas fa-undo"></i>
+                        <span>Deshacer</span>
+                    </button>
+                    <button class="btn next-btn bg-primary-light" id="nextBtn" disabled>
+                        <i class="fas fa-arrow-right"></i>
+                        <span>Siguiente</span>
+                    </button>
+                    <button class="btn save-btn hidden" id="saveBtn">
+                        <i class="fas fa-check"></i>
+                        <span>Enviar</span>
+                    </button>
+                </div>
+
+               
+            </div>
+
+
+
+            <!-- Resto del contenido -->
+            <div class="timeline-header px-4">
+                <h1 class="timeline-title"></h1>
+                <p class="timeline-description"></p>
+                <p id="descripcion" class="text-xl"></p>
+            </div>
         </div>
 
-        <div class="timeline-header">
-            <h1 class="timeline-title"></h1>
-            <p class="timeline-description"></p>
-        </div>
-    </div>
 
-    <div class="timeline-canvas">
-        <div class="timelines-wrapper">
-            <div class="past-initialized-timelines-wrapper"></div>
-            <div class="last-initialized-timeline-wrapper"></div>
-        </div>
-        <div class="gradient-bar"></div>
-    </div>
 
-    <div class="activities-container" id="activitiesContainer">
-        <div class="activities-accordion"></div>
+
+
+        <div class="abosulute ">
+            <div class="timeline-canvas ">
+                <div class="timelines-wrapper overflow-hidden">
+                    <div class="past-initialized-timelines-wrapper"></div>
+                    <div class="last-initialized-timeline-wrapper"></div>
+                </div>
+                <div class="gradient-bar"></div>
+            </div>
+
+            <div class="activities-container" id="activitiesContainer">
+                <div class="activities-accordion"></div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Debug overlay element -->
@@ -82,23 +106,20 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <!-- <script src="js/script.js?v=1.1" type="module"></script> -->
     <!-- <script src="tests/timeline_test.js" type="module"></script> -->
-    
+
     <script type="module">
         import { calculateTimeDifference } from '../../js/utils.js';
         import { init } from '../../js/script.js';
         window.calculateTimeDifference = calculateTimeDifference;
         await init();
     </script>
-    
+
     <script src="../../js/attributeTracker.js"></script>
 
     <div id="instructionsFooter"
         style="padding: 20px; background: white; border-top: 1px solid #ddd; text-align: left; margin-top: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <button onclick="window.location.href='../../pages/instructions.html'" class="navigation-btn">
-                <i class="fas fa-chevron-left"></i>
-                <span data-i18n="buttons.backToInstructions">Instructions</span>
-            </button>
+
             <button id="navSubmitBtn" class="nav-submit-btn">
                 <i class="fas fa-check"></i>
                 <span data-i18n="buttons.submit">Submit</span>

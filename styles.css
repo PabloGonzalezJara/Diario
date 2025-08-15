@@ -1,7 +1,7 @@
 
 
 :root {
-    --primary-color: #2563eb;
+    --primary-color: #682850;
     --secondary-color: #475569;
     --background-color: #f8fafc;
     --text-color: #1e293b;
@@ -780,7 +780,7 @@ body {
 .activity-block {
     position: absolute;
     padding: 2px 4px;
-    color: black;
+    color: white;
     font-size: 12px;
     border-radius: 4px;
     border: 2px solid transparent;
@@ -972,18 +972,10 @@ body {
     background-color: #334155;
 }
 
-.next-btn {
-    background-color: var(--primary-color);
-}
 
-.next-btn:hover:not(:disabled) {
-    background-color: #1d4ed8;
-}
 
-/* When next button shows Submit text, use success color */
-.next-btn:has(i.fa-check) {
-    background-color: var(--success-color);
-}
+
+
 
 .next-btn:has(i.fa-check):hover:not(:disabled) {
     background-color: #047857;
@@ -1059,7 +1051,7 @@ body {
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1001;
+    z-index: 0;
     align-items: center;
     justify-content: center;
 }
@@ -1081,12 +1073,7 @@ body {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
+
 
 .modal-close {
     background: none;
@@ -1495,8 +1482,7 @@ body {
     font-weight: 500;
     min-width: clamp(100px, 20vw, 120px);
     background-color: transparent;
-    border: 2px solid var(--primary-color, #2563eb);
-    color: var(--primary-color, #2563eb);
+    
     transition: all 0.2s ease;
     cursor: pointer;
 }
@@ -1691,7 +1677,7 @@ body {
 #childItemsModal {
     display: none;
     position: fixed;
-    z-index: 3000;
+    z-index: 1001;
     left: 0;
     top: 0;
     width: 100vw;

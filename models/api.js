@@ -1,6 +1,7 @@
 
+const baseURL = 'http://localhost:3000/api/';  
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api/',
+  baseURL: baseURL,
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -57,7 +58,7 @@ api.interceptors.response.use(
       isRefreshing = true;
       try {
         const refreshToken = localStorage.getItem('refreshToken');
-        const res = await axios.post('http://localhost:3000/api/auth/refresh', {
+        const res = await axios.post(`${baseURL}auth/refresh`, {
           refreshToken: refreshToken,
         });
         

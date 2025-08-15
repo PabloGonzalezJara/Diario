@@ -503,7 +503,10 @@ export function createTimelineDataFrame() {
                 nombre_actividad: activity.nombre_actividad ?? null,
                 valor_numerico: activity.maneja_numeros ? parseInt(activity.subcategoria.replace(/\D/g, '')) : null,
                 color: activity.color,
-                otroValor: activity.categoria.includes('Otros') ? activity.name : null,
+                otroValor: activity.categoria.includes('Otros') ||
+                    (activity.nombre_actividad && activity.nombre_actividad.trim().includes('(especifique)'))
+                    ? activity.name
+                    : null,
                 hora_inicio: activity.startTime,
                 hora_termino: activity.endTime,
                 identificador,
@@ -524,7 +527,7 @@ export function createTimelineDataFrame() {
 function toMySQLDatetime(dateISO) {
     const date = new Date(dateISO);
     const pad = n => n.toString().padStart(2, '0');
-    return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 }
 function dividirActividadPrincipalEnTramos(agrupado) {
     let tramos = agrupado.get("Principal")?.map(act => {
@@ -585,9 +588,9 @@ function dividirActividadPrincipalEnTramos(agrupado) {
                     ?? valorDim?.nombre_actividad
                     ?? valorDim?.nombre_subcategoria
                     ?? valorDim?.nombre_categoria
-                    ?? valorDim?.nombre_dimension
+                    ?? valorDim?.nombre_dimension   
                     ?? valorDim?.otroValor
-                    ?? "(sin nombre)";
+                    ?? null;
                 const nombre = nombreDimension(nombreDim);
                 subTramo[nombre.toLowerCase()] = clave;
 

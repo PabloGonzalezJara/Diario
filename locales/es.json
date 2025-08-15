@@ -3,16 +3,21 @@
     "title": "Instrucciones",
     "mainInstruction": "Piensa en las actividades que hiciste <span class=\"emphasis\">ayer</span>. Luego, completa la línea de tiempo con las actividades que realizaste.",
     "step1": {
-      "title": "Seleccionar y Colocar una Actividad",
-      "horizontal": "Elige una actividad del menú en la parte inferior de la pantalla, luego colócala en la línea de tiempo.",
-      "vertical": "Toca el botón (+) en la esquina inferior derecha para abrir el menú de actividades, luego selecciona una actividad y toca donde quieres colocarla en la línea de tiempo."
+      "title": "Actividad principal",
+      "horizontal": "Elige una actividad en la parte inferior de la pantalla, luego presiona en la línea del tiempo para colocarla y arrastra el cursor para seleccionar la duración de la actividad. La linea de tiempo debe estar completa antes de pasar al siguiente bloque (actividad secundaria).",
+      "vertical": "Toca el botón (+) en la esquina inferior derecha para abrir el menú de actividades, luego presiona en la línea del tiempo para colocarla y arrastrala para seleccionar la duración de la actividad. La linea de tiempo debe estar completa antes de pasar al siguiente bloque (actividad secundaria)."
     },
     "step2": {
-      "title": "Ajustar la Duración de la Actividad",
-      "horizontal": "Haz clic y arrastra los bordes horizontalmente para establecer la duración.",
-      "vertical": "Arrastra los bordes verticalmente para establecer la duración."
+      "title": "Actividad secundaria",
+      "horizontal": "La actividad secundaria refiere a aquellas actividades que se realizan de manera simultanea a una actividad principal. Selecciona y registra una actividad solamente cuando corresponda.",
+      "vertical": "La actividad secundaria refiere a aquellas actividades que se realizan de manera simultanea a una actividad principal. Selecciona y registra una actividad solamente cuando corresponda."
     },
     "step3": {
+      "title": "Actividades: ¿Dónde?/¿Con quién?/Satisfacción",
+      "horizontal": "Para cada actividad registrada, indica: (1) el lugar donde la realizaste, (2) con quién estabas y (3) tu nivel de satisfacción. Esto ayudará a comprender mejor el contexto y tu experiencia en cada momento del día.",
+      "vertical": "Para cada actividad registrada, indica: (1) el lugar donde la realizaste, (2) con quién estabas y (3) tu nivel de satisfacción. Esto ayudará a comprender mejor el contexto y tu experiencia en cada momento del día."
+    },
+    "step4": {
       "title": "Enviar tu Diario",
       "description": "Una vez que hayas registrado todas tus actividades del día, haz clic en el botón Enviar para completar tu diario.",
       "submitHelp": "Haz clic para enviar tu diario completado"
@@ -21,13 +26,13 @@
     "undoHelp": "¿Cometiste un error? Revierte tu última acción",
     "cleanRowHelp": "¿Quieres empezar de nuevo? Limpia la fila",
     "customActivityHelp": "¿Actividad no listada? Añade una actividad personalizada",
-    "customActivityName": "Otra no listada (ingresar)"
+    "customActivityName": "Otra no listada (especifique)"
   },
   "buttons": {
     "submit": "Enviar",
     "start": "Comenzar",
     "undo": "Deshacer",
-    "cleanRow": "Limpiar Fila",
+    "cleanRow": "Borrar",
     "next": "Siguiente",
     "back": "Atrás",
     "backToInstructions": "Instrucciones",
@@ -45,7 +50,7 @@
       "placeholder": "Ingresa tu actividad (máx. 30 caracteres)"
     },
     "addActivity": {
-      "title": "Agregar Actividad"
+      "title": "Agregar actividad"
     },
     "childItems": {
       "title": "Selecciona una opción",

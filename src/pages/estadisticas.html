@@ -322,13 +322,19 @@
 
                 if (item.nombre_dimension === "Principal" && dimension === "Principal") {
                     // Para la dimensión Principal, usar jerarquía de claves
-                    clave = item.nombre_actividad
+                    clave = 
+                        item.valor_numerico 
+                        || item.otroValor
+                        || item.nombre_actividad
+                       
                         || item.nombre_subcategoria
                         || item.nombre_categoria
-                        || item.otroValor
+                        || item.nombre_dimension
+                        
                         || "(sin nombre)";
                 } else if (dimension !== "Principal") {
                     // Para otras dimensiones, tomar el valor directamente del campo
+                    console.log(item)
                     clave = item[dimension] ?? "(sin valor)";
                 } else {
                     // Si no corresponde a esta dimensión, saltar

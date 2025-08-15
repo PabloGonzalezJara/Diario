@@ -3,6 +3,7 @@ export class Timeline {
         this.key = key;
         this.name = metadata?.name || '';
         this.description = metadata?.description || '';
+        this.descripcion = metadata?.descripcion || '';
         this.mode = metadata?.mode || 'single-choice';
         this.minCoverage = metadata?.min_coverage || 0;
         this.categories = metadata?.categories || [];
