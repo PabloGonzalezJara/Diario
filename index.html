@@ -47,7 +47,7 @@
         // Si la ruta actual no es válida, redirige a 404.html
         const isValid = validRoutes.some(valid => path === valid || path.endsWith(valid));
 
-/* 
+
         if (!isValid) {
             window.location.href = '/src/pages/404.html'; // ajusta si está en otra carpeta
         } else {
@@ -55,11 +55,11 @@
             if (path === '/') {
                 window.location.href = '/src/pages/login.html';
             } else {
-                window.location.href = '/src/pages/login.html';
+                window.location.href = `/src/pages${path}`;
             }
 
 
-        } */
+        }
     </script>
 </body>
 
