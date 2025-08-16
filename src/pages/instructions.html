@@ -8,14 +8,14 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Instructions | Time Use Diary</title>
-    <link rel="stylesheet" href="instructions.css">
+    <link rel="stylesheet" href="../instructions.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Load i18n (internationalization) module -->
-    <script src="../js/i18n.js" type="module">
+    <script src="../../js/i18n.js" type="module">
 
 
     </script>
@@ -155,7 +155,7 @@
     </nav>
     <script type="module">
 
-        import { getIsMobile, } from '../js/globals.js';
+        import { getIsMobile, } from '../../js/globals.js';
         document.addEventListener('DOMContentLoaded', () => {
             let isMobile = getIsMobile(); // Estado inicial
 
@@ -204,7 +204,7 @@
               
                 continueBtn.addEventListener('click', () => {
                     
-                    window.location.href = `${window.location.origin}/src/pages/timeline.html`;
+                    window.location.href = `./timeline.html`;
                 });
             } else {
                 console.error('Continue button not found!');
