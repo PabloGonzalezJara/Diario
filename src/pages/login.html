@@ -88,7 +88,7 @@
         import AuthController from '../../controller/AuthController.js';
         import { showToast } from '../utils/feedback.js';
         const token = localStorage.getItem('token')
-        if (token) window.location.href = './src/pages/inicio.html'
+        if (token) window.location.href = './inicio.html'
 
         document.getElementById('login-form').addEventListener('submit', async function (e) {
             e.preventDefault();
