@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (continueBtn) {
         console.log('Continue button found, adding click handler');
         continueBtn.addEventListener('click', () => {
-            window.location = `./timeline.html`;
+            window.location = `./src/timeline.html`;
         });
     } else {
         console.error('Continue button not found!');

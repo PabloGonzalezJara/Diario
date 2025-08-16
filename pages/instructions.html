@@ -203,7 +203,8 @@
             if (continueBtn) {
               
                 continueBtn.addEventListener('click', () => {
-                    window.location = `./timeline.html`;
+                    
+                    window.location.href = `${window.location.origin}/src/pages/timeline.html`;
                 });
             } else {
                 console.error('Continue button not found!');
