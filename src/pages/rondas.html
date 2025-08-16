@@ -29,9 +29,9 @@
                 </button>
                 <!-- Navegación de escritorio -->
                 <nav class="hidden md:flex space-x-6">
-                    <a href="/src/pages/inicio.html" class="hover:bg-white/20 px-4 py-2 rounded">Inicio</a>
+                    <a href="./inicio.html" class="hover:bg-white/20 px-4 py-2 rounded">Inicio</a>
                     <!-- <a href="/reportes.html" class="hover:bg-white/20 px-4 py-2 rounded">Reportes</a> -->
-                    <a href="/estadisticas.html" class="hover:bg-white/20 px-4 py-2 rounded">Estadísticas</a>
+                    <a href="./estadisticas.html" class="hover:bg-white/20 px-4 py-2 rounded">Estadísticas</a>
                 </nav>
             </div>
         </header>
@@ -173,7 +173,7 @@
                     if (activo) {
                         card.addEventListener('click', () => {
                             localStorage.setItem('id_ronda', ronda.id_ronda);
-                            window.location.href = '/src/pages/timeline.html';
+                            window.location.href = './timeline.html';
                         });
                     }
 

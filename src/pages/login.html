@@ -121,7 +121,7 @@
                 localStorage.setItem('identificador', identificador);
                 localStorage.setItem('refreshToken', response.refreshToken);
 
-                window.location.href = './src/pages/inicio.html';
+                window.location.href = './inicio.html';
             } catch (error) {
                 showToast('error', 'Credenciales incorrectas.', 'top-center', 2000);
                 console.error(error);
