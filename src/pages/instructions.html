@@ -213,7 +213,7 @@
             window.addEventListener('resize', updateLayout);
         });
         try {
-            const response = await fetch('../settings/activities.json');
+            const response = await fetch('../../settings/activities.json');
             if (response.ok) {
                 const data = await response.json();
                 const language = data.general?.language || 'en';

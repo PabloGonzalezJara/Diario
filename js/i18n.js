@@ -44,7 +44,7 @@ class I18n {
             const isInSubfolder = window.location.pathname.includes('/pages/');
             const localesPath = isInSubfolder ? '../../../locales' : './locales';
             
-            const response = await fetch(`./${localesPath}/${language}.json`);
+            const response = await fetch(`../../locales/${language}.json` );
             if (!response.ok) {
                 throw new Error(`Failed to load ${language} translations: ${response.status}`);
             }
