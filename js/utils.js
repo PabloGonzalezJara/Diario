@@ -373,25 +373,44 @@ export function canPlaceActivity(newStart, newEnd, excludeId = null) {
 
 
 export function currentcoverage() {
-
     const currentData = getCurrentTimelineData();
+    let coveredMinutes = 0;
 
-    var coveredMinutes = 0;
-    for (var i = 0; i < currentData.length; i++) {
-        var activity = currentData[i];
-        const startMinutes = new Date(activity.startTime)
-        const endMinutes = new Date(activity.endTime)
-
-        const diffMs = endMinutes - startMinutes;
-        const diffMins = Math.round(diffMs / 60000);
-
+    for (const activity of currentData) {
+        const startTime = activity.startTime.split(' ')[1];
+        const endTime = activity.endTime.split(' ')[1];
+        
+        // Special case: full day coverage (now checks both formats)
+        if (startTime === '04:00' && (endTime === '04:00(+1)' || endTime === '04:00')) {
+            return 100; // Return 100% immediately for full day coverage
+        }
+        
+        // Rest of the function remains the same...
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+        
+        const start = new Date(yesterday);
+        const [startHour, startMin] = startTime.split(':').map(Number);
+        start.setHours(startHour, startMin, 0);
+        
+        const end = new Date(yesterday);
+        const [endHour, endMin] = endTime.split(':').map(Number);
+        end.setHours(endHour, endMin, 0);
+        
+        if (startHour < 4 || startTime.includes('(+1)')) {
+            start.setDate(start.getDate() + 1);
+        }
+        // Always add a day to end time if it's 04:00
+        if (endHour < 4 || endTime.includes('(+1)') || (endHour === 4 && endMin === 0)) {
+            end.setDate(end.getDate() + 1);
+        }
+        
+        const diffMins = (end - start) / (1000 * 60);
         coveredMinutes += diffMins;
     }
 
-    return (coveredMinutes / MINUTES_PER_DAY) * 100
-
-
-
+    return (coveredMinutes / 1440) * 100;
 }
 
 export function calculateTimeDifference(startTime, endTime) {
@@ -416,7 +435,7 @@ export function calculateTimeDifference(startTime, endTime) {
     if (difference <= 0) {
         difference += 1440; // 24 hours * 60 minutes
     }
-
+   
     return difference;
 }
 
@@ -600,7 +619,7 @@ function dividirActividadPrincipalEnTramos(agrupado) {
 
         tramos = nuevosTramos;
     });
-    console.log(tramos)
+    
     return tramos;
 }
 

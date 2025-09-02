@@ -323,7 +323,7 @@ const handleNextButtonAction = () => {
         return;
 
     } 
-    
+   
     if(actualcoverage >= timelineCoveragePercent || timelineCoveragePercent == 0){
         addNextTimeline();
         const descripcion1 = document.getElementById("categoriaDescripcionMobile");
