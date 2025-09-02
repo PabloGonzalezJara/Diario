@@ -1,5 +1,5 @@
 
-const baseURL = 'http://ddut-frontend-kwhv4f-79f7e0-72-60-62-9.traefik.me/api/';  
+const baseURL = 'https://ddut-frontend-kwhv4f-79f7e0-72-60-62-9.traefik.me/api/';  
 /* const baseURL = 'http://localhost:3000/api/'; */
 const api = axios.create({
   baseURL: baseURL,
