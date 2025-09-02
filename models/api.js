@@ -1,5 +1,6 @@
 
-const baseURL = 'https://1d5prk8t-3000.brs.devtunnels.ms/api/';  
+const baseURL = 'https://ddut-frontend-kwhv4f-0e1706-72-60-62-9.traefik.me/api/';  
+/* const baseURL = 'http://localhost:3000/api/'; */
 const api = axios.create({
   baseURL: baseURL,
   headers: { 'Content-Type': 'application/json' },
