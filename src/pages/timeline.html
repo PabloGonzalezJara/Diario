@@ -81,6 +81,7 @@
             </div>
 
             <div class="activities-container" id="activitiesContainer">
+                
                 <div class="activities-accordion"></div>
             </div>
         </div>
@@ -109,8 +110,10 @@
 
     <script type="module">
         import { calculateTimeDifference } from '../../js/utils.js';
+        import { initScrollButtons } from '../../js/scroll-buttons.js';
         import { init } from '../../js/script.js';
         window.calculateTimeDifference = calculateTimeDifference;
+        initScrollButtons();
         await init();
     </script>
 
@@ -126,6 +129,18 @@
             </button>
         </div>
     </div>
-</body>
 
+    <!-- Botones de scroll -->
+    <div class="scroll-buttons">
+        <button id="scrollUpBtn" class="scroll-btn">
+            ▲
+        </button>
+        <button id="scrollDownBtn" class="scroll-btn">
+            ▼
+        </button>
+    </div>
+
+    
+
+    </body>
 </html>

@@ -27,6 +27,27 @@
         <p class="main-instruction" data-i18n-html="instructions.mainInstruction">Think about the activities you did
             <span class="emphasis">yesterday</span>. Then, fill in the full timeline with the activities you did.
         </p>
+        <div class="instruction-step">
+            <div class="step-content">
+                <h2 data-i18n="instructions.step5.title">Como ingresar una actividad</h2>
+                <div class="layout-specific horizontal-layout">
+                    <p data-i18n="instructions.step5.horizontal">Choose an activity from the menu at the bottom of the
+                        screen, then place it on the timeline.</p>
+                    <div class="gif-container loading" data-src="../assets/1Horizontal.gif">
+                        <img src="../assets/1Horizontal.gif" alt="Selecting an activity from the bottom menu"
+                            loading="lazy" onload="this.parentElement.classList.remove('loading')" />
+                    </div>
+                </div>
+                <div class="layout-specific vertical-layout">
+                    <p data-i18n="instructions.step5.vertical">Tap the (+) button in the bottom right corner to open the
+                        activity menu, then select an activity and tap where you want to place it on the timeline.</p>
+                    <div class="gif-container loading" data-src="../assets/1V.gif">
+                        <img src="../assets/1V.gif" alt="Selecting an activity in vertical layout" loading="lazy"
+                            onload="this.parentElement.classList.remove('loading')" />
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="instruction-step">
             <div class="step-number">1</div>
@@ -44,8 +65,8 @@
                     <p data-i18n="instructions.step1.vertical">Tap the (+) button in the bottom right corner to open the
                         activity menu, then select an activity and tap where you want to place it on the timeline.</p>
                     <div class="gif-container loading" data-src="../assets/1V.gif">
-                        <img src="../assets/1V.gif" alt="Selecting an activity in vertical layout"
-                            loading="lazy" onload="this.parentElement.classList.remove('loading')" />
+                        <img src="../assets/1V.gif" alt="Selecting an activity in vertical layout" loading="lazy"
+                            onload="this.parentElement.classList.remove('loading')" />
                     </div>
                 </div>
             </div>
@@ -66,9 +87,8 @@
                 <div class="layout-specific vertical-layout">
                     <p data-i18n="instructions.step2.vertical">Drag the edges vertically to set the duration.</p>
                     <div class="gif-container loading" data-src="../assets/2V.gif">
-                        <img src="../assets/2V.gif"
-                            alt="Placing and adjusting activity duration vertically" loading="lazy"
-                            onload="this.parentElement.classList.remove('loading')" />
+                        <img src="../assets/2V.gif" alt="Placing and adjusting activity duration vertically"
+                            loading="lazy" onload="this.parentElement.classList.remove('loading')" />
                     </div>
                 </div>
             </div>
@@ -88,9 +108,8 @@
                 <div class="layout-specific vertical-layout">
                     <p data-i18n="instructions.step3.vertical">Drag the edges vertically to set the duration.</p>
                     <div class="gif-container loading" data-src="../assets/3V.gif">
-                        <img src="../assets/3V.gif"
-                            alt="Placing and adjusting activity duration vertically" loading="lazy"
-                            onload="this.parentElement.classList.remove('loading')" />
+                        <img src="../assets/3V.gif" alt="Placing and adjusting activity duration vertically"
+                            loading="lazy" onload="this.parentElement.classList.remove('loading')" />
                     </div>
                 </div>
             </div>
@@ -197,13 +216,13 @@
                 }
             });
             const continueBtn = document.getElementById('continueBtn');
-            
+
 
             // Botón continuar
             if (continueBtn) {
-              
+
                 continueBtn.addEventListener('click', () => {
-                    
+
                     window.location.href = `./timeline.html`;
                 });
             } else {

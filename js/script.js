@@ -834,7 +834,7 @@ function mostrarPopup(texto) {
 
 function renderActivities(categories, container = document.getElementById('activitiesContainer')) {
     container.innerHTML = '';
-
+    console.log("MODE", container.getAttribute('data-mode'))
     // Set data-mode attribute based on current timeline's mode
     const currentKey = getCurrentTimelineKey();
     if (currentKey && window.timelineManager.metadata[currentKey]) {
@@ -890,11 +890,11 @@ function renderActivities(categories, container = document.getElementById('activ
             category.activities.forEach(activity => {
                 const activityButton = document.createElement('button');
                 const isMultipleChoice = container.getAttribute('data-mode') === 'multiple-choice';
+                
                 activityButton.className = `activity-button ${isMultipleChoice ? 'checkbox-style' : ''}`;
                 activityButton.addEventListener('click', (event) => {
                     event.stopPropagation();
-                    /* descripcion2.textContent = activity.descripcion || '-';
-                    descripcion.textContent = activity.descripcion || '-'; */
+                    
                     if (activity.descripcion != null) {
                         mostrarPopup(activity.descripcion);
                     }
@@ -957,7 +957,14 @@ function renderActivities(categories, container = document.getElementById('activ
                                     activityButton.classList.add('selected');
                                     const selectedButtons = Array.from(categoryButtons).filter(btn => btn.classList.contains('selected'));
                                     window.selectedActivity = {
-
+                                        subcategoria: activity.name,
+                                        categoria: category.name,
+                                        dimension: category.nombre_dimension,
+                                        id_categoria: category.id_categoria,
+                                        maneja_numeros: category.maneja_numeros,
+                                        id_subcategoria: activity.id_subcategoria,
+                                        id_dimension: category.id_dimension,
+                                        id_estudio: category.id_estudio,
                                         name: btn === activityButton ? customText : btn.querySelector('.activity-text').textContent,
                                         color: btn.style.getPropertyValue('--color')
                                     };
@@ -1037,8 +1044,8 @@ function renderActivities(categories, container = document.getElementById('activ
                                 id_categoria: category.id_categoria,
                                 id_subcategoria: activity.id_subcategoria,
                                 id_dimension: category.id_dimension,
-                                id_actividad: childItem.id_actividad,
-                                nombre_actividad: childItem.name,
+                               
+                                
                                 id_estudio: category.id_estudio,
                                 category: category.name
                             };
@@ -1286,7 +1293,18 @@ function renderActivities(categories, container = document.getElementById('activ
                         const selectedButtons = Array.from(categoryButtons).filter(btn => btn.classList.contains('selected'));
 
                         if (selectedButtons.length > 0) {
+                            console.log("SELECTED BUTTONS", activity)
                             window.selectedActivity = {
+                                subcategoria: activity.name,
+                                categoria: category.name,
+                                dimension: category.nombre_dimension,
+                                id_categoria: category.id_categoria,
+                                maneja_numeros: category.maneja_numeros,
+                                id_subcategoria: activity.id_subcategoria,
+                                id_dimension: category.id_dimension,
+                                id_estudio: category.id_estudio,
+
+
                                 selections: selectedButtons.map(btn => ({
                                     name: btn.querySelector('.activity-text').textContent,
                                     color: btn.style.getPropertyValue('--color')

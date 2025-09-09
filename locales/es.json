@@ -4,23 +4,28 @@
     "mainInstruction": "Piensa en las actividades que hiciste <span class=\"emphasis\">ayer</span>. Luego, completa la línea de tiempo con las actividades que realizaste.",
     "step1": {
       "title": "Actividad principal",
-      "horizontal": "Elige una actividad en la parte inferior de la pantalla, luego presiona en la línea del tiempo para colocarla y arrastra el cursor para seleccionar la duración de la actividad. La linea de tiempo debe estar completa antes de pasar al siguiente bloque (actividad secundaria).",
-      "vertical": "Toca el botón (+) en la esquina inferior derecha para abrir el menú de actividades, luego presiona en la línea del tiempo para colocarla y arrastrala para seleccionar la duración de la actividad. La linea de tiempo debe estar completa antes de pasar al siguiente bloque (actividad secundaria)."
+      "horizontal": "Es la tarea más relevante que la persona realiza o a la que dedica su atención en cada tramo de tiempo. Por ejemplo, si está cocinando mientras escucha la radio, la actividad principal es cocinar y escuchar la radio sería una actividad secundaria. Recuerde que debe completar la línea del tiempo (24 horas) para poder continuar. ",
+      "vertical": "Es la tarea más relevante que la persona realiza o a la que dedica su atención en cada tramo de tiempo. Por ejemplo, si está cocinando mientras escucha la radio, la actividad principal es cocinar y escuchar la radio sería una actividad secundaria. Recuerde que debe completar la línea del tiempo (24 horas) para poder continuar."
     },
     "step2": {
       "title": "Actividad secundaria",
-      "horizontal": "La actividad secundaria refiere a aquellas actividades que se realizan de manera simultanea a una actividad principal. Selecciona y registra una actividad solamente cuando corresponda.",
-      "vertical": "La actividad secundaria refiere a aquellas actividades que se realizan de manera simultanea a una actividad principal. Selecciona y registra una actividad solamente cuando corresponda."
+      "horizontal": "La actividad secundaria es una acción que realiza de manera simultánea a una actividad principal. Por ejemplo, si está cuidando de su hijo/a y mirando la televisión, la actividad secundaria es mirar la televisión.",
+      "vertical": "La actividad secundaria es una acción que realiza de manera simultánea a una actividad principal. Selecciona y registra una actividad solamente cuando corresponda."
     },
     "step3": {
       "title": "Actividades: ¿Dónde?/¿Con quién?/Satisfacción",
-      "horizontal": "Para cada actividad registrada, indica: (1) el lugar donde la realizaste, (2) con quién estabas y (3) tu nivel de satisfacción. Esto ayudará a comprender mejor el contexto y tu experiencia en cada momento del día.",
-      "vertical": "Para cada actividad registrada, indica: (1) el lugar donde la realizaste, (2) con quién estabas y (3) tu nivel de satisfacción. Esto ayudará a comprender mejor el contexto y tu experiencia en cada momento del día."
+      "horizontal": "Para cada actividad registrada, indica: (1) El lugar donde te encontrabas mientras realizabas la actividad, (2) Con quién/es estabas mientras realizabas la actividad y (3) Tu nivel de satifacción durante el tiempo en que realizabas esta actividad. Esto ayudará a comprender mejor el contexto y tu experiencia en cada momento del día.",
+      "vertical": "Para cada actividad registrada, indica: (1) El lugar donde te encontrabas mientras realizabas la actividad, (2) Con quién/es estabas mientras realizabas la actividad y (3) Tu nivel de satifacción durante el tiempo en que realizabas esta actividad. Esto ayudará a comprender mejor el contexto y tu experiencia en cada momento del día."
     },
     "step4": {
       "title": "Enviar tu Diario",
       "description": "Una vez que hayas registrado todas tus actividades del día, haz clic en el botón Enviar para completar tu diario.",
       "submitHelp": "Haz clic para enviar tu diario completado"
+    },
+    "step5": {
+      "title": "Como ingresar una actividad",
+      "horizontal": "Selecciona una actividad del menú en la parte inferior de la pantalla, posiciona el cursor en la linea de tiempo y haz click para registrarla. Luego pon el cursor sobre la actividad y arrastra para seleccionar la duración de la actividad.",
+      "vertical": "Toca el botón (+) en la esquina inferior derecha para abrir el menú de actividades, luego presiona en la línea del tiempo para colocarla y arrastrala para seleccionar la duración de la actividad."
     },
     "helpfulTools": "Herramientas útiles",
     "undoHelp": "¿Cometiste un error? Revierte tu última acción",

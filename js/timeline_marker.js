@@ -78,10 +78,22 @@ export class TimelineMarker {
                     labelWrapper.style.left = this.element.style.left;
                     labelWrapper.style.top = ''; // Clear top position
                 }
-                
+                if(this.label === '03:00' && isMobile) {
+                    console.log('Adding extra label for 04:00 in mobile mode');
+                    // Add 04:00 label for mobile mode
+                    const extraWrapper = document.createElement('div');
+                    extraWrapper.className = 'hour-label-wrapper '; 
+                    extraWrapper.style.position = 'absolute';
+                    extraWrapper.style.top = '99.7%';
+                    const extraLabel = document.createElement('div');
+                    extraLabel.className = 'hour-label';
+                    extraLabel.textContent = '04:00';
+                    extraWrapper.appendChild(extraLabel);
+                    hourLabelsContainer.appendChild(extraWrapper);
+                }
                 labelWrapper.appendChild(label);
                 hourLabelsContainer.appendChild(labelWrapper);
-
+/* 
                 // Add an extra wrapper at 100% position when we reach the last marker (desktop mode only)
                 if (this.label === '03:00' && !isMobile) {
                     const extraWrapper = document.createElement('div');
@@ -93,7 +105,7 @@ export class TimelineMarker {
                     extraLabel.textContent = '04:00';
                     extraWrapper.appendChild(extraLabel);
                     hourLabelsContainer.appendChild(extraWrapper);
-                }
+                } */
             }
         }
 

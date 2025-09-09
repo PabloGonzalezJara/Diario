@@ -508,7 +508,7 @@ export function createTimelineDataFrame() {
             const start = new Date(activity.startTime);
             const end = new Date(activity.endTime);
             const minutos = Math.round((end - start) / 60000);
-
+            console.log(activity);
             const row = {
                 id_estudio: activity.id_estudio || null,
                 id_dimension: activity.id_dimension,
@@ -518,8 +518,13 @@ export function createTimelineDataFrame() {
                 id_ronda: ronda,
                 nombre_dimension: activity.dimension,
                 nombre_categoria: activity.categoria,
-                nombre_subcategoria: activity.subcategoria,
-                nombre_actividad: activity.nombre_actividad ?? null,
+                nombre_subcategoria: activity.selections ?
+                    activity.activity.split('|')
+                        .map(item => item.trim())
+                        .sort()
+                        .join('|')
+                    : activity.subcategoria,
+                nombre_actividad: activity.selections ? activity.activity : activity.nombre_actividad,
                 valor_numerico: activity.maneja_numeros ? parseInt(activity.subcategoria.replace(/\D/g, '')) : null,
                 color: activity.color,
                 otroValor: activity.categoria.includes('Otros') ||
@@ -540,6 +545,7 @@ export function createTimelineDataFrame() {
 
 
     const tramos = dividirActividadPrincipalEnTramos(agrupado);
+    console.log("TRAMOS", tramos)
 
     return tramos;
 }
@@ -651,70 +657,7 @@ export async function sendDataToDataPipe() {
         const timelineData = createTimelineDataFrame();
         const ronda = localStorage.getItem('id_ronda')
         const identificador = localStorage.getItem('identificador')
-        /* const identificador = localStorage.getItem('identificador')
-        // Get study data if available
-        let studyData = window.timelineManager?.study || {};
-        let pid;
-
-        // Check if ppid exists and is not empty
-        const hasPpid = (studyData.ppid !== undefined && studyData.ppid !== null && studyData.ppid !== '') ||
-            (studyData.PPID !== undefined && studyData.PPID !== null && studyData.PPID !== '');
-
-        if (hasPpid) {
-            // Use ppid as pid when ppid is not empty
-            pid = studyData.ppid || studyData.PPID;
-        } else if (!('pid' in studyData) && !('PID' in studyData)) {
-            // Generate random pid if neither pid nor ppid exists
-            pid = ('0000000000000000' + Math.floor(Math.random() * 1e16)).slice(-16);
-            studyData.pid = pid;
-        } else {
-            // Use existing pid if ppid doesn't exist but pid does
-            pid = studyData.pid || studyData.PID;
-        }
-
-        // --- Prepare Participant Data ---
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-        const layoutHorizontal = viewportWidth >= 1440;
-
-        // Get browser info if available
-        let browserInfo = { name: 'unknown', version: 'unknown' };
-        if (window.bowser) {
-            const browserParser = window.bowser.getParser(window.navigator.userAgent);
-            browserInfo = {
-                name: browserParser.getBrowserName(),
-                version: browserParser.getBrowserVersion()
-            };
-        }
         
-        // Determine session_id based on whether ppid exists
-        const session_id = hasPpid && (studyData.survey || studyData.SURVEY)
-            ? (studyData.survey || studyData.SURVEY)
-            : (studyData.SESSION_ID || null);
-        
-        // Combine timeline and participant data
-        const combinedData = timelineData.map(row => ({
-           
-            id_estudio: row.id_estudio || null,
-            identificador: identificador,
-            id_dimension: row.id_dimension,
-            id_categoria: row.id_categoria,
-            id_subcategoria: row.id_subcategoria,
-            id_actividad: row.id_actividad != null ? row.id_actividad : null,
-            id_ronda: ronda,
-            nombre_categoria: row.categoria,
-            nombre_dimension: row.dimension,
-            nombre_subcategoria: row.subcategoria,
-            nombre_actividad: row.nombre_actividad != null ? row.nombre_actividad : null,
-            valor_numerico: row.maneja_numeros ? parseInt(row.subcategoria.replace(/\D/g, '')) : null,
-            minutos: row.minutos,
-            color: row.color,
-            otroValor: row.categoria.includes('Otra actividad') ? row.name : null,
-            hora_inicio: row.startTime,
-            hora_termino: row.endTime,
-         
-
-        })); */
         console.log(timelineData.length)
         const res = await TimelineApi.saveTimelineData(timelineData);
 
@@ -730,58 +673,7 @@ export async function sendDataToDataPipe() {
         }
 
         hideLoadingModal();
-        // completar la ronda correspondiente en la base de datos
-
-
-
-        // Convert to CSV format
-        /*  const csvData = convertArrayToCSV(combinedData);
- 
-         // Generate unique filename with timestamp
-         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-         const filename = `timeline_${pid}_${timestamp}.csv`; */
-        //Accept: "*/*",
-        // Send to DataPipe API
-        /* const response = await fetch("https://pipe.jspsych.org/api/data/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-           
-          },
-          body: JSON.stringify({
-            experimentID: window.timelineManager?.general?.experimentID || "eR8ENvJPgQth",
-            filename: filename,
-            data: csvData,
-          }),
-        });
-    
-        if (!response.ok) {
-          throw new Error(`DataPipe API request failed: ${response.status} ${response.statusText}`);
-        }
-    
-        console.log('Data sent to DataPipe successfully'); */
-
-        // Hide loading modal before redirect
-
-        /* 
-                // Handle redirect to thank you page
-                const redirectUrl = window.timelineManager?.general?.primary_redirect_url;
         
-                if (redirectUrl) {
-                    // Check if it's a relative URL (like our thank-you.html page)
-                    if (!redirectUrl.startsWith('http')) {
-                        // For relative URLs, just redirect directly
-                        window.location.href = redirectUrl;
-                    } else {
-                        // For external URLs, preserve existing URL parameters
-                        const currentParams = new URLSearchParams(window.location.search);
-                        const separator = redirectUrl.includes('?') ? '&' : '?';
-                        const finalRedirectUrl = redirectUrl +
-                            (currentParams.toString() ? separator + currentParams.toString() : '');
-        
-                        window.location.href = finalRedirectUrl;
-                    }
-                } */
 
         return { success: true };
     } catch (error) {
