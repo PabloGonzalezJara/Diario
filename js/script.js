@@ -304,7 +304,8 @@ async function addNextTimeline() {
         // Add title element
         const titleDiv = document.createElement('div');
         titleDiv.className = 'title';
-        titleDiv.textContent = window.timelineManager.metadata[nextTimelineKey].name;
+        
+        titleDiv.textContent = window.timelineManager.metadata[nextTimelineKey].name == "Principal" || window.timelineManager.metadata[nextTimelineKey].name == "Secundaria" ? `Actividad ${window.timelineManager.metadata[nextTimelineKey].name.toLowerCase()}` : window.timelineManager.metadata[nextTimelineKey].name;
         newTimelineContainer.appendChild(titleDiv);
 
         const newTimeline = document.createElement('div');
@@ -486,7 +487,7 @@ async function goToPreviousTimeline() {
             // Add title element
             const titleDiv = document.createElement('div');
             titleDiv.className = 'title';
-            titleDiv.textContent = window.timelineManager.metadata[previousTimelineKey].name;
+            titleDiv.textContent = window.timelineManager.metadata[nextTimelineKey].name == "Principal" || window.timelineManager.metadata[nextTimelineKey].name == "Secundaria" ? `Actividad ${window.timelineManager.metadata[nextTimelineKey].name.toLowerCase()}` : window.timelineManager.metadata[nextTimelineKey].name;
             newTimelineContainer.appendChild(titleDiv);
 
             const newTimeline = document.createElement('div');

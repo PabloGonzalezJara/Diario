@@ -210,18 +210,7 @@ body {
     }
 }
 
-/* Base styles (outside media query) */
-.past-initialized-timelines-wrapper {
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 20px;
-    margin-bottom: 20px;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    /* Initialize with timeline-count=0 */
-    --timeline-count: 0;
-}
+
 
 .timeline-header {
     text-align: center;
@@ -283,7 +272,19 @@ body {
         width: 100%;
         height: 120px;
     }
-    
+     /* Base styles (outside media query) */
+.past-initialized-timelines-wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    /* Initialize with timeline-count=0 */
+    --timeline-count: 0;
+}   
     /* Improve text wrapping for desktop view */
     .activity-block-text-narrow.wide.resized {
         white-space: normal !important; /* Override any inline styles */
