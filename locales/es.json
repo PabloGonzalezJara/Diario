@@ -14,8 +14,8 @@
     },
     "step3": {
       "title": "Actividades: ¿Dónde?/¿Con quién?/Satisfacción",
-      "horizontal": "Para cada actividad registrada, indica: (1) El lugar donde te encontrabas mientras realizabas la actividad, (2) Con quién/es estabas mientras realizabas la actividad y (3) Tu nivel de satifacción durante el tiempo en que realizabas esta actividad. Esto ayudará a comprender mejor el contexto y tu experiencia en cada momento del día.",
-      "vertical": "Para cada actividad registrada, indica: (1) El lugar donde te encontrabas mientras realizabas la actividad, (2) Con quién/es estabas mientras realizabas la actividad y (3) Tu nivel de satifacción durante el tiempo en que realizabas esta actividad. Esto ayudará a comprender mejor el contexto y tu experiencia en cada momento del día."
+      "horizontal": "Para cada actividad registrada, indica: (1) El lugar donde te encontrabas mientras realizabas la actividad, (2) Con quién/es estabas mientras realizabas la actividad y (3) Tu nivel de satisfacción durante el tiempo en que realizabas esta actividad. Esto ayudará a comprender mejor el contexto y tu experiencia en cada momento del día.",
+      "vertical": "Para cada actividad registrada, indica: (1) El lugar donde te encontrabas mientras realizabas la actividad, (2) Con quién/es estabas mientras realizabas la actividad y (3) Tu nivel de satisfacción durante el tiempo en que realizabas esta actividad. Esto ayudará a comprender mejor el contexto y tu experiencia en cada momento del día."
     },
     "step4": {
       "title": "Enviar tu Diario",
