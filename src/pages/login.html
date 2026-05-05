@@ -27,8 +27,8 @@
                 <h1 class="text-2xl font-semibold mb-6 text-center text-gray-800">Ingresa a tu cuenta</h1>
                 <form id="login-form" class="space-y-4">
                     <div>
-                        <label for="rut" class="block text-gray-700 font-medium">R.U.T</label>
-                        <input id="rut" name="rut" type="text" placeholder="12345678-9" required
+                        <label for="rut" class="block text-gray-700 font-medium">R.U.T (Sin dígito verificador)</label>
+                        <input id="rut" name="rut" type="text" placeholder="20345678" required
                             class="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-primary focus:border-primary" />
                     </div>
                     <div>
@@ -98,12 +98,12 @@
             btn.textContent = 'Ingresando…';
             const identificador = document.getElementById('rut').value;
             const contrasena = document.getElementById('password').value;
-            const rutPattern = /^[0-9]+\.?[0-9]*-[0-9kK]$/;
+            const rutPattern = /^[a-zA-Z0-9]{8,20}$/;
             const passwordPattern = /^.{8,20}$/;
 
             if (!rutPattern.test(identificador)) {
 
-                showToast('error', 'Ingrese un R.U.T. válido.', 'top-center', 2000);
+                showToast('error', 'El R.U.T. debe tener entre 8 y 20 caracteres alfanuméricos.', 'top-center', 2000);
                 btn.disabled = false;
                 btn.textContent = 'Ingresar';
                 return;
