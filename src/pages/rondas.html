@@ -115,10 +115,17 @@
                 if (!rondasPorNumero[r.numero_ronda]) {
                     rondasPorNumero[r.numero_ronda] = [];
                 }
-                rondasPorNumero[r.numero_ronda].push(r);
-            });
-
+                
+                if(r.numero_ronda != 2) {
+                  
+                    rondasPorNumero[r.numero_ronda].push(r);
+                }
+                
+            }); 
+          
             Object.entries(rondasPorNumero).forEach(([numero_ronda, muestras]) => {
+                
+                if (muestras.length === 0) return; // Ignorar rondas sin número válido
                 const grupo = document.createElement('div');
                 grupo.className = 'bg-white rounded-lg shadow p-4 border-2 border-primary-light mb-6';
 
@@ -205,11 +212,12 @@
 
 
         let rondasActuales = [];
-
+        
         getRondasFromDB().then(rondas => {
             rondasActuales = rondas;
             /* rondasActuales[0].semana = 28
             rondasActuales[0].finalizada = true; */
+            
             renderizarRondas(rondasActuales);
 
         });
