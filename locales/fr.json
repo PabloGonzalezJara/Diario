@@ -57,31 +57,7 @@
     "loading": {
       "title": "Soumission de votre journal...",
       "message": "Veuillez patienter pendant que nous sauvegardons vos réponses."
-    }
-  },
-  "messages": {
-    "loading": "Chargement...",
-    "saving": "Sauvegarde...",
-    "saved": "Sauvegardé avec succès",
-    "error": "Une erreur s'est produite",
-    "noActivities": "Aucune activité trouvée",
-    "fillRequired": "Veuillez remplir toutes les activités requises",
-    "submitSuccess": "Journal soumis avec succès",
-    "submitError": "Erreur lors de la soumission du journal"
-  },
-  "activities": {
-    "otherNotListed": "Autre non listé (entrer)"
-  },
-  "thankYou": {
-    "title": "Merci - O-ELIDDI",
-    "heading": "Merci !",
-    "subtitle": "Votre soumission a été complétée avec succès.",
-    "message": "Merci de participer à notre étude <span class=\"app-name\">O-ELIDDI</span>. Vos réponses ont été enregistrées et contribueront à des recherches précieuses."
-  },
-  "nav": {
-    "manageUsers": "Gérer les utilisateurs"
-  },
-  "modals": {
+    },
     "manageUsers": {
       "pageTitle": "Gérer les utilisateurs",
       "title": "Créer un utilisateur",
@@ -110,5 +86,27 @@
         "estudios": "Nombre d'études"
       }
     }
+  },
+  "messages": {
+    "loading": "Chargement...",
+    "saving": "Sauvegarde...",
+    "saved": "Sauvegardé avec succès",
+    "error": "Une erreur s'est produite",
+    "noActivities": "Aucune activité trouvée",
+    "fillRequired": "Veuillez remplir toutes les activités requises",
+    "submitSuccess": "Journal soumis avec succès",
+    "submitError": "Erreur lors de la soumission du journal"
+  },
+  "activities": {
+    "otherNotListed": "Autre non listé (entrer)"
+  },
+  "thankYou": {
+    "title": "Merci - O-ELIDDI",
+    "heading": "Merci !",
+    "subtitle": "Votre soumission a été complétée avec succès.",
+    "message": "Merci de participer à notre étude <span class=\"app-name\">O-ELIDDI</span>. Vos réponses ont été enregistrées et contribueront à des recherches précieuses."
+  },
+  "nav": {
+    "manageUsers": "Gérer les utilisateurs"
   }
 }

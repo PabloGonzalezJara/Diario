@@ -57,31 +57,7 @@
     "loading": {
       "title": "Submitting your diary...",
       "message": "Please wait while we save your responses."
-    }
-  },
-  "messages": {
-    "loading": "Loading...",
-    "saving": "Saving...",
-    "saved": "Saved successfully",
-    "error": "An error occurred",
-    "noActivities": "No activities found",
-    "fillRequired": "Please fill in all required activities",
-    "submitSuccess": "Diary submitted successfully",
-    "submitError": "Error submitting diary"
-  },
-  "activities": {
-    "otherNotListed": "Other not listed (enter)"
-  },
-  "thankYou": {
-    "title": "Thank You - O-ELIDDI",
-    "heading": "Thank You!",
-    "subtitle": "Your submission has been completed successfully.",
-    "message": "Thank you for participating in our <span class=\"app-name\">O-ELIDDI</span> study. Your responses have been recorded and will contribute to valuable research."
-  },
-  "nav": {
-    "manageUsers": "Manage users"
-  },
-  "modals": {
+    },
     "manageUsers": {
       "pageTitle": "Manage users",
       "title": "Create user",
@@ -110,5 +86,27 @@
         "estudios": "Number of studies"
       }
     }
+  },
+  "messages": {
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "saved": "Saved successfully",
+    "error": "An error occurred",
+    "noActivities": "No activities found",
+    "fillRequired": "Please fill in all required activities",
+    "submitSuccess": "Diary submitted successfully",
+    "submitError": "Error submitting diary"
+  },
+  "activities": {
+    "otherNotListed": "Other not listed (enter)"
+  },
+  "thankYou": {
+    "title": "Thank You - O-ELIDDI",
+    "heading": "Thank You!",
+    "subtitle": "Your submission has been completed successfully.",
+    "message": "Thank you for participating in our <span class=\"app-name\">O-ELIDDI</span> study. Your responses have been recorded and will contribute to valuable research."
+  },
+  "nav": {
+    "manageUsers": "Manage users"
   }
 }
