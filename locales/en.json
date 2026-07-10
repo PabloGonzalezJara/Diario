@@ -57,6 +57,40 @@
     "loading": {
       "title": "Submitting your diary...",
       "message": "Please wait while we save your responses."
+    },
+    "manageUsers": {
+      "pageTitle": "Manage users",
+      "title": "Create user",
+      "fields": {
+        "identificador": "Identifier",
+        "contrasena": "Password",
+        "estudios": "Studies",
+        "estudios.help": "Select one or more studies"
+      },
+      "buttons": {
+        "create": "Create user",
+        "cancel": "Cancel"
+      },
+      "messages": {
+        "success": "User created successfully",
+        "errorDuplicate": "The identifier already exists",
+        "errorGeneric": "An error occurred while creating the user"
+      },
+      "errors": {
+        "identificadorLength": "The identifier must be between 1 and 100 characters",
+        "contrasenaLength": "The password must be at least 8 characters",
+        "minOneStudy": "Select at least one study"
+      },
+      "table": {
+        "identificador": "Identifier",
+        "estudios": "Number of studies"
+      },
+      "pagination": {
+        "page": "Page",
+        "of": "of",
+        "prev": "Previous",
+        "next": "Next"
+      }
     }
   },
   "messages": {
@@ -77,5 +111,8 @@
     "heading": "Thank You!",
     "subtitle": "Your submission has been completed successfully.",
     "message": "Thank you for participating in our <span class=\"app-name\">O-ELIDDI</span> study. Your responses have been recorded and will contribute to valuable research."
+  },
+  "nav": {
+    "manageUsers": "Manage users"
   }
 }

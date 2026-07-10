@@ -64,8 +64,15 @@ api.interceptors.response.use(
         });
         
         const newToken = res.data.data.token;
-       
+        const crearUsuario = res.data.data.crear_usuario;
+
         localStorage.setItem('token', newToken);
+        // Persist crear_usuario flag from refresh response (fail-closed)
+        if (crearUsuario !== undefined) {
+            localStorage.setItem('crear_usuario', String(crearUsuario));
+        } else {
+            localStorage.removeItem('crear_usuario');
+        }
 
         processQueue(null, newToken);
 
