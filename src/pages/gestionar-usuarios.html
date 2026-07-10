@@ -14,11 +14,11 @@
 
 </head>
 
-<body class="bg-gray-50 min-h-screen flex flex-col">
-  <div class="flex-grow flex flex-col">
+<body class="bg-gray-50 h-screen overflow-hidden flex flex-col">
+  <div class="flex flex-col min-h-0 flex-1">
 
     <!-- Header con menú móvil -->
-    <header class="bg-primary-light text-white flex items-center justify-between px-6 py-4 rounded-b-lg shadow-md">
+    <header class="bg-primary-light text-white flex items-center justify-between px-6 py-4 rounded-b-lg shadow-md flex-shrink-0">
       <div class="flex items-center space-x-4">
         <img src="../assets/svg/icono.svg" alt="Icono Labofam" class="h-10 w-auto filter invert" />
         <img src="../assets/svg/logo.svg" alt="Labofam" class="h-6 w-auto filter invert" />
@@ -41,7 +41,7 @@
     </header>
 
     <!-- Menú móvil desplegable -->
-    <nav id="mobile-nav" class="bg-primary-light text-white hidden md:hidden">
+    <nav id="mobile-nav" class="bg-primary-light text-white hidden md:hidden flex-shrink-0">
       <div class="flex flex-col px-6 py-4 space-y-2">
         <a href="./inicio.html" class="block py-2 hover:bg-primary-light/20 rounded">Inicio</a>
         <a href="./estadisticas.html" class="block py-2 hover:bg-primary-light/20 rounded">Estadísticas</a>
@@ -50,22 +50,22 @@
     </nav>
 
     <!-- Page title and create button -->
-    <div class="mt-6 mx-6 flex justify-between items-center">
+    <div class="mt-6 mx-6 flex justify-between items-center flex-shrink-0">
       <h1 class="text-2xl font-semibold text-gray-800" data-i18n="modals.manageUsers.pageTitle">Gestionar usuarios</h1>
       <button id="btn-create-user" class="bg-primary-light text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition flex items-center gap-2">
         <span>+ </span><span data-i18n="modals.manageUsers.buttons.create">Crear usuario</span>
       </button>
     </div>
 
-    <!-- Users table (flex-1 to fill remaining height) -->
+    <!-- Users table (flex-1 fills remaining height) -->
     <main class="bg-white mt-4 mx-6 mb-6 p-6 rounded-lg shadow-sm flex-1 flex flex-col min-h-0">
-      <div id="users-message" class="text-gray-500 mb-4" data-i18n="messages.loading">Cargando...</div>
+      <div id="users-message" class="text-gray-500 mb-4 flex-shrink-0" data-i18n="messages.loading">Cargando...</div>
       <div class="flex-1 overflow-auto min-h-0">
         <table id="users-table" class="w-full text-left hidden">
           <thead>
             <tr class="border-b">
-              <th class="pb-3 font-semibold text-gray-700" data-i18n="modals.manageUsers.table.identificador">Identificador</th>
-              <th class="pb-3 font-semibold text-gray-700" data-i18n="modals.manageUsers.table.estudios">Cantidad de estudios</th>
+              <th class="pb-3 font-semibold text-gray-700 sticky top-0 bg-white" data-i18n="modals.manageUsers.table.identificador">Identificador</th>
+              <th class="pb-3 font-semibold text-gray-700 sticky top-0 bg-white" data-i18n="modals.manageUsers.table.estudios">Cantidad de estudios</th>
             </tr>
           </thead>
           <tbody id="users-tbody">
@@ -73,7 +73,7 @@
         </table>
       </div>
       <!-- Paginación -->
-      <div id="users-pagination" class="flex items-center justify-between mt-4 pt-4 border-t hidden">
+      <div id="users-pagination" class="flex items-center justify-between mt-4 pt-4 border-t hidden flex-shrink-0">
         <div class="text-sm text-gray-600">
           <span data-i18n="modals.manageUsers.pagination.page">Página</span> <span id="pagination-current">1</span>
           <span data-i18n="modals.manageUsers.pagination.of">de</span> <span id="pagination-total">1</span>
