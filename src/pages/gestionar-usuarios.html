@@ -60,12 +60,12 @@
     <!-- Users table (flex-1 fills remaining height) -->
     <main class="bg-white mt-4 mx-6 mb-6 p-6 rounded-lg shadow-sm flex-1 flex flex-col min-h-0">
       <div id="users-message" class="text-gray-500 mb-4 flex-shrink-0" data-i18n="messages.loading">Cargando...</div>
-      <div class="flex-1 overflow-auto min-h-0">
+      <div class="flex-1 overflow-auto min-h-0 -mx-6">
         <table id="users-table" class="w-full text-left hidden">
           <thead>
-            <tr class="border-b border-white/20">
-              <th class="pb-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="modals.manageUsers.table.identificador">Identificador</th>
-              <th class="pb-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="modals.manageUsers.table.estudios">Cantidad de estudios</th>
+            <tr class="bg-primary-light">
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10 first:rounded-tl-lg" data-i18n="modals.manageUsers.table.identificador">Identificador</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10 last:rounded-tr-lg" data-i18n="modals.manageUsers.table.estudios">Cantidad de estudios</th>
             </tr>
           </thead>
           <tbody id="users-tbody" class="divide-y divide-gray-200">

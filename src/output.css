@@ -1056,10 +1056,6 @@ video {
   border-width: 2px;
 }
 
-.border-b {
-  border-bottom-width: 1px;
-}
-
 .border-l-4 {
   border-left-width: 4px;
 }
@@ -1097,10 +1093,6 @@ video {
 .border-white {
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity, 1));
-}
-
-.border-white\/20 {
-  border-color: rgb(255 255 255 / 0.2);
 }
 
 .border-yellow-300 {
@@ -1261,10 +1253,6 @@ video {
 .py-6 {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
-}
-
-.pb-3 {
-  padding-bottom: 0.75rem;
 }
 
 .text-left {
@@ -1483,6 +1471,14 @@ video {
 
 .animate-fade-in-down {
   animation: fade-in-down 0.3s ease-out;
+}
+
+.first\:rounded-tl-lg:first-child {
+  border-top-left-radius: 0.5rem;
+}
+
+.last\:rounded-tr-lg:last-child {
+  border-top-right-radius: 0.5rem;
 }
 
 .hover\:bg-primary-dark:hover {
