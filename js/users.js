@@ -3,6 +3,7 @@
  * Handles listing users with pagination, opening create modal, and form submission
  */
 import api from '../models/api.js';
+import { showToast } from '../src/utils/feedback.js';
 
 const els = {
   table: document.getElementById('users-table'),
@@ -176,29 +177,73 @@ function validateForm() {
   const checkedEstudios = els.estudiosCheckboxes.querySelectorAll('input[name="estudio"]:checked');
 
   if (!identificador || identificador.length < 1 || identificador.length > 100) {
-    showFormMessage(
-      window.i18n ? window.i18n.t('modals.manageUsers.errors.identificadorLength') : 'El identificador debe tener entre 1 y 100 caracteres',
-      true
-    );
+    const msg = window.i18n ? window.i18n.t('modals.manageUsers.errors.identificadorLength') : 'El identificador debe tener entre 1 y 100 caracteres';
+    showFormMessage(msg, true);
+    showToast('error', msg, 'top-center', 2000);
     return null;
   }
 
   if (!contrasena || contrasena.length < 8) {
-    showFormMessage(
-      window.i18n ? window.i18n.t('modals.manageUsers.errors.contrasenaLength') : 'La contraseña debe tener al menos 8 caracteres',
-      true
-    );
+    const msg = window.i18n ? window.i18n.t('modals.manageUsers.errors.contrasenaLength') : 'La contraseña debe tener al menos 8 caracteres';
+    showFormMessage(msg, true);
+    showToast('error', msg, 'top-center', 2000);
     return null;
   }
 
   if (checkedEstudios.length === 0) {
     els.estudiosError.classList.remove('hidden');
+    showToast('error', window.i18n ? window.i18n.t('modals.manageUsers.errors.minOneStudy') : 'Selecciona al menos un estudio', 'top-center', 2000);
     return null;
   }
   els.estudiosError.classList.add('hidden');
 
   const id_estudios = Array.from(checkedEstudios).map(cb => parseInt(cb.value, 10));
   return { identificador, contrasena: contrasena, id_estudios };
+}
+
+/**
+ * Map backend error codes to user-friendly Spanish messages.
+ * Returns { message, toast } so the inline error and toast can be tuned.
+ */
+function mapBackendError(err) {
+  const code = err?.response?.data?.code;
+  const backendMsg = err?.response?.data?.message;
+
+  switch (code) {
+    case 'ER_DUP_ENTRY':
+      return {
+        inline: backendMsg || 'El identificador ya existe',
+        toast: 'Ya existe un usuario con ese identificador'
+      };
+    case 'VALIDATION_ERROR':
+      return {
+        inline: backendMsg || 'Datos inválidos',
+        toast: 'Revisa los datos del formulario'
+      };
+    case 'FORBIDDEN_FLAG_REQUIRED':
+      return {
+        inline: 'No tienes permiso para crear usuarios',
+        toast: 'No tienes permiso para crear usuarios'
+      };
+    case 'TOKEN_EXPIRED':
+    case 'TOKEN_INVALID':
+      return {
+        inline: 'Tu sesión expiró. Vuelve a iniciar sesión.',
+        toast: 'Tu sesión expiró. Vuelve a iniciar sesión.'
+      };
+    default:
+      // Network or unknown error
+      if (!err.response) {
+        return {
+          inline: 'No se pudo conectar con el servidor',
+          toast: 'Sin conexión con el servidor'
+        };
+      }
+      return {
+        inline: backendMsg || 'Ocurrió un error al crear el usuario',
+        toast: 'Error al crear el usuario'
+      };
+  }
 }
 
 /**
@@ -216,14 +261,14 @@ async function handleSubmit(e) {
     const res = await api.post('/users', payload);
 
     if (res.status === 201 || res.status === 200) {
-      showFormMessage(
-        window.i18n ? window.i18n.t('modals.manageUsers.messages.success') : 'Usuario creado exitosamente',
-        false
-      );
+      const successMsg = window.i18n
+        ? window.i18n.t('modals.manageUsers.messages.success')
+        : 'Usuario creado exitosamente';
+      showFormMessage(successMsg, false);
+      showToast('success', successMsg, 'top-center', 2000);
       setTimeout(() => {
         closeModal();
         // After creating, go to the last page so the new user is visible
-        // (it'll be there if it fits; otherwise stay where we are and refresh)
         loadUsers().then(() => {
           if (state.page < state.totalPages) {
             state.page = state.totalPages;
@@ -233,10 +278,9 @@ async function handleSubmit(e) {
       }, 1500);
     }
   } catch (err) {
-    const msg = err.response?.data?.message ||
-      err.response?.data?.code ||
-      (window.i18n ? window.i18n.t('modals.manageUsers.messages.errorGeneric') : 'Ocurrió un error al crear el usuario');
-    showFormMessage(msg, true);
+    const { inline, toast } = mapBackendError(err);
+    showFormMessage(inline, true);
+    showToast('error', toast, 'top-center', 3000);
   }
 }
 
