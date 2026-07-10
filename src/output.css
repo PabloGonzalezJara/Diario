@@ -1460,11 +1460,6 @@ video {
   animation: fade-in-down 0.3s ease-out;
 }
 
-.hover\:bg-gray-100:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
-}
-
 .hover\:bg-primary-dark:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(237 119 79 / var(--tw-bg-opacity, 1));
@@ -1525,6 +1520,16 @@ video {
 
 .disabled\:opacity-50:disabled {
   opacity: 0.5;
+}
+
+.disabled\:hover\:bg-white:hover:disabled {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
+
+.disabled\:hover\:text-primary-light:hover:disabled {
+  --tw-text-opacity: 1;
+  color: rgb(104 40 80 / var(--tw-text-opacity, 1));
 }
 
 @media (min-width: 640px) {
