@@ -57,6 +57,34 @@
     "loading": {
       "title": "Soumission de votre journal...",
       "message": "Veuillez patienter pendant que nous sauvegardons vos réponses."
+    },
+    "manageUsers": {
+      "pageTitle": "Gérer les utilisateurs",
+      "title": "Créer un utilisateur",
+      "fields": {
+        "identificador": "Identifiant",
+        "contrasena": "Mot de passe",
+        "estudios": "Études",
+        "estudios.help": "Sélectionnez une ou plusieurs études"
+      },
+      "buttons": {
+        "create": "Créer un utilisateur",
+        "cancel": "Annuler"
+      },
+      "messages": {
+        "success": "Utilisateur créé avec succès",
+        "errorDuplicate": "L'identifiant existe déjà",
+        "errorGeneric": "Une erreur s'est produite lors de la création de l'utilisateur"
+      },
+      "errors": {
+        "identificadorLength": "L'identifiant doit comporter entre 1 et 100 caractères",
+        "contrasenaLength": "Le mot de passe doit comporter au moins 8 caractères",
+        "minOneStudy": "Sélectionnez au moins une étude"
+      },
+      "table": {
+        "identificador": "Identifiant",
+        "estudios": "Nombre d'études"
+      }
     }
   },
   "messages": {
@@ -77,5 +105,8 @@
     "heading": "Merci !",
     "subtitle": "Votre soumission a été complétée avec succès.",
     "message": "Merci de participer à notre étude <span class=\"app-name\">O-ELIDDI</span>. Vos réponses ont été enregistrées et contribueront à des recherches précieuses."
+  },
+  "nav": {
+    "manageUsers": "Gérer les utilisateurs"
   }
 }

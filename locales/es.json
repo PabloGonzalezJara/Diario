@@ -68,6 +68,34 @@
     "loading": {
       "title": "Enviando tu diario...",
       "message": "Por favor espera mientras guardamos tus respuestas."
+    },
+    "manageUsers": {
+      "pageTitle": "Gestionar usuarios",
+      "title": "Crear usuario",
+      "fields": {
+        "identificador": "Identificador",
+        "contrasena": "Contraseña",
+        "estudios": "Estudios",
+        "estudios.help": "Selecciona uno o más estudios"
+      },
+      "buttons": {
+        "create": "Crear usuario",
+        "cancel": "Cancelar"
+      },
+      "messages": {
+        "success": "Usuario creado exitosamente",
+        "errorDuplicate": "El identificador ya existe",
+        "errorGeneric": "Ocurrió un error al crear el usuario"
+      },
+      "errors": {
+        "identificadorLength": "El identificador debe tener entre 1 y 100 caracteres",
+        "contrasenaLength": "La contraseña debe tener al menos 8 caracteres",
+        "minOneStudy": "Selecciona al menos un estudio"
+      },
+      "table": {
+        "identificador": "Identificador",
+        "estudios": "Cantidad de estudios"
+      }
     }
   },
   "messages": {
@@ -88,5 +116,8 @@
     "heading": "¡Gracias!",
     "subtitle": "Tu envío se ha completado exitosamente.",
     "message": "Gracias por participar en nuestro estudio <span class=\"app-name\">O-ELIDDI</span>. Tus respuestas han sido registradas y contribuirán a una investigación valiosa."
+  },
+  "nav": {
+    "manageUsers": "Gestionar usuarios"
   }
 }
