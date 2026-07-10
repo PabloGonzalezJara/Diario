@@ -10,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="../../js/auth-helpers.js"></script>
 </head>
 
 <body class="bg-gradient-to-r from-blue-50 to-indigo-50 min-h-screen flex flex-col">
@@ -35,6 +36,7 @@
                     <a href="./inicio.html" class="hover:bg-white/20 px-4 py-2 rounded">Inicio</a>
                     <!-- <a href="/reportes.html" class="hover:bg-white/20 px-4 py-2 rounded">Reportes</a> -->
                     <a href="./estadisticas.html" class="hover:bg-white/20 px-4 py-2 rounded">Estadísticas</a>
+                    <a id="manageUsersNavLink" href="./gestionar-usuarios.html" class="hover:bg-white/20 px-4 py-2 rounded" style="display: none;" data-i18n="nav.manageUsers">Gestionar usuarios</a>
                 </nav>
             </div>
         </header>
@@ -45,6 +47,7 @@
                 <a href="./inicio.html" class="block py-2 hover:bg-primary-light/20 rounded">Inicio</a>
                 <!--  <a href="/reportes.html" class="block py-2 hover:bg-primary-light/20 rounded">Reportes</a> -->
                 <a href="./estadisticas.html" class="block py-2 hover:bg-primary-light/20 rounded">Estadísticas</a>
+                <a id="manageUsersNavLinkMobile" href="./gestionar-usuarios.html" class="block py-2 hover:bg-primary-light/20 rounded" style="display: none;" data-i18n="nav.manageUsers">Gestionar usuarios</a>
             </div>
         </nav>
         <div class="p-4  bg-white shadow z-10 sticky top-0 ">
@@ -191,6 +194,17 @@
         document.getElementById('nav-toggle').addEventListener('click', () => {
             document.getElementById('mobile-nav').classList.toggle('hidden');
         });
+        // Conditional navbar: show "Gestionar usuarios" only if crear_usuario flag is true
+        (function showManageUsersNav() {
+          if (!window.getCurrentUser) return;
+          const user = window.getCurrentUser();
+          if (user.crear_usuario) {
+            const desktopLink = document.getElementById('manageUsersNavLink');
+            const mobileLink = document.getElementById('manageUsersNavLinkMobile');
+            if (desktopLink) desktopLink.style.display = '';
+            if (mobileLink) mobileLink.style.display = '';
+          }
+        })();
         async function getRondasFromDB() {
             try {
                 const id_estudio = localStorage.getItem('id_estudio')
