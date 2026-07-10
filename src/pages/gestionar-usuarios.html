@@ -132,7 +132,16 @@
   </div>
 
   <script src="../../js/auth-helpers.js"></script>
+  <script src="../../js/i18n.js" type="module"></script>
   <script src="../../js/users.js" type="module"></script>
+  <script type="module">
+    // Initialize i18n and apply translations to data-i18n elements
+    const lang = (navigator.language || 'en').split('-')[0];
+    const supported = ['es', 'en', 'fr'];
+    const initialLang = supported.includes(lang) ? lang : 'en';
+    await window.i18n.init(initialLang);
+    window.i18n.applyTranslations();
+  </script>
   <script>
     // Toggle móvil
     document.getElementById('nav-toggle').addEventListener('click', () => {
