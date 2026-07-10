@@ -121,6 +121,12 @@
                 localStorage.setItem('token', response.token);
                 localStorage.setItem('identificador', identificador);
                 localStorage.setItem('refreshToken', response.refreshToken);
+                // Persist crear_usuario flag (fail-closed: remove if undefined)
+                if (response.crear_usuario !== undefined) {
+                    localStorage.setItem('crear_usuario', String(response.crear_usuario));
+                } else {
+                    localStorage.removeItem('crear_usuario');
+                }
 
                 window.location.href = './inicio.html';
             } catch (error) {
