@@ -1,6 +1,6 @@
 /**
  * User management page logic
- * Handles listing users, opening create modal, and form submission
+ * Handles listing users with pagination, opening create modal, and form submission
  */
 import api from '../models/api.js';
 
@@ -8,6 +8,11 @@ const els = {
   table: document.getElementById('users-table'),
   tbody: document.getElementById('users-tbody'),
   message: document.getElementById('users-message'),
+  pagination: document.getElementById('users-pagination'),
+  paginationCurrent: document.getElementById('pagination-current'),
+  paginationTotal: document.getElementById('pagination-total'),
+  btnPrev: document.getElementById('btn-prev-page'),
+  btnNext: document.getElementById('btn-next-page'),
   btnCreate: document.getElementById('btn-create-user'),
   modal: document.getElementById('createUserModal'),
   modalClose: document.getElementById('modal-close'),
@@ -20,21 +25,31 @@ const els = {
   formMessage: document.getElementById('form-message'),
 };
 
-let estudiosLoaded = false;
+const state = {
+  page: 1,
+  limit: 20,
+  totalPages: 1,
+  estudiosLoaded: false,
+};
 
 /**
- * Fetch and render users table
+ * Fetch and render users for the current page
  */
 async function loadUsers() {
   els.message.textContent = window.i18n ? window.i18n.t('messages.loading') : 'Cargando...';
   els.message.classList.remove('hidden');
   els.table.classList.add('hidden');
+  els.pagination.classList.add('hidden');
 
   try {
-    const res = await api.get('/users');
-    const users = res.data.data || [];
+    const res = await api.get('/users', { params: { page: state.page, limit: state.limit } });
+    const payload = res.data.data || {};
+    const users = payload.data || [];
+    const pagination = payload.pagination || { page: 1, total_pages: 1 };
 
-    if (users.length === 0) {
+    state.totalPages = pagination.total_pages || 1;
+
+    if (users.length === 0 && state.page === 1) {
       els.message.textContent = window.i18n ? window.i18n.t('messages.noActivities') : 'No se encontraron usuarios';
       els.message.classList.remove('hidden');
       return;
@@ -42,6 +57,7 @@ async function loadUsers() {
 
     els.message.classList.add('hidden');
     els.table.classList.remove('hidden');
+    els.pagination.classList.remove('hidden');
     els.tbody.innerHTML = '';
 
     users.forEach(user => {
@@ -53,6 +69,8 @@ async function loadUsers() {
       `;
       els.tbody.appendChild(tr);
     });
+
+    renderPagination();
   } catch (err) {
     console.error('Error loading users:', err);
     els.message.textContent = window.i18n ? window.i18n.t('messages.error') : 'Ocurrió un error';
@@ -61,10 +79,29 @@ async function loadUsers() {
 }
 
 /**
+ * Render pagination controls based on current state
+ */
+function renderPagination() {
+  els.paginationCurrent.textContent = state.page;
+  els.paginationTotal.textContent = state.totalPages;
+  els.btnPrev.disabled = state.page <= 1;
+  els.btnNext.disabled = state.page >= state.totalPages;
+}
+
+/**
+ * Go to a specific page
+ */
+function goToPage(page) {
+  if (page < 1 || page > state.totalPages) return;
+  state.page = page;
+  loadUsers();
+}
+
+/**
  * Fetch estudios and populate modal checkboxes
  */
 async function loadEstudios() {
-  if (estudiosLoaded) return;
+  if (state.estudiosLoaded) return;
   try {
     const res = await api.get('/estudios/all');
     const estudios = res.data.data || [];
@@ -87,7 +124,7 @@ async function loadEstudios() {
       els.estudiosCheckboxes.appendChild(label);
     });
 
-    estudiosLoaded = true;
+    state.estudiosLoaded = true;
   } catch (err) {
     console.error('Error loading estudios:', err);
     els.estudiosCheckboxes.innerHTML = '<p class="text-red-500 text-sm">' +
@@ -178,7 +215,14 @@ async function handleSubmit(e) {
       );
       setTimeout(() => {
         closeModal();
-        loadUsers();
+        // After creating, go to the last page so the new user is visible
+        // (it'll be there if it fits; otherwise stay where we are and refresh)
+        loadUsers().then(() => {
+          if (state.page < state.totalPages) {
+            state.page = state.totalPages;
+            loadUsers();
+          }
+        });
       }, 1500);
     }
   } catch (err) {
@@ -208,6 +252,9 @@ function init() {
   els.btnCreate.addEventListener('click', openModal);
   els.modalClose.addEventListener('click', closeModal);
   els.btnCancel.addEventListener('click', closeModal);
+
+  els.btnPrev.addEventListener('click', () => goToPage(state.page - 1));
+  els.btnNext.addEventListener('click', () => goToPage(state.page + 1));
 
   // Close on overlay click
   els.modal.addEventListener('click', e => {

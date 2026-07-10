@@ -95,6 +95,12 @@
       "table": {
         "identificador": "Identificador",
         "estudios": "Cantidad de estudios"
+      },
+      "pagination": {
+        "page": "Página",
+        "of": "de",
+        "prev": "Anterior",
+        "next": "Siguiente"
       }
     }
   },

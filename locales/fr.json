@@ -84,6 +84,12 @@
       "table": {
         "identificador": "Identifiant",
         "estudios": "Nombre d'études"
+      },
+      "pagination": {
+        "page": "Page",
+        "of": "de",
+        "prev": "Précédent",
+        "next": "Suivant"
       }
     }
   },
