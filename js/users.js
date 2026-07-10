@@ -43,9 +43,15 @@ async function loadUsers() {
 
   try {
     const res = await api.get('/users', { params: { page: state.page, limit: state.limit } });
-    const payload = res.data.data || {};
-    const users = payload.data || [];
-    const pagination = payload.pagination || { page: 1, total_pages: 1 };
+    const inner = res.data.data || {};
+    // Support both response shapes:
+    //  - paginated: { data: [...], pagination: {...} }
+    //  - legacy:    [user1, user2, ...]  (no pagination)
+    const isArray = Array.isArray(inner);
+    const users = isArray ? inner : (inner.data || []);
+    const pagination = isArray
+      ? { page: 1, total_pages: 1 }
+      : (inner.pagination || { page: 1, total_pages: 1 });
 
     state.totalPages = pagination.total_pages || 1;
 
@@ -104,7 +110,8 @@ async function loadEstudios() {
   if (state.estudiosLoaded) return;
   try {
     const res = await api.get('/estudios/all');
-    const estudios = res.data.data || [];
+    const inner = res.data.data || [];
+    const estudios = Array.isArray(inner) ? inner : (inner.data || []);
 
     els.estudiosCheckboxes.innerHTML = '';
 
