@@ -22,8 +22,6 @@ const els = {
   inputIdentificador: document.getElementById('input-identificador'),
   inputContrasena: document.getElementById('input-contrasena'),
   estudiosCheckboxes: document.getElementById('estudios-checkboxes'),
-  estudiosError: document.getElementById('estudios-error'),
-  formMessage: document.getElementById('form-message'),
 };
 
 const state = {
@@ -146,8 +144,6 @@ async function loadEstudios() {
 function openModal() {
   els.modal.style.display = 'block';
   els.form.reset();
-  els.formMessage.classList.add('hidden');
-  els.estudiosError.classList.add('hidden');
   els.inputIdentificador.focus();
   loadEstudios();
 }
@@ -162,11 +158,6 @@ function closeModal() {
 /**
  * Show a message in the form
  */
-function showFormMessage(text, isError) {
-  els.formMessage.textContent = text;
-  els.formMessage.className = 'mb-4 text-sm ' + (isError ? 'text-red-500' : 'text-green-500');
-  els.formMessage.classList.remove('hidden');
-}
 
 /**
  * Validate form inputs
@@ -177,25 +168,25 @@ function validateForm() {
   const checkedEstudios = els.estudiosCheckboxes.querySelectorAll('input[name="estudio"]:checked');
 
   if (!identificador || identificador.length < 1 || identificador.length > 100) {
-    const msg = window.i18n ? window.i18n.t('modals.manageUsers.errors.identificadorLength') : 'El identificador debe tener entre 1 y 100 caracteres';
-    showFormMessage(msg, true);
-    showToast('error', msg, 'top-center', 2000);
+    showToast('error',
+      window.i18n ? window.i18n.t('modals.manageUsers.errors.identificadorLength') : 'El identificador debe tener entre 1 y 100 caracteres',
+      'top-center', 2000);
     return null;
   }
 
   if (!contrasena || contrasena.length < 8) {
-    const msg = window.i18n ? window.i18n.t('modals.manageUsers.errors.contrasenaLength') : 'La contraseña debe tener al menos 8 caracteres';
-    showFormMessage(msg, true);
-    showToast('error', msg, 'top-center', 2000);
+    showToast('error',
+      window.i18n ? window.i18n.t('modals.manageUsers.errors.contrasenaLength') : 'La contraseña debe tener al menos 8 caracteres',
+      'top-center', 2000);
     return null;
   }
 
   if (checkedEstudios.length === 0) {
-    els.estudiosError.classList.remove('hidden');
-    showToast('error', window.i18n ? window.i18n.t('modals.manageUsers.errors.minOneStudy') : 'Selecciona al menos un estudio', 'top-center', 2000);
+    showToast('error',
+      window.i18n ? window.i18n.t('modals.manageUsers.errors.minOneStudy') : 'Selecciona al menos un estudio',
+      'top-center', 2000);
     return null;
   }
-  els.estudiosError.classList.add('hidden');
 
   const id_estudios = Array.from(checkedEstudios).map(cb => parseInt(cb.value, 10));
   return { identificador, contrasena: contrasena, id_estudios };
@@ -203,11 +194,16 @@ function validateForm() {
 
 /**
  * Map backend error codes to user-friendly Spanish messages.
- * Returns { message, toast } so the inline error and toast can be tuned.
+ * Returns { inline, toast } so the inline error and toast can be tuned.
+ *
+ * The backend wraps errors in { status, message, data: { code } }.
+ * axios exposes the body as err.response.data, so the code is at
+ * err.response.data.data.code, not err.response.data.code.
  */
 function mapBackendError(err) {
-  const code = err?.response?.data?.code;
-  const backendMsg = err?.response?.data?.message;
+  const body = err?.response?.data;
+  const code = body?.data?.code || body?.code;
+  const backendMsg = body?.message;
 
   switch (code) {
     case 'ER_DUP_ENTRY':
@@ -255,8 +251,6 @@ async function handleSubmit(e) {
   const payload = validateForm();
   if (!payload) return;
 
-  els.formMessage.classList.add('hidden');
-
   try {
     const res = await api.post('/users', payload);
 
@@ -264,7 +258,6 @@ async function handleSubmit(e) {
       const successMsg = window.i18n
         ? window.i18n.t('modals.manageUsers.messages.success')
         : 'Usuario creado exitosamente';
-      showFormMessage(successMsg, false);
       showToast('success', successMsg, 'top-center', 2000);
       setTimeout(() => {
         closeModal();
@@ -278,8 +271,7 @@ async function handleSubmit(e) {
       }, 1500);
     }
   } catch (err) {
-    const { inline, toast } = mapBackendError(err);
-    showFormMessage(inline, true);
+    const { toast } = mapBackendError(err);
     showToast('error', toast, 'top-center', 3000);
   }
 }
