@@ -11,6 +11,13 @@
   <link href="../output.css" rel="stylesheet">
 
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script type="importmap">
+  {
+    "imports": {
+      "xlsx": "https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"
+    }
+  }
+  </script>
 
 </head>
 
@@ -84,6 +91,7 @@
               <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.compania">Compañía</th>
               <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.satisfaccion">Satisfacción</th>
               <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.numeroRonda">Ronda</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.diasSemana">Días</th>
             </tr>
           </thead>
           <tbody id="export-tbody" class="divide-y divide-gray-200">

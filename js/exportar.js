@@ -299,9 +299,24 @@ async function downloadXlsx() {
       return;
     }
 
+    // Format dates/days before exporting so the xlsx is human-readable.
+    const formattedRows = rows.map(row => {
+      const out = {};
+      for (const key of Object.keys(row)) {
+        if (key === 'dias_semana') {
+          out[key] = formatDiasSemana(row[key]);
+        } else if (key === 'hora_inicio' || key === 'hora_termino') {
+          out[key] = formatCell(row[key], key);
+        } else {
+          out[key] = row[key];
+        }
+      }
+      return out;
+    });
+
     // Lazy-load xlsx so users who never click Download don't pay the bundle cost.
     const XLSX = await import('xlsx');
-    const ws = XLSX.utils.json_to_sheet(rows);
+    const ws = XLSX.utils.json_to_sheet(formattedRows);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Registros');
     XLSX.writeFile(wb, buildFileName());

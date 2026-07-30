@@ -154,7 +154,8 @@
         "ubicacion": "Location",
         "compania": "Company",
         "satisfaccion": "Satisfaction",
-        "numeroRonda": "Round"
+        "numeroRonda": "Round",
+        "diasSemana": "Days"
       },
       "pagination": {
         "page": "Page",
