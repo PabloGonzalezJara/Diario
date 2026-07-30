@@ -291,10 +291,11 @@ function handleFilterSubmit(e) {
 }
 
 function buildFileName() {
-  const estudioText = els.selectEstudio.options[els.selectEstudio.selectedIndex]?.text || (state.id_estudio ? `estudio_${state.id_estudio}` : 'todos_los_estudios');
-  const estudioSlug = estudioText.replace(/[^a-zA-Z0-9-_]+/g, '_');
-  const rondasPart = state.id_rondas.length > 0 ? state.id_rondas.join('-') : 'todas';
-  return `${estudioSlug}_rondas_${rondasPart}.xlsx`;
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  const fecha = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  const hora = `${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+  return `DDUT_${fecha}_${hora}.xlsx`;
 }
 
 async function downloadXlsx() {
