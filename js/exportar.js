@@ -73,8 +73,8 @@ function escapeHtml(value) {
 function formatCell(value, key) {
   if (value === null || value === undefined || value === '') return '';
   if ((key === 'hora_inicio' || key === 'hora_termino') && typeof value === 'string') {
-    const m = value.match(/^(\d{4}-\d{2}-\d{2})[T ](\d{2}:\d{2})/);
-    if (m) return `${m[1]} ${m[2]}`;
+    const m = value.match(/[T ](\d{2}:\d{2})/);
+    if (m) return m[1];
   }
   return value;
 }
@@ -314,8 +314,11 @@ async function downloadXlsx() {
       return out;
     });
 
-    // Lazy-load xlsx so users who never click Download don't pay the bundle cost.
-    const XLSX = await import('xlsx');
+    // xlsx is loaded as a global UMD script in the page (window.XLSX).
+    const XLSX = window.XLSX;
+    if (!XLSX) {
+      throw new Error('XLSX library not loaded');
+    }
     const ws = XLSX.utils.json_to_sheet(formattedRows);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Registros');
