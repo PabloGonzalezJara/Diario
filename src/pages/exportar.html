@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../../logo2.png" type="image/png">
+
+  <title data-i18n="pages.export.pageTitle">Exportar</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link href="../output.css" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</head>
+
+<body class="bg-gray-50 h-screen overflow-hidden flex flex-col">
+  <div class="flex flex-col min-h-0 flex-1">
+
+    <!-- Header con menú móvil -->
+    <header class="bg-primary-light text-white flex items-center justify-between px-6 py-4 rounded-b-lg shadow-md flex-shrink-0">
+      <div class="flex items-center space-x-4">
+        <img src="../assets/svg/icono.svg" alt="Icono Labofam" class="h-10 w-auto filter invert" />
+        <img src="../assets/svg/logo.svg" alt="Labofam" class="h-6 w-auto filter invert" />
+      </div>
+      <div class="flex items-center space-x-4">
+        <!-- Botón hamburguesa visible en móvil -->
+        <button id="nav-toggle" class="md:hidden focus:outline-none">
+          <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+        <!-- Navegación de escritorio -->
+        <nav class="hidden md:flex space-x-6">
+          <a href="./inicio.html" class="hover:bg-white/20 px-4 py-2 rounded">Inicio</a>
+          <a href="./estadisticas.html" class="hover:bg-white/20 px-4 py-2 rounded">Estadísticas</a>
+          <a id="manageUsersNavLink" href="./gestionar-usuarios.html" class="hover:bg-white/20 px-4 py-2 rounded" style="display: none;" data-i18n="nav.manageUsers">Gestionar usuarios</a>
+          <a id="exportNavLink" href="./exportar.html" class="hover:bg-white/20 px-4 py-2 rounded" style="display: none;" data-i18n="nav.export">Exportar</a>
+        </nav>
+        <button id="btn-logout" onclick="logout()" class="hidden md:inline-flex text-sm hover:bg-white/20 px-4 py-2 rounded" data-i18n="nav.logout">Cerrar sesión</button>
+      </div>
+    </header>
+
+    <!-- Menú móvil desplegable -->
+    <nav id="mobile-nav" class="bg-primary-light text-white hidden md:hidden flex-shrink-0">
+      <div class="flex flex-col px-6 py-4 space-y-2">
+        <a href="./inicio.html" class="block py-2 hover:bg-primary-light/20 rounded">Inicio</a>
+        <a href="./estadisticas.html" class="block py-2 hover:bg-primary-light/20 rounded">Estadísticas</a>
+        <a id="manageUsersNavLinkMobile" href="./gestionar-usuarios.html" class="block py-2 hover:bg-primary-light/20 rounded" style="display: none;" data-i18n="nav.manageUsers">Gestionar usuarios</a>
+        <a id="exportNavLinkMobile" href="./exportar.html" class="block py-2 hover:bg-primary-light/20 rounded" style="display: none;" data-i18n="nav.export">Exportar</a>
+        <button id="btn-logout-mobile" onclick="logout()" class="block py-2 hover:bg-primary-light/20 rounded text-left w-full mt-2 border-t border-white/20 pt-3" data-i18n="nav.logout">Cerrar sesión</button>
+      </div>
+    </nav>
+
+    <!-- Page title and filter button -->
+    <div class="mt-6 mx-6 flex justify-between items-center flex-shrink-0">
+      <h1 class="text-2xl font-semibold text-gray-800" data-i18n="pages.export.title">Exportar</h1>
+      <button id="btn-filter" class="bg-primary-light text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition flex items-center gap-2">
+        <span data-i18n="pages.export.filterButton">Filtrar</span>
+      </button>
+    </div>
+
+    <!-- Export table (flex-1 fills remaining height) -->
+    <main class="bg-white mt-4 mx-6 mb-6 p-6 rounded-lg shadow-sm flex-1 flex flex-col min-h-0">
+      <div id="export-message" class="text-gray-500 mb-4 flex-shrink-0" data-i18n="messages.loading">Cargando...</div>
+      <div class="flex-1 overflow-auto min-h-0 -mx-6">
+        <table id="export-table" class="w-full text-left hidden">
+          <thead>
+            <tr class="bg-primary-light">
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.identificador">Identificador</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.horaInicio">Hora inicio</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.horaTermino">Hora término</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.minutos">Minutos</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.categoria">Categoría</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.subcategoria">Subcategoría</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.actividad">Actividad</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.otroValor">Otro valor</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.secundaria">Secundaria</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.ubicacion">Ubicación</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.compania">Compañía</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.satisfaccion">Satisfacción</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.numeroRonda">Ronda</th>
+            </tr>
+          </thead>
+          <tbody id="export-tbody" class="divide-y divide-gray-200">
+          </tbody>
+        </table>
+      </div>
+      <!-- Paginación -->
+      <div id="export-pagination" class="flex items-center justify-between mt-4 -mx-6 -mb-6 px-6 py-4 bg-primary-light text-white rounded-b-lg hidden flex-shrink-0">
+        <div class="text-sm">
+          <span data-i18n="pages.export.pagination.page">Página</span> <span id="export-pagination-current">1</span>
+          <span data-i18n="pages.export.pagination.of">de</span> <span id="export-pagination-total">1</span>
+        </div>
+        <div class="flex gap-2">
+          <button id="btn-prev-page" class="px-4 py-2 text-sm border border-white text-white bg-transparent rounded-lg hover:bg-white hover:text-primary-light transition disabled:opacity-50 disabled:cursor-not-allowed" data-i18n="pages.export.pagination.prev">Anterior</button>
+          <button id="btn-next-page" class="px-4 py-2 text-sm border border-white text-white bg-transparent rounded-lg hover:bg-white hover:text-primary-light transition disabled:opacity-50 disabled:cursor-not-allowed" data-i18n="pages.export.pagination.next">Siguiente</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Download button bar -->
+    <div class="mx-6 mb-6 flex justify-end flex-shrink-0">
+      <button id="btn-download" class="bg-primary-light text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition flex items-center gap-2 hidden" data-i18n="pages.export.downloadButton">Descargar</button>
+    </div>
+  </div>
+
+  <!-- Filter Modal -->
+  <div id="filterModal" class="modal-overlay z-50" style="display: none;">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 data-i18n="pages.export.filter.title">Filtrar registros</h3>
+        <button id="filter-modal-close" class="modal-close">&times;</button>
+      </div>
+      <div class="modal-content">
+        <form id="filter-form">
+          <div class="form-group">
+            <label for="filter-estudio" data-i18n="pages.export.filter.study">Estudio</label>
+            <select id="filter-estudio" required class="w-full px-4 py-2 border rounded-lg">
+              <!-- Populated via JS -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label data-i18n="pages.export.filter.rounds">Rondas</label>
+            <p class="text-sm text-gray-500 mb-2" data-i18n="pages.export.filter.roundsHelp">Selecciona una o más rondas</p>
+            <div id="filter-rondas" class="space-y-2 max-h-48 overflow-y-auto border rounded-lg p-3">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+          <div class="button-container flex justify-end gap-3">
+            <button type="button" id="btn-filter-cancel" class="btn btn-secondary px-4 py-2 rounded-lg" data-i18n="pages.export.filter.cancel">Cancelar</button>
+            <button type="submit" id="btn-filter-apply" class="btn save-btn bg-primary-light text-white px-4 py-2 rounded-lg hover:bg-primary-dark" data-i18n="pages.export.filter.apply">Aplicar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/auth-helpers.js"></script>
+  <script src="../../js/i18n.js" type="module"></script>
+  <script src="../../js/exportar.js" type="module"></script>
+  <script type="module">
+    // Initialize i18n and apply translations to data-i18n elements
+    const lang = (navigator.language || 'en').split('-')[0];
+    const supported = ['es', 'en', 'fr'];
+    const initialLang = supported.includes(lang) ? lang : 'en';
+    await window.i18n.init(initialLang);
+    window.i18n.applyTranslations();
+  </script>
+  <script>
+    // Toggle móvil
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      document.getElementById('mobile-nav').classList.toggle('hidden');
+    });
+
+    // Conditional navbar: show "Gestionar usuarios" and "Exportar" only if crear_usuario flag is true
+    (function showPermissionNav() {
+      if (!window.getCurrentUser) return;
+      const user = window.getCurrentUser();
+      if (user.crear_usuario) {
+        const pairs = [
+          ['manageUsersNavLink', 'manageUsersNavLinkMobile'],
+          ['exportNavLink', 'exportNavLinkMobile'],
+        ];
+        pairs.forEach(([desktopId, mobileId]) => {
+          const desktopLink = document.getElementById(desktopId);
+          const mobileLink = document.getElementById(mobileId);
+          if (desktopLink) desktopLink.style.display = '';
+          if (mobileLink) mobileLink.style.display = '';
+        });
+      }
+    })();
+  </script>
+</body>
+
+</html>
