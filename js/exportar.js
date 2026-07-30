@@ -200,17 +200,51 @@ async function loadRondasDelEstudio(id_estudio) {
       return;
     }
 
+    const allLabel = document.createElement('label');
+    allLabel.className = 'flex items-center gap-2 cursor-pointer pb-2 mb-2 border-b border-gray-200 font-semibold';
+    allLabel.innerHTML = `
+      <input type="checkbox" id="ronda-all" class="w-4 h-4" />
+      <span>${i18n('pages.export.filter.allRounds', 'Todas')}</span>
+    `;
+    els.rondasContainer.appendChild(allLabel);
+
+    const allCheckbox = allLabel.querySelector('#ronda-all');
+    const individualCheckboxes = [];
+
     rondas.forEach(ronda => {
       const label = document.createElement('label');
       label.className = 'flex items-center gap-2 cursor-pointer';
       const tipo = formatDiasSemana(ronda.dias_semana);
       const sufijo = tipo ? ` (${tipo})` : '';
-      label.innerHTML = `
+      const html = `
         <input type="checkbox" name="ronda" value="${ronda.id_ronda}" class="w-4 h-4" />
         <span>${escapeHtml(`Ronda ${ronda.numero_ronda} - ${ronda.anio}${sufijo}`)}</span>
       `;
+      label.innerHTML = html;
+      const cb = label.querySelector('input[name="ronda"]');
+      individualCheckboxes.push(cb);
       els.rondasContainer.appendChild(label);
     });
+
+    const syncAll = () => {
+      const allChecked = individualCheckboxes.every(cb => cb.checked);
+      allCheckbox.checked = allChecked;
+    };
+
+    allCheckbox.addEventListener('change', () => {
+      individualCheckboxes.forEach(cb => { cb.checked = allCheckbox.checked; });
+    });
+    individualCheckboxes.forEach(cb => {
+      cb.addEventListener('change', syncAll);
+    });
+
+    // Preserve the selection when re-opening the modal with an active filter.
+    if (state.id_rondas.length > 0) {
+      individualCheckboxes.forEach(cb => {
+        if (state.id_rondas.includes(parseInt(cb.value, 10))) cb.checked = true;
+      });
+      syncAll();
+    }
   } catch (err) {
     console.error('Error loading rondas:', err);
     els.rondasContainer.innerHTML = `<p class="text-red-500 text-sm">${i18n('messages.error', 'Error al cargar rondas')}</p>`;
@@ -223,9 +257,6 @@ async function openFilterModal() {
   if (state.id_estudio) {
     els.selectEstudio.value = state.id_estudio;
     await loadRondasDelEstudio(state.id_estudio);
-    els.rondasContainer.querySelectorAll('input[name="ronda"]').forEach(cb => {
-      if (state.id_rondas.includes(parseInt(cb.value, 10))) cb.checked = true;
-    });
   } else {
     els.rondasContainer.innerHTML = '';
   }

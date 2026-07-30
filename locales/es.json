@@ -148,6 +148,7 @@
         "study": "Estudio",
         "rounds": "Rondas",
         "roundsHelp": "Selecciona una o más rondas",
+        "allRounds": "Todas",
         "selectStudy": "Selecciona un estudio",
         "cancel": "Cancelar",
         "apply": "Aplicar"

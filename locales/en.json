@@ -137,6 +137,7 @@
         "study": "Study",
         "rounds": "Rounds",
         "roundsHelp": "Select one or more rounds",
+        "allRounds": "All",
         "selectStudy": "Select a study",
         "cancel": "Cancel",
         "apply": "Apply"
