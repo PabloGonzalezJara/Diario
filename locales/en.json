@@ -113,6 +113,7 @@
     "message": "Thank you for participating in our <span class=\"app-name\">O-ELIDDI</span> study. Your responses have been recorded and will contribute to valuable research."
   },
   "nav": {
-    "manageUsers": "Manage users"
+    "manageUsers": "Manage users",
+    "logout": "Log out"
   }
 }
