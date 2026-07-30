@@ -53,12 +53,15 @@
       </div>
     </nav>
 
-    <!-- Page title and filter button -->
+    <!-- Page title and filter/download buttons -->
     <div class="mt-6 mx-6 flex justify-between items-center flex-shrink-0">
       <h1 class="text-2xl font-semibold text-gray-800" data-i18n="pages.export.title">Exportar</h1>
-      <button id="btn-filter" class="bg-primary-light text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition flex items-center gap-2">
-        <span data-i18n="pages.export.filterButton">Filtrar</span>
-      </button>
+      <div class="flex gap-2">
+        <button id="btn-filter" class="bg-primary-light text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition flex items-center gap-2">
+          <span data-i18n="pages.export.filterButton">Filtrar</span>
+        </button>
+        <button id="btn-download" class="bg-primary-light text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition flex items-center gap-2" data-i18n="pages.export.downloadButton">Descargar</button>
+      </div>
     </div>
 
     <!-- Export table (flex-1 fills remaining height) -->
@@ -99,11 +102,6 @@
         </div>
       </div>
     </main>
-
-    <!-- Download button bar -->
-    <div class="mx-6 mb-6 flex justify-end flex-shrink-0">
-      <button id="btn-download" class="bg-primary-light text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition flex items-center gap-2 hidden" data-i18n="pages.export.downloadButton">Descargar</button>
-    </div>
   </div>
 
   <!-- Filter Modal -->

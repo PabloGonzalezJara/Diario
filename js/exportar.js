@@ -36,8 +36,30 @@ const state = {
 const COLUMNS = [
   'identificador', 'hora_inicio', 'hora_termino', 'minutos',
   'nombre_categoria', 'nombre_subcategoria', 'nombre_actividad',
-  'otroValor', 'secundaria', 'ubicación', 'compañia', 'satisfacción', 'numero_ronda',
+  'otroValor', 'secundaria', 'ubicación', 'compañia', 'satisfacción', 'numero_ronda', 'dias_semana',
 ];
+
+/**
+ * Translate a MySQL SET dias_semana value (e.g. "1,2,3,4,5") into a
+ * human-readable label. Keeps the raw value as fallback when the set
+ * doesn't match any known pattern.
+ */
+function formatDiasSemana(value) {
+  if (value === null || value === undefined || value === '') return '';
+  const set = new Set(String(value).split(',').map(v => v.trim()).filter(Boolean));
+  const all = ['0', '1', '2', '3', '4', '5', '6'];
+  const allDays = all.every(d => set.has(d));
+  const weekday = ['1', '2', '3', '4', '5'].every(d => set.has(d)) && !set.has('0') && !set.has('6');
+  const weekend = ['0', '6'].every(d => set.has(d)) && ['1', '2', '3', '4', '5'].every(d => !set.has(d));
+  const lunSab = ['1', '2', '3', '4', '5', '6'].every(d => set.has(d)) && !set.has('0');
+  const domVie = ['0', '1', '2', '3', '4', '5'].every(d => set.has(d)) && !set.has('6');
+  if (allDays) return 'Todos';
+  if (weekday) return 'Lun-Vie';
+  if (weekend) return 'Sáb-Dom';
+  if (lunSab) return 'Lun-Sáb';
+  if (domVie) return 'Dom-Vie';
+  return String(value);
+}
 
 const i18n = (key, fallback) => window.i18n ? window.i18n.t(key) : fallback;
 
@@ -62,30 +84,19 @@ function formatCell(value, key) {
  * Supports both paginated `{ data, pagination }` and legacy array shapes.
  */
 async function loadRegistros() {
-  if (!state.id_estudio || state.id_rondas.length === 0) {
-    els.message.textContent = i18n('pages.export.noFilter', 'Aplica un filtro para ver registros');
-    els.message.classList.remove('hidden');
-    els.table.classList.add('hidden');
-    els.pagination.classList.add('hidden');
-    els.btnDownload.classList.add('hidden');
-    return;
-  }
-
   els.message.textContent = i18n('messages.loading', 'Cargando...');
   els.message.classList.remove('hidden');
   els.table.classList.add('hidden');
   els.pagination.classList.add('hidden');
-  els.btnDownload.classList.add('hidden');
+
+  const params = { page: state.page, limit: state.limit };
+  if (state.id_estudio && state.id_rondas.length > 0) {
+    params.id_estudio = state.id_estudio;
+    params.id_rondas = state.id_rondas.join(',');
+  }
 
   try {
-    const res = await api.get('/registros/export', {
-      params: {
-        id_estudio: state.id_estudio,
-        id_rondas: state.id_rondas.join(','),
-        page: state.page,
-        limit: state.limit,
-      },
-    });
+    const res = await api.get('/registros/export', { params });
 
     const inner = res.data.data || {};
     const rows = Array.isArray(inner) ? inner : (inner.data || []);
@@ -109,9 +120,10 @@ async function loadRegistros() {
     els.tbody.innerHTML = '';
 
     rows.forEach(row => {
-      const cells = COLUMNS.map(key =>
-        `<td class="py-3 px-2 whitespace-nowrap">${escapeHtml(formatCell(row[key], key))}</td>`
-      ).join('');
+      const cells = COLUMNS.map(key => {
+        const value = key === 'dias_semana' ? formatDiasSemana(row[key]) : row[key];
+        return `<td class="py-3 px-2 whitespace-nowrap">${escapeHtml(formatCell(value, key))}</td>`;
+      }).join('');
       const tr = document.createElement('tr');
       tr.className = 'border-b hover:bg-gray-50';
       tr.innerHTML = cells;
@@ -191,9 +203,11 @@ async function loadRondasDelEstudio(id_estudio) {
     rondas.forEach(ronda => {
       const label = document.createElement('label');
       label.className = 'flex items-center gap-2 cursor-pointer';
+      const tipo = formatDiasSemana(ronda.dias_semana);
+      const sufijo = tipo ? ` (${tipo})` : '';
       label.innerHTML = `
         <input type="checkbox" name="ronda" value="${ronda.id_ronda}" class="w-4 h-4" />
-        <span>${escapeHtml(`Ronda ${ronda.numero_ronda} - ${ronda.anio}`)}</span>
+        <span>${escapeHtml(`Ronda ${ronda.numero_ronda} - ${ronda.anio}${sufijo}`)}</span>
       `;
       els.rondasContainer.appendChild(label);
     });
@@ -246,29 +260,27 @@ function handleFilterSubmit(e) {
 }
 
 function buildFileName() {
-  const estudioText = els.selectEstudio.options[els.selectEstudio.selectedIndex]?.text || `estudio_${state.id_estudio}`;
+  const estudioText = els.selectEstudio.options[els.selectEstudio.selectedIndex]?.text || (state.id_estudio ? `estudio_${state.id_estudio}` : 'todos_los_estudios');
   const estudioSlug = estudioText.replace(/[^a-zA-Z0-9-_]+/g, '_');
-  return `${estudioSlug}_rondas_${state.id_rondas.join('-')}.xlsx`;
+  const rondasPart = state.id_rondas.length > 0 ? state.id_rondas.join('-') : 'todas';
+  return `${estudioSlug}_rondas_${rondasPart}.xlsx`;
 }
 
 async function downloadXlsx() {
-  if (!state.id_estudio || state.id_rondas.length === 0) {
-    showToast('error', i18n('pages.export.errors.noFilter', 'Aplica un filtro antes de descargar'), 'top-center', 2000);
-    return;
-  }
-
   const btn = els.btnDownload;
   const originalText = btn.textContent;
   btn.disabled = true;
   btn.textContent = i18n('messages.loading', 'Cargando...');
 
+  const params = { download: 1 };
+  if (state.id_estudio && state.id_rondas.length > 0) {
+    params.id_estudio = state.id_estudio;
+    params.id_rondas = state.id_rondas.join(',');
+  }
+
   try {
     const res = await api.get('/registros/export', {
-      params: {
-        id_estudio: state.id_estudio,
-        id_rondas: state.id_rondas.join(','),
-        download: 1,
-      },
+      params,
       validateStatus: status => status === 200 || status === 413,
     });
 
