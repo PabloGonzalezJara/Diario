@@ -101,7 +101,10 @@
     "noActivities": "Aucune activité trouvée",
     "fillRequired": "Veuillez remplir toutes les activités requises",
     "submitSuccess": "Journal soumis avec succès",
-    "submitError": "Erreur lors de la soumission du journal"
+    "submitError": "Erreur lors de la soumission du journal",
+    "exportSuccess": "Fichier téléchargé",
+    "exportError": "Erreur lors de la génération du fichier",
+    "exportTooLarge": "Trop d'enregistrements à exporter. Affinez le filtre (étude ou rondes) et réessayez."
   },
   "activities": {
     "otherNotListed": "Autre non listé (entrer)"
@@ -114,6 +117,51 @@
   },
   "nav": {
     "manageUsers": "Gérer les utilisateurs",
+    "export": "Exporter",
     "logout": "Se déconnecter"
+  },
+  "pages": {
+    "export": {
+      "pageTitle": "Exporter",
+      "title": "Exporter",
+      "filterButton": "Filtrer",
+      "downloadButton": "Télécharger",
+      "noFilter": "Appliquez un filtre pour voir les enregistrements",
+      "errors": {
+        "selectStudy": "Sélectionnez une étude",
+        "minOneRound": "Sélectionnez au moins une ronde",
+        "noFilter": "Appliquez un filtre avant de télécharger"
+      },
+      "filter": {
+        "title": "Filtrer les enregistrements",
+        "study": "Étude",
+        "rounds": "Rondes",
+        "roundsHelp": "Sélectionnez une ou plusieurs rondes",
+        "selectStudy": "Sélectionnez une étude",
+        "cancel": "Annuler",
+        "apply": "Appliquer"
+      },
+      "table": {
+        "identificador": "Identifiant",
+        "horaInicio": "Heure de début",
+        "horaTermino": "Heure de fin",
+        "minutos": "Minutes",
+        "categoria": "Catégorie",
+        "subcategoria": "Sous-catégorie",
+        "actividad": "Activité",
+        "otroValor": "Autre valeur",
+        "secundaria": "Secondaire",
+        "ubicacion": "Lieu",
+        "compania": "Compagnie",
+        "satisfaccion": "Satisfaction",
+        "numeroRonda": "Ronde"
+      },
+      "pagination": {
+        "page": "Page",
+        "of": "de",
+        "prev": "Précédent",
+        "next": "Suivant"
+      }
+    }
   }
 }

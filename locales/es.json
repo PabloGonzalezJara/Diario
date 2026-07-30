@@ -112,7 +112,10 @@
     "noActivities": "No se encontraron actividades",
     "fillRequired": "Por favor completa todas las actividades requeridas",
     "submitSuccess": "Diario enviado exitosamente",
-    "submitError": "Error al enviar el diario"
+    "submitError": "Error al enviar el diario",
+    "exportSuccess": "Archivo descargado",
+    "exportError": "Error al generar el archivo",
+    "exportTooLarge": "Demasiados registros para exportar. Refina el filtro (estudio o rondas) e intenta de nuevo."
   },
   "activities": {
     "otherNotListed": "Otro no listado (ingresar)"
@@ -125,6 +128,51 @@
   },
   "nav": {
     "manageUsers": "Gestionar usuarios",
+    "export": "Exportar",
     "logout": "Cerrar sesión"
+  },
+  "pages": {
+    "export": {
+      "pageTitle": "Exportar",
+      "title": "Exportar",
+      "filterButton": "Filtrar",
+      "downloadButton": "Descargar",
+      "noFilter": "Aplica un filtro para ver registros",
+      "errors": {
+        "selectStudy": "Selecciona un estudio",
+        "minOneRound": "Selecciona al menos una ronda",
+        "noFilter": "Aplica un filtro antes de descargar"
+      },
+      "filter": {
+        "title": "Filtrar registros",
+        "study": "Estudio",
+        "rounds": "Rondas",
+        "roundsHelp": "Selecciona una o más rondas",
+        "selectStudy": "Selecciona un estudio",
+        "cancel": "Cancelar",
+        "apply": "Aplicar"
+      },
+      "table": {
+        "identificador": "Identificador",
+        "horaInicio": "Hora inicio",
+        "horaTermino": "Hora término",
+        "minutos": "Minutos",
+        "categoria": "Categoría",
+        "subcategoria": "Subcategoría",
+        "actividad": "Actividad",
+        "otroValor": "Otro valor",
+        "secundaria": "Secundaria",
+        "ubicacion": "Ubicación",
+        "compania": "Compañía",
+        "satisfaccion": "Satisfacción",
+        "numeroRonda": "Ronda"
+      },
+      "pagination": {
+        "page": "Página",
+        "of": "de",
+        "prev": "Anterior",
+        "next": "Siguiente"
+      }
+    }
   }
 }

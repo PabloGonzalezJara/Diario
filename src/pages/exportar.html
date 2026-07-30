@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="../../logo2.png" type="image/png">
 
-  <title data-i18n="nav.manageUsers">Gestionar usuarios</title>
+  <title data-i18n="pages.export.pageTitle">Exportar</title>
   <link rel="stylesheet" href="../../styles.css">
   <link href="../output.css" rel="stylesheet">
 
@@ -53,70 +53,84 @@
       </div>
     </nav>
 
-    <!-- Page title and create button -->
+    <!-- Page title and filter button -->
     <div class="mt-6 mx-6 flex justify-between items-center flex-shrink-0">
-      <h1 class="text-2xl font-semibold text-gray-800" data-i18n="modals.manageUsers.pageTitle">Gestionar usuarios</h1>
-      <button id="btn-create-user" class="bg-primary-light text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition flex items-center gap-2">
-        <span>+ </span><span data-i18n="modals.manageUsers.buttons.create">Crear usuario</span>
+      <h1 class="text-2xl font-semibold text-gray-800" data-i18n="pages.export.title">Exportar</h1>
+      <button id="btn-filter" class="bg-primary-light text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition flex items-center gap-2">
+        <span data-i18n="pages.export.filterButton">Filtrar</span>
       </button>
     </div>
 
-    <!-- Users table (flex-1 fills remaining height) -->
+    <!-- Export table (flex-1 fills remaining height) -->
     <main class="bg-white mt-4 mx-6 mb-6 p-6 rounded-lg shadow-sm flex-1 flex flex-col min-h-0">
-      <div id="users-message" class="text-gray-500 mb-4 flex-shrink-0" data-i18n="messages.loading">Cargando...</div>
+      <div id="export-message" class="text-gray-500 mb-4 flex-shrink-0" data-i18n="messages.loading">Cargando...</div>
       <div class="flex-1 overflow-auto min-h-0 -mx-6">
-        <table id="users-table" class="w-full text-left hidden">
+        <table id="export-table" class="w-full text-left hidden">
           <thead>
             <tr class="bg-primary-light">
-              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10 first:rounded-tl-lg" data-i18n="modals.manageUsers.table.identificador">Identificador</th>
-              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10 last:rounded-tr-lg" data-i18n="modals.manageUsers.table.estudios">Cantidad de estudios</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.identificador">Identificador</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.horaInicio">Hora inicio</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.horaTermino">Hora término</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.minutos">Minutos</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.categoria">Categoría</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.subcategoria">Subcategoría</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.actividad">Actividad</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.otroValor">Otro valor</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.secundaria">Secundaria</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.ubicacion">Ubicación</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.compania">Compañía</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.satisfaccion">Satisfacción</th>
+              <th class="px-6 py-3 font-semibold text-white sticky top-0 bg-primary-light z-10" data-i18n="pages.export.table.numeroRonda">Ronda</th>
             </tr>
           </thead>
-          <tbody id="users-tbody" class="divide-y divide-gray-200">
+          <tbody id="export-tbody" class="divide-y divide-gray-200">
           </tbody>
         </table>
       </div>
       <!-- Paginación -->
-      <div id="users-pagination" class="flex items-center justify-between mt-4 -mx-6 -mb-6 px-6 py-4 bg-primary-light text-white rounded-b-lg hidden flex-shrink-0">
+      <div id="export-pagination" class="flex items-center justify-between mt-4 -mx-6 -mb-6 px-6 py-4 bg-primary-light text-white rounded-b-lg hidden flex-shrink-0">
         <div class="text-sm">
-          <span data-i18n="modals.manageUsers.pagination.page">Página</span> <span id="pagination-current">1</span>
-          <span data-i18n="modals.manageUsers.pagination.of">de</span> <span id="pagination-total">1</span>
+          <span data-i18n="pages.export.pagination.page">Página</span> <span id="export-pagination-current">1</span>
+          <span data-i18n="pages.export.pagination.of">de</span> <span id="export-pagination-total">1</span>
         </div>
         <div class="flex gap-2">
-          <button id="btn-prev-page" class="px-4 py-2 text-sm border border-white text-white bg-transparent rounded-lg hover:bg-white hover:text-primary-light transition disabled:opacity-50 disabled:cursor-not-allowed" data-i18n="modals.manageUsers.pagination.prev">Anterior</button>
-          <button id="btn-next-page" class="px-4 py-2 text-sm border border-white text-white bg-transparent rounded-lg hover:bg-white hover:text-primary-light transition disabled:opacity-50 disabled:cursor-not-allowed" data-i18n="modals.manageUsers.pagination.next">Siguiente</button>
+          <button id="btn-prev-page" class="px-4 py-2 text-sm border border-white text-white bg-transparent rounded-lg hover:bg-white hover:text-primary-light transition disabled:opacity-50 disabled:cursor-not-allowed" data-i18n="pages.export.pagination.prev">Anterior</button>
+          <button id="btn-next-page" class="px-4 py-2 text-sm border border-white text-white bg-transparent rounded-lg hover:bg-white hover:text-primary-light transition disabled:opacity-50 disabled:cursor-not-allowed" data-i18n="pages.export.pagination.next">Siguiente</button>
         </div>
       </div>
     </main>
+
+    <!-- Download button bar -->
+    <div class="mx-6 mb-6 flex justify-end flex-shrink-0">
+      <button id="btn-download" class="bg-primary-light text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition flex items-center gap-2 hidden" data-i18n="pages.export.downloadButton">Descargar</button>
+    </div>
   </div>
 
-  <!-- Create User Modal -->
-  <div id="createUserModal" class="modal-overlay z-50" style="display: none;">
+  <!-- Filter Modal -->
+  <div id="filterModal" class="modal-overlay z-50" style="display: none;">
     <div class="modal">
       <div class="modal-header">
-        <h3 data-i18n="modals.manageUsers.title">Crear usuario</h3>
-        <button id="modal-close" class="modal-close">&times;</button>
+        <h3 data-i18n="pages.export.filter.title">Filtrar registros</h3>
+        <button id="filter-modal-close" class="modal-close">&times;</button>
       </div>
       <div class="modal-content">
-        <form id="create-user-form">
+        <form id="filter-form">
           <div class="form-group">
-            <label for="input-identificador" data-i18n="modals.manageUsers.fields.identificador">Identificador</label>
-            <input type="text" id="input-identificador" required maxlength="100" class="w-full px-4 py-2 border rounded-lg" />
+            <label for="filter-estudio" data-i18n="pages.export.filter.study">Estudio</label>
+            <select id="filter-estudio" required class="w-full px-4 py-2 border rounded-lg">
+              <!-- Populated via JS -->
+            </select>
           </div>
           <div class="form-group">
-            <label for="input-contrasena" data-i18n="modals.manageUsers.fields.contrasena">Contraseña</label>
-            <input type="password" id="input-contrasena" required minlength="8" class="w-full px-4 py-2 border rounded-lg" />
-          </div>
-          <div class="form-group">
-            <label data-i18n="modals.manageUsers.fields.estudios">Estudios</label>
-            <p class="text-sm text-gray-500 mb-2" data-i18n="modals.manageUsers.fields.estudios.help">Selecciona uno o más estudios</p>
-            <div id="estudios-checkboxes" class="space-y-2 max-h-48 overflow-y-auto border rounded-lg p-3">
+            <label data-i18n="pages.export.filter.rounds">Rondas</label>
+            <p class="text-sm text-gray-500 mb-2" data-i18n="pages.export.filter.roundsHelp">Selecciona una o más rondas</p>
+            <div id="filter-rondas" class="space-y-2 max-h-48 overflow-y-auto border rounded-lg p-3">
               <!-- Populated via JS -->
             </div>
           </div>
           <div class="button-container flex justify-end gap-3">
-            <button type="button" id="btn-cancel" class="btn btn-secondary px-4 py-2 rounded-lg" data-i18n="modals.manageUsers.buttons.cancel">Cancelar</button>
-            <button type="submit" class="btn save-btn bg-primary-light text-white px-4 py-2 rounded-lg hover:bg-primary-dark" data-i18n="modals.manageUsers.buttons.create">Crear usuario</button>
+            <button type="button" id="btn-filter-cancel" class="btn btn-secondary px-4 py-2 rounded-lg" data-i18n="pages.export.filter.cancel">Cancelar</button>
+            <button type="submit" id="btn-filter-apply" class="btn save-btn bg-primary-light text-white px-4 py-2 rounded-lg hover:bg-primary-dark" data-i18n="pages.export.filter.apply">Aplicar</button>
           </div>
         </form>
       </div>
@@ -125,7 +139,7 @@
 
   <script src="../../js/auth-helpers.js"></script>
   <script src="../../js/i18n.js" type="module"></script>
-  <script src="../../js/users.js" type="module"></script>
+  <script src="../../js/exportar.js" type="module"></script>
   <script type="module">
     // Initialize i18n and apply translations to data-i18n elements
     const lang = (navigator.language || 'en').split('-')[0];
