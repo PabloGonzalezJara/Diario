@@ -101,7 +101,10 @@
     "noActivities": "No activities found",
     "fillRequired": "Please fill in all required activities",
     "submitSuccess": "Diary submitted successfully",
-    "submitError": "Error submitting diary"
+    "submitError": "Error submitting diary",
+    "exportSuccess": "File downloaded",
+    "exportError": "Error generating the file",
+    "exportTooLarge": "Too many records to export. Refine the filter (study or rounds) and try again."
   },
   "activities": {
     "otherNotListed": "Other not listed (enter)"
@@ -114,6 +117,51 @@
   },
   "nav": {
     "manageUsers": "Manage users",
+    "export": "Export",
     "logout": "Log out"
+  },
+  "pages": {
+    "export": {
+      "pageTitle": "Export",
+      "title": "Export",
+      "filterButton": "Filter",
+      "downloadButton": "Download",
+      "noFilter": "Apply a filter to see records",
+      "errors": {
+        "selectStudy": "Select a study",
+        "minOneRound": "Select at least one round",
+        "noFilter": "Apply a filter before downloading"
+      },
+      "filter": {
+        "title": "Filter records",
+        "study": "Study",
+        "rounds": "Rounds",
+        "roundsHelp": "Select one or more rounds",
+        "selectStudy": "Select a study",
+        "cancel": "Cancel",
+        "apply": "Apply"
+      },
+      "table": {
+        "identificador": "Identifier",
+        "horaInicio": "Start time",
+        "horaTermino": "End time",
+        "minutos": "Minutes",
+        "categoria": "Category",
+        "subcategoria": "Subcategory",
+        "actividad": "Activity",
+        "otroValor": "Other value",
+        "secundaria": "Secondary",
+        "ubicacion": "Location",
+        "compania": "Company",
+        "satisfaccion": "Satisfaction",
+        "numeroRonda": "Round"
+      },
+      "pagination": {
+        "page": "Page",
+        "of": "of",
+        "prev": "Previous",
+        "next": "Next"
+      }
+    }
   }
 }
